@@ -1,0 +1,39 @@
+{
+    "name": "back",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "pnpx eslint .",
+        "dev": "ts-node-dev src/index.ts",
+        "seed": "ts-node-dev src/seed.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@apollo/server": "^4.10.4",
+        "argon2": "^0.40.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "graphql": "^16.8.2",
+        "graphql-scalars": "^1.23.0",
+        "jsonwebtoken": "^9.0.2",
+        "reflect-metadata": "^0.2.2",
+        "type-graphql": "^2.0.0-rc.1",
+        "typeorm": "^0.3.20"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.6.0",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^9.0.6",
+        "@types/node": "^20.14.9",
+        "eslint": "~9.6.0",
+        "globals": "^15.8.0",
+        "ts-node-dev": "^2.0.0",
+        "typescript-eslint": "^7.15.0"
+    }
+}
