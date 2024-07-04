@@ -23,14 +23,33 @@ Health-checker permet de vérifier si un service web est en ligne.
 Le projet tourne sous Docker.
 Une seule commande est nécessaire pour installer le projet.
 
+> Renseigner les variables d'environnements
+```env
+VITE_API_URL=
+
+BACKEND_PORT=4000
+
+POSTGRES_HOST=db
+POSTGRES_USER=test
+POSTGRES_DB=healthchecker
+POSTGRES_PASSWORD=test
+```
+
+> Environnement de développement
 ```bash
-## Environnement de développement
 docker-compose -f docker-compose.dev.yaml up --build
+```
+ou utiliser les commandes dans le fichier `Makefile`
+```bash
+make build-dev
 ```
 
 Par la suite, utiliser :
 
 ```bash
-## Environnement de développement
 docker-compose -f docker-compose.dev.yaml up
+```
+ou 
+```bash
+make run-dev
 ```
