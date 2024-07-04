@@ -1,0 +1,51 @@
+name: 'health-checker-dev'
+services:
+  backend:
+    container_name: backend
+    build: ./back
+    command: npm run dev
+    env_file: .env
+    volumes:
+      - ./back/src:/app/src
+    ports:
+      - 3000:4000
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    container_name: frontend
+    build: ./front
+    command: npm run dev
+    env_file: .env
+    volumes:
+      - ./front/src/:/app/src/
+    ports:
+      - 5173:5173
+    restart: always
+
+  database:
+    container_name: database
+    image: postgres
+    env_file: .env
+    restart: always
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      database:
+        condition: service_healthy
