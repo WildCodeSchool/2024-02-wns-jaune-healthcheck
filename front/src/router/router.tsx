@@ -1,5 +1,6 @@
 import App from "@/App";
 import Landing from "@/pages/Landing";
+import UrlHistory from "@/pages/UrlHistory";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
                 path: "/",
                 index: true,
                 element: <Landing />,
+            },
+            {
+                path: "/url/:id",
+                element: <UrlHistory />,
             },
         ],
     },
