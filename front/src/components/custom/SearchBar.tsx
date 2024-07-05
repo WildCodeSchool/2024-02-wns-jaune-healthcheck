@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Input } from "../ui/input";
 
 const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => {
     const [query, setQuery] = React.useState("");
@@ -9,15 +10,13 @@ const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => {
     };
 
     return (
-        <div className="mb-4">
-            <input
-                type="text"
-                placeholder="Rechercher..."
-                value={query}
-                onChange={handleInputChange}
-                className="px-4 py-2 border border-gray-300 rounded-lg w-1/5 m-8"
-            />
-        </div>
+        <Input
+            type="text"
+            placeholder="Rechercher..."
+            value={query}
+            onChange={handleInputChange}
+            className="w-1/3"
+        />
     );
 };
 

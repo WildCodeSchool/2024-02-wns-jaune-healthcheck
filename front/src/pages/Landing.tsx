@@ -1,5 +1,5 @@
 import FormUrl from "@/components/landing/FormUrl";
-import URLList from "./List";
+import ListUrl from "../components/landing/ListUrl";
 
 export default function Landing() {
     return (
@@ -8,11 +8,13 @@ export default function Landing() {
                 <h1 className="text-2xl font-bold text-center">
                     Health-checker
                 </h1>
-                <section className="w-1/2 mx-auto">
+                <section className="w-1/3 mx-auto">
                     <FormUrl />
                 </section>
+                <section className="w-2/3 mx-auto">
+                    <ListUrl />
+                </section>
             </div>
-            <URLList />
         </>
     );
 }

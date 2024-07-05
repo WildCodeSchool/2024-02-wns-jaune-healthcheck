@@ -18,9 +18,30 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type History = {
+  __typename?: 'History';
+  created_at: Scalars['DateTimeISO']['output'];
+  id: Scalars['String']['output'];
+  response: Scalars['String']['output'];
+  status_code: Scalars['Float']['output'];
+  url: Url;
+};
+
+export type HistoryInput = {
+  response: Scalars['String']['input'];
+  status_code: Scalars['Float']['input'];
+  urlId: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  addHistory: History;
   addUrl: Url;
+};
+
+
+export type MutationAddHistoryArgs = {
+  historyData: HistoryInput;
 };
 
 
@@ -30,8 +51,15 @@ export type MutationAddUrlArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  histories: Array<History>;
+  history: History;
   url: Url;
   urls: Array<Url>;
+};
+
+
+export type QueryHistoryArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -42,6 +70,7 @@ export type QueryUrlArgs = {
 export type Url = {
   __typename?: 'Url';
   createdAt: Scalars['DateTimeISO']['output'];
+  histories: Array<History>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   path: Scalars['String']['output'];
@@ -58,6 +87,11 @@ export type AddUrlMutationVariables = Exact<{
 
 
 export type AddUrlMutation = { __typename?: 'Mutation', addUrl: { __typename?: 'Url', name: string, path: string } };
+
+export type GetAllURlsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllURlsQuery = { __typename?: 'Query', urls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number }> }> };
 
 
 export const AddUrlDocument = gql`
@@ -94,3 +128,50 @@ export function useAddUrlMutation(baseOptions?: Apollo.MutationHookOptions<AddUr
 export type AddUrlMutationHookResult = ReturnType<typeof useAddUrlMutation>;
 export type AddUrlMutationResult = Apollo.MutationResult<AddUrlMutation>;
 export type AddUrlMutationOptions = Apollo.BaseMutationOptions<AddUrlMutation, AddUrlMutationVariables>;
+export const GetAllURlsDocument = gql`
+    query GetAllURls {
+  urls {
+    id
+    name
+    path
+    createdAt
+    histories {
+      id
+      response
+      status_code
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllURlsQuery__
+ *
+ * To run a query within a React component, call `useGetAllURlsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllURlsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllURlsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllURlsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+      }
+export function useGetAllURlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+        }
+export function useGetAllURlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+        }
+export type GetAllURlsQueryHookResult = ReturnType<typeof useGetAllURlsQuery>;
+export type GetAllURlsLazyQueryHookResult = ReturnType<typeof useGetAllURlsLazyQuery>;
+export type GetAllURlsSuspenseQueryHookResult = ReturnType<typeof useGetAllURlsSuspenseQuery>;
+export type GetAllURlsQueryResult = Apollo.QueryResult<GetAllURlsQuery, GetAllURlsQueryVariables>;
