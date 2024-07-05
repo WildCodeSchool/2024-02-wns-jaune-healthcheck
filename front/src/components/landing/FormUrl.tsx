@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
 import { useAddUrlMutation } from "@/generated/graphql-types";
+import { GET_ALL_URLS } from "@/graphql/queries";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -41,6 +42,7 @@ export default function FormUrl() {
             onError(error) {
                 console.log(error);
             },
+            refetchQueries: [{ query: GET_ALL_URLS }],
         });
     };
 
@@ -89,8 +91,8 @@ export default function FormUrl() {
                                             />
                                         </FormControl>
                                         <FormDescription className="italic">
-                                            URL dont vous souhaitez
-                                            vérifier le statut
+                                            URL dont vous souhaitez vérifier le
+                                            statut
                                         </FormDescription>
                                     </FormItem>
                                     <FormMessage />
