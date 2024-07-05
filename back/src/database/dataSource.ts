@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { Url } from "../entities/Url";
 import { History } from "../entities/History";
+import { UrlSubscriber } from "../subscribers/UrlSubscribers";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -12,6 +13,7 @@ const dataSource = new DataSource({
     synchronize: true,
     logging: process.env.APP_ENV === "dev",
     entities: [Url, History],
+    subscribers: [UrlSubscriber],
 });
 
 export default dataSource;
