@@ -58,22 +58,22 @@ export default function URLList() {
                                             item.name
                                                 .toLowerCase()
                                                 .includes(
-                                                    searchQuery.toLowerCase()
+                                                    searchQuery.toLowerCase(),
                                                 ) ||
                                             item.path
                                                 .toLowerCase()
                                                 .includes(
-                                                    searchQuery.toLowerCase()
-                                                )
+                                                    searchQuery.toLowerCase(),
+                                                ),
                                     )
                                     .sort(
                                         (a, b) =>
                                             new Date(b.createdAt).getTime() -
-                                            new Date(a.createdAt).getTime()
+                                            new Date(a.createdAt).getTime(),
                                     )
                                     .slice(
                                         startIndex,
-                                        startIndex + itemsPerPage
+                                        startIndex + itemsPerPage,
                                     )
                                     .map((item) => (
                                         <ListItem
@@ -81,7 +81,7 @@ export default function URLList() {
                                             className="flex justify-center items-center"
                                         >
                                             <a
-                                                href={"/"}
+                                                href={`/url/${item.id}`}
                                                 rel="noopener noreferrer"
                                                 className="w-full max-w-xs block"
                                             >
