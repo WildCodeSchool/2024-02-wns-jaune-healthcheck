@@ -1,13 +1,18 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { buildSchema } from "type-graphql";
-import { HelloWorldResolver } from "./resolvers/helloWorldResolver";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import dataSource from "./database/dataSource";
+import UrlResolver from "./resolvers/UrlResolver";
+import HistoryResolver from "./resolvers/HistoryResolver";
 
 const start = async () => {
+    // Initialisation de la connexion à la base de données
+    await dataSource.initialize();
+
     // Création du schéma GraphQL à partir des résolveurs TypeGraphQL
     const schema = await buildSchema({
-        resolvers: [HelloWorldResolver],
+        resolvers: [UrlResolver, HistoryResolver],
     });
 
     // Création du serveur Apollo avec le schéma généré
