@@ -4,16 +4,15 @@ import { buildSchema } from "type-graphql";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
+import HistoryResolver from "./resolvers/HistoryResolver";
 
 const start = async () => {
     // Initialisation de la connexion à la base de données
     await dataSource.initialize();
-    
+
     // Création du schéma GraphQL à partir des résolveurs TypeGraphQL
     const schema = await buildSchema({
-        resolvers: [
-            UrlResolver,
-        ],
+        resolvers: [UrlResolver, HistoryResolver],
     });
 
     // Création du serveur Apollo avec le schéma généré

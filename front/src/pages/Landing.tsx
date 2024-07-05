@@ -1,21 +1,19 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import FormUrl from "@/components/landing/FormUrl";
+import ListUrl from "../components/landing/ListUrl";
 
 export default function Landing() {
-    const [count, setCount] = useState(0);
-
     return (
         <>
-            <h1 className="font-bold">
-                Hello there ! Welcome to the Health-checker
-            </h1>
-            <div>
-                <Button
-                    variant="default"
-                    onClick={() => setCount((count) => count + 1)}
-                >
-                    count is {count}
-                </Button>
+            <div className="space-y-8 h-screen flex flex-col justify-center items-center">
+                <h1 className="text-2xl font-bold text-center">
+                    Health-checker
+                </h1>
+                <section className="w-1/3 mx-auto">
+                    <FormUrl />
+                </section>
+                <section className="w-2/3 mx-auto">
+                    <ListUrl />
+                </section>
             </div>
         </>
     );
