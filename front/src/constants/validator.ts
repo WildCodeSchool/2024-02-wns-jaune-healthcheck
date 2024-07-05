@@ -5,5 +5,5 @@ export const newUrlSchema = z.object({
         .string()
         .min(3, "Minimum 3 caractères")
         .max(55, "Maximum 55 caractères"),
-    url: z.string().min(10, "Minimum 10 caractères"),
+    path: z.string().min(10, "Minimum 10 caractères"),
 });

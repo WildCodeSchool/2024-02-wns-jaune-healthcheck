@@ -1,14 +1,14 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 const config: CodegenConfig = {
     overwrite: true,
-    schema: "http://localhost:7000/api",
+    schema: "http://localhost:3000",
     documents: ["src/graphql/*.ts"],
     generates: {
         "./src/generated/graphql-types.ts": {
             plugins: [
                 "typescript",
                 "typescript-operations",
-                "typescript-graphql-request",
+                "typescript-react-apollo",
             ],
             config: {
                 withHooks: true,

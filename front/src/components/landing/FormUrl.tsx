@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
+import { useAddUrlMutation } from "@/generated/graphql-types";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -20,12 +21,27 @@ export default function FormUrl() {
         mode: "onChange",
         defaultValues: {
             name: "",
-            url: "",
+            path: "",
         },
     });
 
+    const [createNewUrl, { loading }] = useAddUrlMutation();
+
     const onSubmit = (values: z.infer<typeof newUrlSchema>) => {
-        console.log(values);
+        const urlInput = {
+            name: values.name,
+            path: values.path,
+        };
+
+        createNewUrl({
+            variables: { urlData: urlInput },
+            onCompleted() {
+                console.log("Url ajoutée");
+            },
+            onError(error) {
+                console.log(error);
+            },
+        });
     };
 
     return (
@@ -60,7 +76,7 @@ export default function FormUrl() {
                     />
                     <FormField
                         control={newUrlForm.control}
-                        name="url"
+                        name="path"
                         render={({ field }) => {
                             return (
                                 <>
@@ -83,8 +99,8 @@ export default function FormUrl() {
                         }}
                     />
                 </div>
-                <Button variant="default" type="submit">
-                    Ajouter
+                <Button variant="default" type="submit" disabled={loading}>
+                    {loading ? "Ajout en cours" : "Ajouter"}
                 </Button>
             </form>
         </Form>

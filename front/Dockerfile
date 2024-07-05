@@ -6,4 +6,4 @@ RUN npm install
 
 COPY src src
 
-CMD npm run dev
+CMD ["npm" "run" "codgen" "&&" "npm" "run" "dev"]
