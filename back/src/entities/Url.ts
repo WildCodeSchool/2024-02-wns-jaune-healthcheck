@@ -39,6 +39,6 @@ export class Url extends BaseEntity {
     createdAt: Date;
 
     @Field(() => [History])
-    @OneToMany(() => History, (history) => history.url)
+    @OneToMany(() => History, (history) => history.url, { eager: true })
     histories: History[];
 }
