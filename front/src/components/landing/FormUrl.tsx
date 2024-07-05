@@ -89,7 +89,7 @@ export default function FormUrl() {
                                             />
                                         </FormControl>
                                         <FormDescription className="italic">
-                                            URL que vous dont vous souhaitez
+                                            URL dont vous souhaitez
                                             vérifier le statut
                                         </FormDescription>
                                     </FormItem>

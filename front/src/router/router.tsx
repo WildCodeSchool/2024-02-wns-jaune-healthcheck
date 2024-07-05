@@ -1,5 +1,5 @@
 import App from "@/App";
-import URLList from "@/pages/List";
+import Landing from "@/pages/Landing";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 index: true,
-                element: <URLList />,
+                element: <Landing />,
             },
         ],
     },
