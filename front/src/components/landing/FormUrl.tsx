@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
 import { useAddUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS } from "@/graphql/queries";
+import { useToast } from "../ui/use-toast";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -27,6 +28,7 @@ export default function FormUrl() {
     });
 
     const [createNewUrl, { loading }] = useAddUrlMutation();
+    const { toast } = useToast();
 
     const onSubmit = (values: z.infer<typeof newUrlSchema>) => {
         const urlInput = {
@@ -37,10 +39,16 @@ export default function FormUrl() {
         createNewUrl({
             variables: { urlData: urlInput },
             onCompleted() {
-                console.log("Url ajoutée");
+                toast({
+                    variant: "default",
+                    description: `${values.name} à bien été ajouté`,
+                });
             },
             onError(error) {
-                console.log(error);
+                toast({
+                    variant: "destructive",
+                    description: `${error}`,
+                });
             },
             refetchQueries: [{ query: GET_ALL_URLS }],
         });
@@ -51,6 +59,7 @@ export default function FormUrl() {
             <form
                 onSubmit={newUrlForm.handleSubmit(onSubmit)}
                 className="space-y-6"
+                role="add-url-form"
             >
                 <div className="space-y-4">
                     <FormField
@@ -64,6 +73,7 @@ export default function FormUrl() {
                                         <FormControl>
                                             <Input
                                                 placeholder="Entrez un nom"
+                                                role="name"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -87,6 +97,7 @@ export default function FormUrl() {
                                         <FormControl>
                                             <Input
                                                 placeholder="URL"
+                                                role="path"
                                                 {...field}
                                             />
                                         </FormControl>
