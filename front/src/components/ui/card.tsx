@@ -2,6 +2,25 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+const getStatusColor = (statusCode: number | null) => {
+    if (statusCode === null) {
+        return "bg-gray-500";
+    }
+    if (statusCode >= 200 && statusCode < 300) {
+        return "bg-green-500";
+    }
+    if (statusCode >= 300 && statusCode < 400) {
+        return "bg-yellow-500";
+    }
+    if (statusCode >= 400 && statusCode < 500) {
+        return "bg-red-500";
+    }
+    if (statusCode >= 500) {
+        return "bg-red-500";
+    }
+    return "bg-gray-500";
+};
+
 const Card = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement>
@@ -10,7 +29,7 @@ const Card = React.forwardRef<
         ref={ref}
         className={cn(
             "rounded-lg border bg-card text-card-foreground shadow-sm",
-            className,
+            className
         )}
         {...props}
     />
@@ -37,7 +56,7 @@ const CardTitle = React.forwardRef<
         ref={ref}
         className={cn(
             "text-2xl font-semibold leading-none tracking-tight text-right",
-            className,
+            className
         )}
         {...props}
     />
@@ -78,19 +97,23 @@ CardFooter.displayName = "CardFooter";
 
 const CardStatus = React.forwardRef<
     HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-    <div
-        ref={ref}
-        className={cn(
-            "text-sm font-semibold text-right flex items-center",
-            className,
-        )}
-        {...props}
-    >
-        <span className="w-4 h-4 rounded-full bg-green-500 mr-2"></span>
-    </div>
-));
+    React.HTMLAttributes<HTMLDivElement> & { statusCode: number | null }
+>(({ className, statusCode, ...props }, ref) => {
+    const statusColor = getStatusColor(statusCode);
+
+    return (
+        <div
+            ref={ref}
+            className={cn(
+                "text-sm font-semibold text-right flex items-center",
+                className
+            )}
+            {...props}
+        >
+            <span className={`w-4 h-4 rounded-full ${statusColor} mr-2`}></span>
+        </div>
+    );
+});
 CardStatus.displayName = "CardStatus";
 
 const List = React.forwardRef<

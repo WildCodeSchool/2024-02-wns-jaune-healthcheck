@@ -167,4 +167,37 @@ describe("URLList", () => {
             expect(statusTextElement).toBeInTheDocument();
         }
     });
+
+    it("should handle sort change", async () => {
+        const mockData = {
+            urls: [
+                {
+                    id: "1",
+                    name: "Test URL B",
+                    path: "/testB",
+                    createdAt: new Date(Date.now() - 10000).toISOString(), // Older
+                    histories: [{ status_code: 200 }],
+                },
+                {
+                    id: "2",
+                    name: "Test URL A",
+                    path: "/testA",
+                    createdAt: new Date().toISOString(), // Newer
+                    histories: [{ status_code: 200 }],
+                },
+            ],
+        };
+        vi.mocked(graphqlTypes.useGetAllURlsQuery).mockReturnValue({
+            data: mockData,
+            loading: false,
+        } as any);
+        render(React.createElement(URLList));
+
+        const items = screen.getAllByText(/Test URL/i);
+        expect(items[0]).toHaveTextContent("Test URL A");
+        expect(items[1]).toHaveTextContent("Test URL B");
+
+        const selectTrigger = screen.getByRole('combobox');
+        await fireEvent.click(selectTrigger);
+    });
 });
