@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     Card,
     CardHeader,
@@ -17,18 +17,38 @@ export default function URLList() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [totalItems, setTotalItems] = useState(0);
     const itemsPerPage = 24;
-    let totalItems = 0;
 
     useEffect(() => {
         if (data) {
-            totalItems = data.urls.length;
+            setTotalItems(data.urls.length);
         } else {
-            totalItems = 0;
+            setTotalItems(0);
         }
     }, [data]);
 
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const filteredAndSortedUrls = useMemo(() => {
+        return data
+            ? data.urls
+                  .filter(
+                      (item) =>
+                          item.name
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase()) ||
+                          item.path
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
+                  )
+                  .sort(
+                      (a, b) =>
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime()
+                  )
+            : [];
+    }, [data, searchQuery]);
+
+    const totalPages = Math.ceil(filteredAndSortedUrls.length / itemsPerPage);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
 
@@ -51,64 +71,45 @@ export default function URLList() {
                 <>
                     <div className="flex-grow">
                         <List className="grid grid-cols-4 gap-4">
-                            {data &&
-                                data.urls
-                                    .filter(
-                                        (item) =>
-                                            item.name
-                                                .toLowerCase()
-                                                .includes(
-                                                    searchQuery.toLowerCase(),
-                                                ) ||
-                                            item.path
-                                                .toLowerCase()
-                                                .includes(
-                                                    searchQuery.toLowerCase(),
-                                                ),
-                                    )
-                                    .sort(
-                                        (a, b) =>
-                                            new Date(b.createdAt).getTime() -
-                                            new Date(a.createdAt).getTime(),
-                                    )
-                                    .slice(
-                                        startIndex,
-                                        startIndex + itemsPerPage,
-                                    )
-                                    .map((item) => (
-                                        <ListItem
-                                            key={item.id}
-                                            className="flex justify-center items-center"
+                            {filteredAndSortedUrls
+                                .slice(startIndex, startIndex + itemsPerPage)
+                                .map((item) => (
+                                    <ListItem
+                                        key={item.id}
+                                        className="flex justify-center items-center"
+                                    >
+                                        <a
+                                            href={`/url/${item.id}`}
+                                            rel="noopener noreferrer"
+                                            className="w-full max-w-xs block"
                                         >
-                                            <a
-                                                href={`/url/${item.id}`}
-                                                rel="noopener noreferrer"
-                                                className="w-full max-w-xs block"
-                                            >
-                                                <Card className="w-full max-w-xs">
-                                                    <CardHeader>
-                                                        <CardTitle>
-                                                            {item.name}
-                                                        </CardTitle>
-                                                        <CardDescription>
-                                                            {item.path}
-                                                        </CardDescription>
-                                                    </CardHeader>
-                                                    <CardContent className="flex">
-                                                        <CardStatus />
-                                                        <p className="text-sm">
-                                                            {item.histories[0]
-                                                                ? `Status ${item.histories[0].status_code}`
-                                                                : ""}
-                                                        </p>
-                                                    </CardContent>
-                                                </Card>
-                                            </a>
-                                        </ListItem>
-                                    ))}
+                                            <Card className="w-full max-w-xs">
+                                                <CardHeader>
+                                                    <CardTitle>
+                                                        {item.name}
+                                                    </CardTitle>
+                                                    <CardDescription>
+                                                        {item.path}
+                                                    </CardDescription>
+                                                </CardHeader>
+                                                <CardContent className="flex">
+                                                    <CardStatus />
+                                                    <p className="text-sm">
+                                                        {item.histories[0]
+                                                            ? `Status ${item.histories[0].status_code}`
+                                                            : ""}
+                                                    </p>
+                                                </CardContent>
+                                            </Card>
+                                        </a>
+                                    </ListItem>
+                                ))}
                         </List>
                     </div>
-                    <div className="flex justify-center mt-4 mb-2">
+                    <div
+                        className="flex justify-center mt-4 mb-2"
+                        data-testid="pagination-container"
+                    >
                         {Array.from({ length: totalPages }, (_, index) => (
                             <button
                                 key={index + 1}
