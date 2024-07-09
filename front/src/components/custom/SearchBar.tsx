@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 placeholder="Rechercher..."
                 value={searchQuery}
                 onChange={handleInputChange}
-                className="w-1/3"
+                className="w-full max-w-md"
             />
             <Select value={sortKey} onValueChange={handleSortChange}>
                 <SelectTrigger className="w-1/3">
