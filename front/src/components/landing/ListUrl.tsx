@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
     Card,
     CardHeader,
@@ -11,45 +11,55 @@ import {
 } from "@/components/ui/card";
 import SearchBar from "../custom/SearchBar";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function URLList() {
     const { loading, error, data } = useGetAllURlsQuery();
 
+    console.log(data);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
-    const [totalItems, setTotalItems] = useState(0);
+    const [sortKey, setSortKey] = useState("createdAt");
     const itemsPerPage = 24;
 
-    useEffect(() => {
-        if (data) {
-            setTotalItems(data.urls.length);
-        } else {
-            setTotalItems(0);
-        }
-    }, [data]);
-
     const filteredAndSortedUrls = useMemo(() => {
-        return data
-            ? data.urls
-                  .filter(
-                      (item) =>
-                          item.name
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase()) ||
-                          item.path
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase())
-                  )
-                  .sort(
-                      (a, b) =>
-                          new Date(b.createdAt).getTime() -
-                          new Date(a.createdAt).getTime()
-                  )
-            : [];
-    }, [data, searchQuery]);
+        if (!data) return [];
+
+        let urls = data.urls.filter(
+            (item) =>
+                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.path.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        urls = urls.sort((a, b) => {
+            if (sortKey === "name") {
+                return a.name.localeCompare(b.name);
+            } else if (sortKey === "status_code") {
+                return (
+                    (a.histories[0]?.status_code || 0) -
+                    (b.histories[0]?.status_code || 0)
+                );
+            } else if (sortKey === "createdAt") {
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            }
+            return 0;
+        });
+
+        return urls;
+    }, [data, searchQuery, sortKey]);
 
     const totalPages = Math.ceil(filteredAndSortedUrls.length / itemsPerPage);
-
     const startIndex = (currentPage - 1) * itemsPerPage;
 
     const handlePageChange = (page: number) => {
@@ -61,10 +71,19 @@ export default function URLList() {
         setCurrentPage(1);
     };
 
+    const handleSortChange = (key: string) => {
+        setSortKey(key);
+    };
+
     if (error) return "Error";
     return (
         <div className="flex flex-col gap-8">
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar
+                searchQuery={searchQuery}
+                sortKey={sortKey}
+                onSearch={handleSearch}
+                onSortChange={handleSortChange}
+            />
             {loading ? (
                 "Loading"
             ) : (
@@ -93,7 +112,15 @@ export default function URLList() {
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent className="flex">
-                                                    <CardStatus />
+                                                    <CardStatus
+                                                        statusCode={
+                                                            item.histories[0]
+                                                                ? item
+                                                                      .histories[0]
+                                                                      .status_code
+                                                                : null
+                                                        }
+                                                    />
                                                     <p className="text-sm">
                                                         {item.histories[0]
                                                             ? `Status ${item.histories[0].status_code}`
@@ -106,24 +133,40 @@ export default function URLList() {
                                 ))}
                         </List>
                     </div>
-                    <div
-                        className="flex justify-center mt-4 mb-2"
-                        data-testid="pagination-container"
-                    >
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index + 1}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`px-4 py-2 mx-1 text-black border border-black rounded ${
-                                    currentPage === index + 1
-                                        ? "text-black"
-                                        : ""
-                                }`}
+                    <Pagination className="mt-4 mb-2">
+                        <PaginationContent>
+                            <PaginationPrevious
+                                onClick={() =>
+                                    handlePageChange(
+                                        Math.max(currentPage - 1, 1)
+                                    )
+                                }
                             >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
+                                Previous
+                            </PaginationPrevious>
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <PaginationItem key={index + 1}>
+                                    <PaginationLink
+                                        isActive={currentPage === index + 1}
+                                        onClick={() =>
+                                            handlePageChange(index + 1)
+                                        }
+                                    >
+                                        {index + 1}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationNext
+                                onClick={() =>
+                                    handlePageChange(
+                                        Math.min(currentPage + 1, totalPages)
+                                    )
+                                }
+                            >
+                                Next
+                            </PaginationNext>
+                        </PaginationContent>
+                    </Pagination>
                 </>
             )}
         </div>
