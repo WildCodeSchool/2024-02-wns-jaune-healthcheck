@@ -7,7 +7,7 @@
     "test": "jest",
     "lint": "npx eslint --ext .ts src",
     "dev": "ts-node-dev --poll src/index.ts",
-    "seed": "ts-node-dev src/seed.ts"
+    "seed": "ts-node-dev src/database/seeder/fixtures.ts"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "9.0.6",
     "@types/node": "20.14.9",
+    "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "eslint": "8.56.0",
     "globals": "15.8.0",
