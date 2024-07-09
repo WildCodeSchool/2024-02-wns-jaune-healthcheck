@@ -87,7 +87,7 @@ export default function URLList() {
             ) : (
                 <>
                     <div className="flex-grow">
-                        <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
                             {filteredAndSortedUrls
                                 .slice(startIndex, startIndex + itemsPerPage)
                                 .map((item) => (
