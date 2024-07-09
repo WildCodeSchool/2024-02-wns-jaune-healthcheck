@@ -9,7 +9,7 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
-import SearchBar from "../custom/SearchBar";
+import FilterBar from "../custom/FilterBar";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import {
     Pagination,
@@ -22,8 +22,6 @@ import {
 
 export default function URLList() {
     const { loading, error, data } = useGetAllURlsQuery();
-
-    console.log(data);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
@@ -78,7 +76,7 @@ export default function URLList() {
     if (error) return "Error";
     return (
         <div className="flex flex-col gap-8">
-            <SearchBar
+            <FilterBar
                 searchQuery={searchQuery}
                 sortKey={sortKey}
                 onSearch={handleSearch}
@@ -89,20 +87,20 @@ export default function URLList() {
             ) : (
                 <>
                     <div className="flex-grow">
-                        <List className="grid grid-cols-4 gap-4">
+                        <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {filteredAndSortedUrls
                                 .slice(startIndex, startIndex + itemsPerPage)
                                 .map((item) => (
                                     <ListItem
                                         key={item.id}
-                                        className="flex justify-center items-center"
+                                        className="flex justify-center items-center w-full"
                                     >
                                         <a
                                             href={`/url/${item.id}`}
                                             rel="noopener noreferrer"
-                                            className="w-full max-w-xs block"
+                                            className="w-full max-w-lg"
                                         >
-                                            <Card className="w-full max-w-xs">
+                                            <Card className="w-full">
                                                 <CardHeader>
                                                     <CardTitle>
                                                         {item.name}
@@ -142,7 +140,7 @@ export default function URLList() {
                                     )
                                 }
                             >
-                                Previous
+                                Précédent
                             </PaginationPrevious>
                             {Array.from({ length: totalPages }, (_, index) => (
                                 <PaginationItem key={index + 1}>
@@ -163,7 +161,7 @@ export default function URLList() {
                                     )
                                 }
                             >
-                                Next
+                                Suivant
                             </PaginationNext>
                         </PaginationContent>
                     </Pagination>
