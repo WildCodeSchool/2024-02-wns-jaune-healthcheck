@@ -3,14 +3,14 @@ import { Input } from "../ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 
-interface SearchBarProps {
+interface FilterBarProps {
     onSearch: (query: string) => void;
     onSortChange: (key: string) => void;
     searchQuery: string;
     sortKey: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
+const FilterBar: React.FC<FilterBarProps> = ({
     onSearch,
     onSortChange,
     searchQuery,
@@ -25,16 +25,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
     };
 
     return (
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex max-md:flex-col justify-between items-center gap-4 mb-4">
             <Input
                 type="text"
                 placeholder="Rechercher..."
                 value={searchQuery}
                 onChange={handleInputChange}
-                className="w-full max-w-md"
+                className="w-full max-w-lg"
             />
             <Select value={sortKey} onValueChange={handleSortChange}>
-                <SelectTrigger className="w-1/3">
+                <SelectTrigger className="w-full max-w-lg md:w-1/4">
                     <SelectValue placeholder="Choisir un tri" />
                 </SelectTrigger>
                 <SelectContent>
@@ -51,4 +51,4 @@ const SearchBar: React.FC<SearchBarProps> = ({
     );
 };
 
-export default SearchBar;
+export default FilterBar;
