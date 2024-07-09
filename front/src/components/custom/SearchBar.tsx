@@ -15,7 +15,7 @@ const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => {
             placeholder="Rechercher..."
             value={query}
             onChange={handleInputChange}
-            className="w-1/3"
+            className="w-full max-w-md"
         />
     );
 };

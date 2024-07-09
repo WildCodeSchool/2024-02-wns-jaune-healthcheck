@@ -1,14 +1,31 @@
 import FormUrl from "@/components/landing/FormUrl";
 import ListUrl from "../components/landing/ListUrl";
+import { Separator } from "@/components/ui/separator";
 
 export default function Landing() {
     return (
-        <div className="space-y-8 h-screen flex flex-col justify-center items-center">
-            <h1 className="text-2xl font-bold text-center">Health-checker</h1>
-            <section className="w-1/3 mx-auto">
+        <div className="pt-12 space-y-14 flex flex-col justify-center items-center">
+            <section className="text-center space-y-6">
+                <h1 className="text-6xl font-bold">
+                    Le Monitoring <br />à portée{" "}
+                    <span className="underline underline-offset-8">d'un</span>{" "}
+                    Clic
+                </h1>
+                <h2>
+                    Suivez{" "}
+                    <span className="underline underline-offset-8">
+                        l'état de santé
+                    </span>{" "}
+                    de n'importe quelle{" "}
+                    <span className="underline underline-offset-8">URL</span>{" "}
+                    sans effort.
+                </h2>
+            </section>
+            <section className="w-full max-w-xl mx-auto">
                 <FormUrl />
             </section>
-            <section className="w-2/3 mx-auto">
+            <Separator className="w-full max-w-6xl" />
+            <section className="w-full max-w-6xl mx-auto">
                 <ListUrl />
             </section>
         </div>

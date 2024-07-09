@@ -43,6 +43,7 @@ export default function FormUrl() {
                     variant: "default",
                     description: `${values.name} à bien été ajouté`,
                 });
+                newUrlForm.reset();
             },
             onError(error) {
                 toast({
@@ -58,7 +59,7 @@ export default function FormUrl() {
         <Form {...newUrlForm}>
             <form
                 onSubmit={newUrlForm.handleSubmit(onSubmit)}
-                className="space-y-6"
+                className="space-y-6 flex flex-col"
                 role="add-url-form"
             >
                 <div className="space-y-4">
@@ -67,22 +68,20 @@ export default function FormUrl() {
                         name="name"
                         render={({ field }) => {
                             return (
-                                <>
-                                    <FormItem>
-                                        <FormLabel>Nom</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Entrez un nom"
-                                                role="name"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription className="italic">
-                                            C'est le nom public pour l'URL
-                                        </FormDescription>
-                                    </FormItem>
+                                <FormItem>
+                                    <FormLabel>Nom</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Entrez un nom"
+                                            role="name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription className="italic">
+                                        C'est le nom public pour l'URL
+                                    </FormDescription>
                                     <FormMessage />
-                                </>
+                                </FormItem>
                             );
                         }}
                     />
@@ -91,28 +90,31 @@ export default function FormUrl() {
                         name="path"
                         render={({ field }) => {
                             return (
-                                <>
-                                    <FormItem>
-                                        <FormLabel>URL</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="URL"
-                                                role="path"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription className="italic">
-                                            URL dont vous souhaitez vérifier le
-                                            statut
-                                        </FormDescription>
-                                    </FormItem>
+                                <FormItem>
+                                    <FormLabel>URL</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="URL"
+                                            role="path"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription className="italic">
+                                        URL dont vous souhaitez vérifier le
+                                        statut
+                                    </FormDescription>
                                     <FormMessage />
-                                </>
+                                </FormItem>
                             );
                         }}
                     />
                 </div>
-                <Button variant="default" type="submit" disabled={loading}>
+                <Button
+                    variant="default"
+                    type="submit"
+                    disabled={loading}
+                    className="ml-auto"
+                >
                     {loading ? "Ajout en cours" : "Ajouter"}
                 </Button>
             </form>
