@@ -20,8 +20,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { loginSchema } from "@/constants/validator";
+import { useLoginMutation } from "@/generated/graphql-types";
 
-export default function FormLogin() {
+type FormLoginProps = {
+    setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function FormLogin({ setOpenDialog }: FormLoginProps) {
     const loginForm = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         mode: "onChange",
@@ -31,8 +36,22 @@ export default function FormLogin() {
         },
     });
 
+    const [login, { loading }] = useLoginMutation();
+
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        console.log(values);
+        login({
+            variables: {
+                email: values.email,
+                password: values.password,
+            },
+            onCompleted() {
+                console.log("Connexion réussie");
+                setOpenDialog(false);
+            },
+            onError(error) {
+                console.log(error);
+            },
+        });
     };
 
     return (
@@ -101,7 +120,9 @@ export default function FormLogin() {
                                 Annuler
                             </Button>
                         </DialogClose>
-                        <Button type="submit">Connexion</Button>
+                        <Button type="submit" disabled={loading}>
+                            {loading ? "Chargement..." : "Connexion"}
+                        </Button>
                     </DialogFooter>
                 </form>
             </Form>

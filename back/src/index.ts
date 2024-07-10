@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import "dotenv/config";
+import * as jwt from "jsonwebtoken";
 import { ApolloServer } from "@apollo/server";
 import { buildSchema } from "type-graphql";
 import { startStandaloneServer } from "@apollo/server/standalone";
@@ -14,6 +16,10 @@ const start = async () => {
     // Création du schéma GraphQL à partir des résolveurs TypeGraphQL
     const schema = await buildSchema({
         resolvers: [UrlResolver, HistoryResolver, UserResolver],
+        authChecker: ({ context }) => {
+            if (!context.payload) return false;
+            return true;
+        },
     });
 
     // Création du serveur Apollo avec le schéma généré
@@ -22,6 +28,23 @@ const start = async () => {
     // Démarrage du serveur
     const { url } = await startStandaloneServer(server, {
         listen: { port: 4000 },
+        context: async ({ req, res }) => {
+            if (!process.env.JWT_SECRET_KEY) return { res };
+
+            if (!req.headers.authorization) return { res };
+
+            if (!req.headers.cookie) return { res };
+
+            const payload = jwt.verify(
+                req.headers.cookie.split("token=")[1],
+                process.env.JWT_SECRET_KEY,
+            );
+            if (payload) {
+                return { payload, res };
+            }
+
+            return { res };
+        },
     });
     console.log(`🚀 Server ready at ${url}`);
 };
