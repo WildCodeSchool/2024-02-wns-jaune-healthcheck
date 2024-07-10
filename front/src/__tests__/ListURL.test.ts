@@ -87,7 +87,9 @@ describe("URLList", () => {
         render(React.createElement(URLList));
 
         const searchInput = screen.getByRole("textbox");
-        await fireEvent.change(searchInput, { target: { value: "Test URL 1" } });
+        await fireEvent.change(searchInput, {
+            target: { value: "Test URL 1" },
+        });
 
         expect(screen.getByText("Test URL 1")).toBeInTheDocument();
         expect(screen.queryByText("Test URL 2")).not.toBeInTheDocument();
@@ -124,20 +126,48 @@ describe("URLList", () => {
         expect(screen.queryByText("Test URL 24")).not.toBeInTheDocument();
     });
 
-    it("should display status when history exists and show empty string when it does not", async () => {
+    it("should display correct status for different HTTP status codes", async () => {
         const mockData = {
             urls: [
                 {
                     id: "1",
-                    name: "URL with History",
+                    name: "URL with 200 status",
                     path: "/test1",
                     createdAt: new Date().toISOString(),
                     histories: [{ status_code: 200 }],
                 },
                 {
                     id: "2",
-                    name: "URL without History",
+                    name: "URL with 300 status",
                     path: "/test2",
+                    createdAt: new Date().toISOString(),
+                    histories: [{ status_code: 300 }],
+                },
+                {
+                    id: "3",
+                    name: "URL with 400 status",
+                    path: "/test3",
+                    createdAt: new Date().toISOString(),
+                    histories: [{ status_code: 400 }],
+                },
+                {
+                    id: "4",
+                    name: "URL with 500 status",
+                    path: "/test4",
+                    createdAt: new Date().toISOString(),
+                    histories: [{ status_code: 500 }],
+                },
+                {
+                    id: "5",
+                    name: "URL with unknown status",
+                    path: "/test5",
+                    createdAt: new Date().toISOString(),
+                    histories: [{ status_code: 999 }],
+                },
+                {
+                    id: "6",
+                    name: "URL with status null",
+                    path: "/test6",
                     createdAt: new Date().toISOString(),
                     histories: [],
                 },
@@ -151,21 +181,35 @@ describe("URLList", () => {
 
         render(React.createElement(URLList));
 
-        await screen.findByText("URL with History");
+        const url200 = await screen.findByText("URL with 200 status");
+        expect(url200).toBeInTheDocument();
         expect(screen.getByText("Status 200")).toBeInTheDocument();
+        const statusIndicators = screen.getAllByTestId("status-indicator");
+        expect(statusIndicators[0]).toHaveClass("bg-green-500");
 
-        await screen.findByText("URL without History");
-        const cardWithoutHistory = screen.getByText('URL without History').closest('.w-full.max-w-xs');
-        const statusTextElements = cardWithoutHistory?.querySelectorAll('p.text-sm');
-        expect(statusTextElements?.length).toBeGreaterThanOrEqual(2);
-        const statusTextElement = statusTextElements?.[1];
+        const url300 = await screen.findByText("URL with 300 status");
+        expect(url300).toBeInTheDocument();
+        expect(screen.getByText("Status 300")).toBeInTheDocument();
+        expect(statusIndicators[1]).toHaveClass("bg-yellow-500");
 
+        const url400 = await screen.findByText("URL with 400 status");
+        expect(url400).toBeInTheDocument();
+        expect(screen.getByText("Status 400")).toBeInTheDocument();
+        expect(statusIndicators[2]).toHaveClass("bg-red-500");
 
-        if (statusTextElement) {
-            expect(statusTextElement.textContent?.trim()).toBe("");
-        } else {
-            expect(statusTextElement).toBeInTheDocument();
-        }
+        const url500 = await screen.findByText("URL with 500 status");
+        expect(url500).toBeInTheDocument();
+        expect(screen.getByText("Status 500")).toBeInTheDocument();
+        expect(statusIndicators[3]).toHaveClass("bg-red-500");
+
+        const url999 = await screen.findByText("URL with unknown status");
+        expect(url999).toBeInTheDocument();
+        expect(screen.getByText("Status 999")).toBeInTheDocument();
+        expect(statusIndicators[4]).toHaveClass("bg-gray-500");
+
+        const urlNull = await screen.findByText("URL with status null");
+        expect(urlNull).toBeInTheDocument();
+        expect(statusIndicators[5]).toHaveClass("bg-gray-500");
     });
 
     it("should handle sort change", async () => {
@@ -197,7 +241,7 @@ describe("URLList", () => {
         expect(items[0]).toHaveTextContent("Test URL A");
         expect(items[1]).toHaveTextContent("Test URL B");
 
-        const selectTrigger = screen.getByRole('combobox');
+        const selectTrigger = screen.getByRole("combobox");
         await fireEvent.click(selectTrigger);
     });
 });

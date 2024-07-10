@@ -15,7 +15,7 @@ const getStatusColor = (statusCode: number | null) => {
     if (statusCode >= 400 && statusCode < 500) {
         return "bg-red-500";
     }
-    if (statusCode >= 500) {
+    if (statusCode >= 500 && statusCode < 600) {
         return "bg-red-500";
     }
     return "bg-gray-500";
@@ -83,18 +83,6 @@ const CardContent = React.forwardRef<
 ));
 CardContent.displayName = "CardContent";
 
-const CardFooter = React.forwardRef<
-    HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-    <div
-        ref={ref}
-        className={cn("flex items-center p-6 pt-0", className)}
-        {...props}
-    />
-));
-CardFooter.displayName = "CardFooter";
-
 const CardStatus = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement> & { statusCode: number | null }
@@ -110,7 +98,10 @@ const CardStatus = React.forwardRef<
             )}
             {...props}
         >
-            <span className={`w-4 h-4 rounded-full ${statusColor} mr-2`}></span>
+            <span
+                data-testid="status-indicator"
+                className={`w-4 h-4 rounded-full ${statusColor} mr-2`}
+            ></span>
         </div>
     );
 });
@@ -135,7 +126,6 @@ ListItem.displayName = "ListItem";
 export {
     Card,
     CardHeader,
-    CardFooter,
     CardTitle,
     CardDescription,
     CardContent,
