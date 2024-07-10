@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FormUrl from "@/components/landing/FormUrl";
-import App from "@/App";
 import { MockedProvider } from "@apollo/client/testing";
 import { CREATE_NEW_URL } from "@/graphql/mutation";
 
@@ -28,23 +27,6 @@ const mocks = [
     },
 ];
 
-const failedMocks = [
-    {
-        delay: 2000,
-        request: {
-            query: CREATE_NEW_URL,
-            variables: {
-                urlData: {
-                    name: "Google",
-                    path: "//www.google.com/",
-                },
-            },
-        },
-        error: new Error(
-            "Erreur de validation des données, l'url doit comporter un chemin valide ex: http(s)://..."
-        )
-    },
-];
 
 describe("Form url tests", () => {
     it("should contain a form", () => {
