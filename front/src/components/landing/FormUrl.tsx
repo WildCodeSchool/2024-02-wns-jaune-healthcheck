@@ -48,7 +48,7 @@ export default function FormUrl() {
             onError(error) {
                 toast({
                     variant: "destructive",
-                    description: `${error}`,
+                    description: `${error.message}`,
                 });
             },
             refetchQueries: [{ query: GET_ALL_URLS }],
