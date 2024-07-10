@@ -3,7 +3,7 @@ services:
   backend:
     container_name: backend
     build: ./back
-    command: npm run dev
+    command: sh -c "npm run migration:up && npm run dev"
     env_file: .env
     volumes:
       - ./back/src:/app/src
