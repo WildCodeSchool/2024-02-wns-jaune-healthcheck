@@ -26,10 +26,10 @@ class UrlResolver {
     @Query(() => Url)
     async url(@Arg("id") id: string): Promise<Url> {
         try {
-            const ulr = await Url.findOneByOrFail({
+            const url = await Url.findOneByOrFail({
                 id: id,
             });
-            return ulr;
+            return url;
         } catch (_error) {
             throw new Error("Internal server error");
         }
@@ -48,7 +48,7 @@ class UrlResolver {
         } catch (error) {
             if (error instanceof QueryFailedError) {
                 throw new Error(
-                    "Erreur lors de l'ajout de l'url dans la base de données"
+                    "Erreur lors de l'ajout de l'url dans la base de données",
                 );
             }
             if (error.message === "Data validation error") {

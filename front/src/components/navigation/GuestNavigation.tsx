@@ -8,8 +8,11 @@ import {
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormRegister from "../auth/FormRegister";
 import FormLogin from "../auth/FormLogin";
+import { useState } from "react";
 
 export default function GuestNavigation() {
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+
     return (
         <div className="w-full max-w-6xl mx-auto">
             <NavigationMenu className="ml-auto">
@@ -26,11 +29,14 @@ export default function GuestNavigation() {
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                         <NavigationMenuLink>
-                            <Dialog>
+                            <Dialog
+                                open={openDialog}
+                                onOpenChange={setOpenDialog}
+                            >
                                 <DialogTrigger asChild>
                                     <Button variant="outline">Connexion</Button>
                                 </DialogTrigger>
-                                <FormLogin />
+                                <FormLogin setOpenDialog={setOpenDialog} />
                             </Dialog>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
