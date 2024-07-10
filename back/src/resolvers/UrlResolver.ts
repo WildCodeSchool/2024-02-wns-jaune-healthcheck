@@ -47,20 +47,14 @@ class UrlResolver {
             return url;
         } catch (error) {
             if (error instanceof QueryFailedError) {
-                if (
-                    error.message.includes(
-                        "duplicate key value violates unique constraint",
-                    )
-                ) {
-                    throw new Error("Le chemin de l'url doit être unique");
-                } else {
-                    throw new Error(
-                        "Erreur lors de l'ajout de l'url dans la base de données",
-                    );
-                }
+                throw new Error(
+                    "Erreur lors de l'ajout de l'url dans la base de données"
+                );
             }
             if (error.message === "Data validation error") {
-                throw new Error(error.message);
+                throw new Error(
+                    "Erreur de validation des données, l'url doit comporter un chemin valide ex: http(s)://...",
+                );
             }
             throw new Error("Internal server error");
         }
