@@ -5,12 +5,14 @@ import {
     BaseEntity,
     CreateDateColumn,
     OneToMany,
+    Unique
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
 import { History } from "./History";
 
 @Entity()
+@Unique(["path"])
 @ObjectType()
 export class Url extends BaseEntity {
     @Field()

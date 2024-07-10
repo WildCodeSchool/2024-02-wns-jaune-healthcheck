@@ -1,11 +1,12 @@
-import { Outlet } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import GuestLayout from "./layouts/GuestLayout";
 
 function App() {
+    /* TODO : Gérer dynamiquement l'affichage du bon layout en fonction de l'authentification */
     return (
         <>
-            <main>
-                <Outlet />
-            </main>
+            <GuestLayout />
+            <Toaster />
         </>
     );
 }

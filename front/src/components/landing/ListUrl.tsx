@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import {
     Card,
     CardHeader,
@@ -9,27 +9,55 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
-import SearchBar from "../custom/SearchBar";
+import FilterBar from "../custom/FilterBar";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function URLList() {
     const { loading, error, data } = useGetAllURlsQuery();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [sortKey, setSortKey] = useState("createdAt");
     const itemsPerPage = 24;
-    let totalItems = 0;
 
-    useEffect(() => {
-        if (data) {
-            totalItems = data.urls.length;
-        } else {
-            totalItems = 0;
-        }
-    }, [data]);
+    const filteredAndSortedUrls = useMemo(() => {
+        if (!data) return [];
 
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+        let urls = data.urls.filter(
+            (item) =>
+                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.path.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
+        urls = urls.sort((a, b) => {
+            if (sortKey === "name") {
+                return a.name.localeCompare(b.name);
+            } else if (sortKey === "status_code") {
+                return (
+                    (a.histories[0]?.status_code || 0) -
+                    (b.histories[0]?.status_code || 0)
+                );
+            } else if (sortKey === "createdAt") {
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            }
+            return 0;
+        });
+
+        return urls;
+    }, [data, searchQuery, sortKey]);
+
+    const totalPages = Math.ceil(filteredAndSortedUrls.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
 
     const handlePageChange = (page: number) => {
@@ -41,88 +69,102 @@ export default function URLList() {
         setCurrentPage(1);
     };
 
+    const handleSortChange = (key: string) => {
+        setSortKey(key);
+    };
+
     if (error) return "Error";
     return (
         <div className="flex flex-col gap-8">
-            <SearchBar onSearch={handleSearch} />
+            <FilterBar
+                searchQuery={searchQuery}
+                sortKey={sortKey}
+                onSearch={handleSearch}
+                onSortChange={handleSortChange}
+            />
             {loading ? (
                 "Loading"
             ) : (
                 <>
                     <div className="flex-grow">
-                        <List className="grid grid-cols-4 gap-4">
-                            {data &&
-                                data.urls
-                                    .filter(
-                                        (item) =>
-                                            item.name
-                                                .toLowerCase()
-                                                .includes(
-                                                    searchQuery.toLowerCase(),
-                                                ) ||
-                                            item.path
-                                                .toLowerCase()
-                                                .includes(
-                                                    searchQuery.toLowerCase(),
-                                                ),
-                                    )
-                                    .sort(
-                                        (a, b) =>
-                                            new Date(b.createdAt).getTime() -
-                                            new Date(a.createdAt).getTime(),
-                                    )
-                                    .slice(
-                                        startIndex,
-                                        startIndex + itemsPerPage,
-                                    )
-                                    .map((item) => (
-                                        <ListItem
-                                            key={item.id}
-                                            className="flex justify-center items-center"
+                        <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
+                            {filteredAndSortedUrls
+                                .slice(startIndex, startIndex + itemsPerPage)
+                                .map((item) => (
+                                    <ListItem
+                                        key={item.id}
+                                        className="flex justify-center items-center w-full"
+                                    >
+                                        <a
+                                            href={`/url/${item.id}`}
+                                            rel="noopener noreferrer"
+                                            className="w-full max-w-lg"
                                         >
-                                            <a
-                                                href={`/url/${item.id}`}
-                                                rel="noopener noreferrer"
-                                                className="w-full max-w-xs block"
-                                            >
-                                                <Card className="w-full max-w-xs">
-                                                    <CardHeader>
-                                                        <CardTitle>
-                                                            {item.name}
-                                                        </CardTitle>
-                                                        <CardDescription>
-                                                            {item.path}
-                                                        </CardDescription>
-                                                    </CardHeader>
-                                                    <CardContent className="flex">
-                                                        <CardStatus />
-                                                        <p className="text-sm">
-                                                            {item.histories[0]
-                                                                ? `Status ${item.histories[0].status_code}`
-                                                                : ""}
-                                                        </p>
-                                                    </CardContent>
-                                                </Card>
-                                            </a>
-                                        </ListItem>
-                                    ))}
+                                            <Card className="w-full">
+                                                <CardHeader>
+                                                    <CardTitle>
+                                                        {item.name}
+                                                    </CardTitle>
+                                                    <CardDescription>
+                                                        {item.path}
+                                                    </CardDescription>
+                                                </CardHeader>
+                                                <CardContent className="flex">
+                                                    <CardStatus
+                                                        statusCode={
+                                                            item.histories[0]
+                                                                ? item
+                                                                      .histories[0]
+                                                                      .status_code
+                                                                : null
+                                                        }
+                                                    />
+                                                    <p className="text-sm">
+                                                        {item.histories[0]
+                                                            ? `Status ${item.histories[0].status_code}`
+                                                            : ""}
+                                                    </p>
+                                                </CardContent>
+                                            </Card>
+                                        </a>
+                                    </ListItem>
+                                ))}
                         </List>
                     </div>
-                    <div className="flex justify-center mt-4 mb-2">
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index + 1}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`px-4 py-2 mx-1 text-black border border-black rounded ${
-                                    currentPage === index + 1
-                                        ? "text-black"
-                                        : ""
-                                }`}
+                    <Pagination className="mt-4 mb-2">
+                        <PaginationContent>
+                            <PaginationPrevious
+                                onClick={() =>
+                                    handlePageChange(
+                                        Math.max(currentPage - 1, 1)
+                                    )
+                                }
                             >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
+                                Précédent
+                            </PaginationPrevious>
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <PaginationItem key={index + 1}>
+                                    <PaginationLink
+                                        isActive={currentPage === index + 1}
+                                        onClick={() =>
+                                            handlePageChange(index + 1)
+                                        }
+                                    >
+                                        {index + 1}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationNext
+                                onClick={() =>
+                                    handlePageChange(
+                                        Math.min(currentPage + 1, totalPages)
+                                    )
+                                }
+                            >
+                                Suivant
+                            </PaginationNext>
+                        </PaginationContent>
+                    </Pagination>
                 </>
             )}
         </div>
