@@ -7,6 +7,7 @@ import {
     UpdateEvent,
     Connection,
     QueryRunner,
+    EntityMetadata,
 } from "typeorm";
 import axios from "axios";
 
@@ -35,9 +36,16 @@ describe("UrlSubscriber", () => {
         mockConnection = {} as Partial<Connection>;
         mockQueryRunner = {} as Partial<QueryRunner>;
 
-        (axios.get as jest.Mock).mockResolvedValue({
-            data: "Mock response",
-            status: 200,
+        (axios.get as jest.Mock).mockImplementation((_, config) => {
+            expect(config.validateStatus).toBeDefined();
+            expect(config.validateStatus(200)).toBe(true);
+            expect(config.validateStatus(404)).toBe(true);
+            expect(config.validateStatus(500)).toBe(true);
+
+            return Promise.resolve({
+                data: "Mock response",
+                status: 200,
+            });
         });
     });
 
@@ -56,7 +64,7 @@ describe("UrlSubscriber", () => {
                 manager: mockEntityManager,
                 connection: mockConnection as Connection,
                 queryRunner: mockQueryRunner as QueryRunner,
-                metadata: {} as any,
+                metadata: {} as EntityMetadata,
             };
 
             mockEntityManager.findOne.mockResolvedValue(mockUrl as Url);
@@ -66,9 +74,40 @@ describe("UrlSubscriber", () => {
             expect(mockEntityManager.findOne).toHaveBeenCalledWith(Url, {
                 where: { id: mockUrl.id },
             });
-            expect(axios.get).toHaveBeenCalledWith(mockUrl.path);
+            expect(axios.get).toHaveBeenCalledWith(
+                mockUrl.path,
+                expect.objectContaining({
+                    validateStatus: expect.any(Function),
+                }),
+            );
             expect(mockEntityManager.save).toHaveBeenCalledWith(
                 expect.any(History),
+            );
+        });
+
+        it("should handle non-200 status codes", async () => {
+            (axios.get as jest.Mock).mockResolvedValue({
+                data: "Not Found",
+                status: 404,
+            });
+
+            const mockEvent: Partial<InsertEvent<Url>> = {
+                entity: mockUrl as Url,
+                manager: mockEntityManager,
+                connection: mockConnection as Connection,
+                queryRunner: mockQueryRunner as QueryRunner,
+                metadata: {} as EntityMetadata,
+            };
+
+            mockEntityManager.findOne.mockResolvedValue(mockUrl as Url);
+
+            await subscriber.afterInsert(mockEvent as InsertEvent<Url>);
+
+            expect(mockEntityManager.save).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    status_code: 404,
+                    response: "Not Found",
+                }),
             );
         });
     });
@@ -80,7 +119,7 @@ describe("UrlSubscriber", () => {
                 manager: mockEntityManager,
                 connection: mockConnection as Connection,
                 queryRunner: mockQueryRunner as QueryRunner,
-                metadata: {} as any,
+                metadata: {} as EntityMetadata,
             };
 
             mockEntityManager.findOne.mockResolvedValue(mockUrl as Url);
@@ -90,7 +129,12 @@ describe("UrlSubscriber", () => {
             expect(mockEntityManager.findOne).toHaveBeenCalledWith(Url, {
                 where: { id: mockUrl.id },
             });
-            expect(axios.get).toHaveBeenCalledWith(mockUrl.path);
+            expect(axios.get).toHaveBeenCalledWith(
+                mockUrl.path,
+                expect.objectContaining({
+                    validateStatus: expect.any(Function),
+                }),
+            );
             expect(mockEntityManager.save).toHaveBeenCalledWith(
                 expect.any(History),
             );
@@ -103,7 +147,7 @@ describe("UrlSubscriber", () => {
             manager: mockEntityManager,
             connection: mockConnection as Connection,
             queryRunner: mockQueryRunner as QueryRunner,
-            metadata: {} as any,
+            metadata: {} as EntityMetadata,
         };
 
         mockEntityManager.findOne.mockResolvedValue(mockUrl as Url);

@@ -54,7 +54,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             history.url = url;
             history.response = response.data;
             history.status_code = response.status;
-    
+
             await transactionalEntityManager.save(history);
         } catch (error) {
             console.error("Failed to log URL response", error);
