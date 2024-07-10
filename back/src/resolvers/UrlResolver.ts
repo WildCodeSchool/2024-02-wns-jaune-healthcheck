@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Arg, InputType, Field } from "type-graphql";
 import { Url } from "../entities/Url";
 import { validate } from "class-validator";
-import { QueryFailedError } from "typeorm";
+import { QueryFailedError, ILike } from "typeorm";
 
 @InputType()
 class UrlInput implements Partial<Url> {
@@ -17,8 +17,25 @@ class UrlResolver {
     @Query(() => [Url])
     async urls(): Promise<Url[]> {
         try {
-            const ulrs = await Url.find();
-            return ulrs;
+            const urls = await Url.find({ 
+                order: { createdAt: "DESC" },
+            });
+            return urls;
+        } catch (_error) {
+            throw new Error("Internal server error");
+        }
+    }
+    @Query(() => [Url])
+    async urlsFilter(@Arg("searchText") searchText: string): Promise<Url[]> {
+        try {
+            const urls = await Url.find({
+                where: [
+                    { name: ILike(`%${searchText}%`) },
+                    { path: ILike(`%${searchText}%`) }
+                ],
+                order: { createdAt: "DESC" }
+            });
+            return urls;
         } catch (_error) {
             throw new Error("Internal server error");
         }

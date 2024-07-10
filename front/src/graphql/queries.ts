@@ -31,3 +31,19 @@ export const GET_ONE_URL = gql`
         }
     }
 `;
+
+export const GET_FILTERED_URLS = gql`
+    query GetFilteredURls($searchText: String!) {
+        urlsFilter(searchText: $searchText) {
+            id
+            name
+            path
+            createdAt
+            histories {
+                id
+                response
+                status_code
+            }
+        }
+    }
+`;
