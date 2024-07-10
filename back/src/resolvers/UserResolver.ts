@@ -8,7 +8,7 @@ class UserResolver {
     async createUser(
         @Arg("username") username: string,
         @Arg("email") email: string,
-        @Arg("password") password: string
+        @Arg("password") password: string,
     ) {
         const hashedPassword = await argon2.hash(password);
         const userFromDB = await User.save({
@@ -22,7 +22,7 @@ class UserResolver {
         }
         const token = jwt.sign(
             { id: userFromDB.id, email: userFromDB.email },
-            process.env.JWT_SECRET_KEY
+            process.env.JWT_SECRET_KEY,
         );
 
         return token;

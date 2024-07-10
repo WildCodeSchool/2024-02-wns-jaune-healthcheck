@@ -87,7 +87,9 @@ describe("URLList", () => {
         render(React.createElement(URLList));
 
         const searchInput = screen.getByRole("textbox");
-        await fireEvent.change(searchInput, { target: { value: "Test URL 1" } });
+        await fireEvent.change(searchInput, {
+            target: { value: "Test URL 1" },
+        });
 
         expect(screen.getByText("Test URL 1")).toBeInTheDocument();
         expect(screen.queryByText("Test URL 2")).not.toBeInTheDocument();
@@ -155,11 +157,13 @@ describe("URLList", () => {
         expect(screen.getByText("Status 200")).toBeInTheDocument();
 
         await screen.findByText("URL without History");
-        const cardWithoutHistory = screen.getByText('URL without History').closest('.w-full.max-w-xs');
-        const statusTextElements = cardWithoutHistory?.querySelectorAll('p.text-sm');
+        const cardWithoutHistory = screen
+            .getByText("URL without History")
+            .closest(".w-full.max-w-xs");
+        const statusTextElements =
+            cardWithoutHistory?.querySelectorAll("p.text-sm");
         expect(statusTextElements?.length).toBeGreaterThanOrEqual(2);
         const statusTextElement = statusTextElements?.[1];
-
 
         if (statusTextElement) {
             expect(statusTextElement.textContent?.trim()).toBe("");
@@ -197,7 +201,7 @@ describe("URLList", () => {
         expect(items[0]).toHaveTextContent("Test URL A");
         expect(items[1]).toHaveTextContent("Test URL B");
 
-        const selectTrigger = screen.getByRole('combobox');
+        const selectTrigger = screen.getByRole("combobox");
         await fireEvent.click(selectTrigger);
     });
 });

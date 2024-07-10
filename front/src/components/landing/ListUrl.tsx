@@ -34,7 +34,7 @@ export default function URLList() {
         let urls = data.urls.filter(
             (item) =>
                 item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.path.toLowerCase().includes(searchQuery.toLowerCase())
+                item.path.toLowerCase().includes(searchQuery.toLowerCase()),
         );
 
         urls = urls.sort((a, b) => {
@@ -136,7 +136,7 @@ export default function URLList() {
                             <PaginationPrevious
                                 onClick={() =>
                                     handlePageChange(
-                                        Math.max(currentPage - 1, 1)
+                                        Math.max(currentPage - 1, 1),
                                     )
                                 }
                             >
@@ -157,7 +157,7 @@ export default function URLList() {
                             <PaginationNext
                                 onClick={() =>
                                     handlePageChange(
-                                        Math.min(currentPage + 1, totalPages)
+                                        Math.min(currentPage + 1, totalPages),
                                     )
                                 }
                             >

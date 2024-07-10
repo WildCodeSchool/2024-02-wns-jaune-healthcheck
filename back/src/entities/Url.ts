@@ -32,7 +32,7 @@ export class Url extends BaseEntity {
         { require_protocol: true },
         {
             message: "Le chemin doit être une URL valide",
-        }
+        },
     )
     path: string;
 
