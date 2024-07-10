@@ -5,7 +5,7 @@ import {
     BaseEntity,
     CreateDateColumn,
     OneToMany,
-    Unique
+    Unique,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
@@ -32,7 +32,7 @@ export class Url extends BaseEntity {
         { require_protocol: true },
         {
             message: "Le chemin doit être une URL valide",
-        },
+        }
     )
     path: string;
 
