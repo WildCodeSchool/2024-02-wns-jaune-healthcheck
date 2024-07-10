@@ -19,84 +19,39 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { registerSchema } from "@/constants/validator";
-import { useAddUserMutation } from "@/generated/graphql-types";
-import { useToast } from "../ui/use-toast";
+import { loginSchema } from "@/constants/validator";
 
-export default function FormRegister() {
-    const registerForm = useForm<z.infer<typeof registerSchema>>({
-        resolver: zodResolver(registerSchema),
+export default function FormLogin() {
+    const loginForm = useForm<z.infer<typeof loginSchema>>({
+        resolver: zodResolver(loginSchema),
         mode: "onChange",
         defaultValues: {
-            username: "",
             email: "",
             password: "",
         },
     });
 
-    const [registerUser, { loading }] = useAddUserMutation();
-    const { toast } = useToast();
-
-    const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        registerUser({
-            variables: {
-                username: values.username,
-                email: values.email,
-                password: values.password,
-            },
-            onCompleted() {
-                toast({
-                    variant: "default",
-                    description: `Votre compte à bien été créé`,
-                });
-                registerForm.reset();
-            },
-            onError(error) {
-                toast({
-                    variant: "destructive",
-                    description: `${error}`,
-                });
-            },
-        });
+    const onSubmit = (values: z.infer<typeof loginSchema>) => {
+        console.log(values);
     };
 
     return (
         <DialogContent className="sm:max-w-md space-y-2">
             <DialogHeader>
-                <DialogTitle className="text-2xl">Créer un compte</DialogTitle>
+                <DialogTitle className="text-2xl">Connexion</DialogTitle>
                 <DialogDescription>
-                    Vous aurez accès à des fonctionnalitées avancées de
-                    monitoring.
+                    Profitez de fonctionnalités de monitoring avancées.
                 </DialogDescription>
             </DialogHeader>
-            <Form {...registerForm}>
+            <Form {...loginForm}>
                 <form
-                    onSubmit={registerForm.handleSubmit(onSubmit)}
+                    onSubmit={loginForm.handleSubmit(onSubmit)}
                     className="space-y-6 flex flex-col"
                     role="register-form"
                 >
                     <div className="space-y-4">
                         <FormField
-                            control={registerForm.control}
-                            name="username"
-                            render={({ field }) => {
-                                return (
-                                    <FormItem>
-                                        <FormLabel>Pseudo</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Choisissez votre pseudo"
-                                                role="username"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                );
-                            }}
-                        />
-                        <FormField
-                            control={registerForm.control}
+                            control={loginForm.control}
                             name="email"
                             render={({ field }) => {
                                 return (
@@ -116,7 +71,7 @@ export default function FormRegister() {
                             }}
                         />
                         <FormField
-                            control={registerForm.control}
+                            control={loginForm.control}
                             name="password"
                             render={({ field }) => {
                                 return (
@@ -146,9 +101,7 @@ export default function FormRegister() {
                                 Annuler
                             </Button>
                         </DialogClose>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? "Chargement..." : "S'enregistrer"}
-                        </Button>
+                        <Button type="submit">Connexion</Button>
                     </DialogFooter>
                 </form>
             </Form>

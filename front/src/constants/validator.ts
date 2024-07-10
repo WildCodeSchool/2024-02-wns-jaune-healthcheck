@@ -29,3 +29,19 @@ export const registerSchema = z.object({
             "Doit contenir minimum une majuscule, une minuscule, un chiffre et un caractère spécial",
         ),
 });
+
+export const loginSchema = z.object({
+    email: z
+        .string()
+        .email("Entrez un email valide")
+        .min(8, "Minimum 8 caractères")
+        .max(255, "Maximum 255 caractères"),
+    password: z
+        .string()
+        .min(8, "Minimum 8 caractères")
+        .max(255, "Maximum 255 caractères")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            "Doit contenir minimum une majuscule, une minuscule, un chiffre et un caractère spécial",
+        ),
+});

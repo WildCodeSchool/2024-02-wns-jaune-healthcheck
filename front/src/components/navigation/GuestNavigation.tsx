@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormRegister from "../auth/FormRegister";
+import FormLogin from "../auth/FormLogin";
 
 export default function GuestNavigation() {
-    /* TODO: Open dialog pour ouvrir les formulaires d'inscription/connexion */
     return (
         <div className="w-full max-w-6xl mx-auto">
             <NavigationMenu className="ml-auto">
@@ -26,14 +26,12 @@ export default function GuestNavigation() {
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                         <NavigationMenuLink>
-                            <Button
-                                variant="outline"
-                                onClick={() =>
-                                    console.log("Open dialog for login")
-                                }
-                            >
-                                Connexion
-                            </Button>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline">Connexion</Button>
+                                </DialogTrigger>
+                                <FormLogin />
+                            </Dialog>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                 </NavigationMenuList>
