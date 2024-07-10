@@ -124,6 +124,30 @@ describe("URLList", () => {
         expect(screen.getByText("Test URL 25")).toBeInTheDocument();
         expect(screen.getByText("Test URL 48")).toBeInTheDocument();
         expect(screen.queryByText("Test URL 24")).not.toBeInTheDocument();
+
+        const previousPageButton = screen.getByText("1");
+        await fireEvent.click(previousPageButton);
+
+        await screen.findByText("Test URL 1");
+        expect(screen.getByText("Test URL 1")).toBeInTheDocument();
+        expect(screen.getByText("Test URL 24")).toBeInTheDocument();
+        expect(screen.queryByText("Test URL 25")).not.toBeInTheDocument();
+
+        const nextPageText = screen.getByText("Suivant");
+        await fireEvent.click(nextPageText);
+
+        await screen.findByText("Test URL 25");
+        expect(screen.getByText("Test URL 25")).toBeInTheDocument();
+        expect(screen.getByText("Test URL 48")).toBeInTheDocument();
+        expect(screen.queryByText("Test URL 24")).not.toBeInTheDocument();
+
+        const previousPageText = screen.getByText("Précédent");
+        await fireEvent.click(previousPageText);
+
+        await screen.findByText("Test URL 1");
+        expect(screen.getByText("Test URL 1")).toBeInTheDocument();
+        expect(screen.getByText("Test URL 24")).toBeInTheDocument();
+        expect(screen.queryByText("Test URL 25")).not.toBeInTheDocument();
     });
 
     it("should display correct status for different HTTP status codes", async () => {
@@ -227,7 +251,7 @@ describe("URLList", () => {
                     name: "Test URL A",
                     path: "/testA",
                     createdAt: new Date().toISOString(), // Newer
-                    histories: [{ status_code: 200 }],
+                    histories: [{ status_code: 201 }],
                 },
             ],
         };
@@ -241,7 +265,36 @@ describe("URLList", () => {
         expect(items[0]).toHaveTextContent("Test URL A");
         expect(items[1]).toHaveTextContent("Test URL B");
 
-        const selectTrigger = screen.getByRole("combobox");
-        await fireEvent.click(selectTrigger);
+        const selectTrigger1 = screen.getByRole("combobox");
+        await fireEvent.click(selectTrigger1);
+
+        await fireEvent.keyDown(selectTrigger1, { key: "ArrowUp" });
+        await fireEvent.keyDown(selectTrigger1, { key: "ArrowUp" });
+        await fireEvent.keyDown(selectTrigger1, { key: "Enter" });
+
+        const sortedItems = screen.getAllByText(/Test URL/i);
+        expect(sortedItems[0]).toHaveTextContent("Test URL A");
+        expect(sortedItems[1]).toHaveTextContent("Test URL B");
+
+        const selectTrigger2 = screen.getByText("Trier par code de statut");
+        await fireEvent.click(selectTrigger2);
+
+        const reSortedItems = screen.getAllByText(/Test URL/i);
+        expect(reSortedItems[0]).toHaveTextContent("Test URL A");
+        expect(reSortedItems[1]).toHaveTextContent("Test URL B");
+
+        const dateOption = screen.getByText("Trier par date de création", { selector: 'span#radix-\\:rq\\:' });
+        await fireEvent.click(dateOption);
+
+        const reReSortedItems = screen.getAllByText(/Test URL/i);
+        expect(reReSortedItems[0]).toHaveTextContent("Test URL A");
+        expect(reReSortedItems[1]).toHaveTextContent("Test URL B");
+
+        const nameOption = screen.getByText("Trier par nom");
+        await fireEvent.click(nameOption);
+
+        const reReReSortedItems = screen.getAllByText(/Test URL/i);
+        expect(reReReSortedItems[0]).toHaveTextContent("Test URL A");
+        expect(reReReSortedItems[1]).toHaveTextContent("Test URL B");
     });
 });
