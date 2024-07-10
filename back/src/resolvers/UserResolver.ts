@@ -3,7 +3,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 
-function setCookies(context: any, token: string) {
+function setCookie(context: any, token: string) {
     let expireCookieUTC = new Date();
     expireCookieUTC.setSeconds(
         expireCookieUTC.getSeconds() + Number(process.env.COOKIE_TTL),
@@ -15,6 +15,14 @@ function setCookies(context: any, token: string) {
         "Set-Cookie",
         `token=${token}${secureCookie};httpOnly;expires=${expireCookieUTC.toUTCString()}`,
     );
+}
+
+function getUserBasicInfo(user: User) {
+    return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+    };
 }
 
 class UserResolver {
@@ -69,9 +77,9 @@ class UserResolver {
                 { id: userFromDB.id, email: userFromDB.email },
                 process.env.JWT_SECRET_KEY,
             );
-            setCookies(context, token);
+            setCookie(context, token);
 
-            return "Login successfull";
+            return JSON.stringify(getUserBasicInfo(userFromDB));
         } catch (error) {
             console.log(error);
             throw new Error("Bad request");
