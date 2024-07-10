@@ -5,6 +5,8 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import FormRegister from "../auth/FormRegister";
 
 export default function GuestNavigation() {
     /* TODO: Open dialog pour ouvrir les formulaires d'inscription/connexion */
@@ -14,14 +16,12 @@ export default function GuestNavigation() {
                 <NavigationMenuList className="flex gap-2">
                     <NavigationMenuItem>
                         <NavigationMenuLink>
-                            <Button
-                                variant="ghost"
-                                onClick={() =>
-                                    console.log("Open dialog for register")
-                                }
-                            >
-                                S'inscrire
-                            </Button>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="ghost">S'inscrire</Button>
+                                </DialogTrigger>
+                                <FormRegister />
+                            </Dialog>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
