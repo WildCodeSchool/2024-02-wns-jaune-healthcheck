@@ -32,7 +32,7 @@ describe("Form url tests", () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
                 <FormUrl />
-            </MockedProvider>
+            </MockedProvider>,
         );
 
         const formTag = screen.getByRole("add-url-form");
@@ -43,7 +43,7 @@ describe("Form url tests", () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
                 <FormUrl />
-            </MockedProvider>
+            </MockedProvider>,
         );
 
         const nameInput = screen.getByRole("name");
@@ -67,9 +67,9 @@ describe("Form url tests", () => {
                             element?.tagName.toLowerCase() === "button" &&
                             content.includes("Ajout en cours")
                         );
-                    })
+                    }),
                 ).toBeInTheDocument(),
-            { timeout: 2000 }
+            { timeout: 2000 },
         );
     });
 });

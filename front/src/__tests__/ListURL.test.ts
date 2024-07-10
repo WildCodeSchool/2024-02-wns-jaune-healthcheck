@@ -90,6 +90,9 @@ describe("URLList", () => {
         await fireEvent.change(searchInput, {
             target: { value: "Test URL 1" },
         });
+        await fireEvent.change(searchInput, {
+            target: { value: "Test URL 1" },
+        });
 
         expect(screen.getByText("Test URL 1")).toBeInTheDocument();
         expect(screen.queryByText("Test URL 2")).not.toBeInTheDocument();
@@ -241,6 +244,7 @@ describe("URLList", () => {
         expect(items[0]).toHaveTextContent("Test URL A");
         expect(items[1]).toHaveTextContent("Test URL B");
 
+        const selectTrigger = screen.getByRole("combobox");
         const selectTrigger = screen.getByRole("combobox");
         await fireEvent.click(selectTrigger);
     });
