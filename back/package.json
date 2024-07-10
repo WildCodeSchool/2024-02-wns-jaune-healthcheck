@@ -7,7 +7,11 @@
         "test": "jest",
         "lint": "npx eslint --ext .ts src",
         "dev": "ts-node-dev --poll src/index.ts",
-        "seed": "ts-node-dev src/database/seeder/fixtures.ts"
+        "seed": "ts-node-dev src/database/seeder/fixtures.ts",
+        "migration:create": "typeorm-ts-node-commonjs migration:create",
+        "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/dataSource.ts",
+        "migration:up": "typeorm-ts-node-commonjs migration:run -d src/database/dataSource.ts",
+        "migration:down": "typeorm-ts-node-commonjs migration:revert -d src/database/dataSource.ts"
     },
     "keywords": [],
     "author": "",
