@@ -6,11 +6,15 @@ const BATCH_SIZE = 10;
 const DELAY_BETWEEN_BATCHES = 1000; // 1 seconde
 
 async function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function insertUrlBatch(urls: typeof urlsData, startIndex: number, batchSize: number) {
-    return dataSource.transaction(async transactionalEntityManager => {
+async function insertUrlBatch(
+    urls: typeof urlsData,
+    startIndex: number,
+    batchSize: number,
+) {
+    return dataSource.transaction(async (transactionalEntityManager) => {
         for (let i = 0; i < batchSize && startIndex + i < urls.length; i++) {
             const urlData = urls[startIndex + i];
             const url = transactionalEntityManager.create(Url, urlData);
@@ -27,9 +31,11 @@ async function populateUrls() {
         try {
             await insertUrlBatch(urlsData, i, BATCH_SIZE);
             console.log(`Batch ${Math.floor(i / BATCH_SIZE) + 1} completed.`);
-            
+
             if (i + BATCH_SIZE < urlsData.length) {
-                console.log(`Waiting ${DELAY_BETWEEN_BATCHES}ms before next batch...`);
+                console.log(
+                    `Waiting ${DELAY_BETWEEN_BATCHES}ms before next batch...`,
+                );
                 await delay(DELAY_BETWEEN_BATCHES);
             }
         } catch (error) {
@@ -41,8 +47,10 @@ async function populateUrls() {
     console.log("Urls population completed");
 }
 
-populateUrls().catch((error) => {
-    console.error("Error while populating urls", error);
-}).finally(() => {
-    dataSource.destroy(); // Assurez-vous de fermer la connexion à la base de données
-});
+populateUrls()
+    .catch((error) => {
+        console.error("Error while populating urls", error);
+    })
+    .finally(() => {
+        dataSource.destroy(); // Assurez-vous de fermer la connexion à la base de données
+    });
