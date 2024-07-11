@@ -1,0 +1,162 @@
+[
+    {
+        "name": "Youtube",
+        "path": "https://www.youtube.com/"
+    },
+    {
+        "name": "Facebook",
+        "path": "https://www.facebook.com/"
+    },
+    {
+        "name": "Google",
+        "path": "https://www.google.com/"
+    },
+    {
+        "name": "Twitter",
+        "path": "https://www.twitter.com/"
+    },
+    {
+        "name": "Instagram",
+        "path": "https://www.instagram.com/"
+    },
+    {
+        "name": "LinkedIn",
+        "path": "https://www.linkedin.com/"
+    },
+    {
+        "name": "Wikipedia",
+        "path": "https://www.wikipedia.org/"
+    },
+    {
+        "name": "Amazon",
+        "path": "https://www.amazon.com/"
+    },
+    {
+        "name": "Netflix",
+        "path": "https://www.netflix.com/"
+    },
+    {
+        "name": "Reddit",
+        "path": "https://www.reddit.com/"
+    },
+    {
+        "name": "Twitch",
+        "path": "https://www.twitch.tv/"
+    },
+    {
+        "name": "Pinterest",
+        "path": "https://www.pinterest.com/"
+    },
+    {
+        "name": "Quora",
+        "path": "https://www.quora.com/"
+    },
+    {
+        "name": "GitHub",
+        "path": "https://www.github.com/"
+    },
+    {
+        "name": "Stack Overflow",
+        "path": "https://www.stackoverflow.com/"
+    },
+    {
+        "name": "Ebay",
+        "path": "https://www.ebay.com/"
+    },
+    {
+        "name": "BBC",
+        "path": "https://www.bbc.com/"
+    },
+    {
+        "name": "CNN",
+        "path": "https://www.cnn.com/"
+    },
+    {
+        "name": "NY Times",
+        "path": "https://www.nytimes.com/"
+    },
+    {
+        "name": "The Guardian",
+        "path": "https://www.theguardian.com/"
+    },
+    {
+        "name": "Forbes",
+        "path": "https://www.forbes.com/"
+    },
+    {
+        "name": "Bloomberg",
+        "path": "https://www.bloomberg.com/"
+    },
+    {
+        "name": "BuzzFeed",
+        "path": "https://www.buzzfeed.com/"
+    },
+    {
+        "name": "Vimeo",
+        "path": "https://www.vimeo.com/"
+    },
+    {
+        "name": "SoundCloud",
+        "path": "https://www.soundcloud.com/"
+    },
+    {
+        "name": "Spotify",
+        "path": "https://www.spotify.com/"
+    },
+    {
+        "name": "Medium",
+        "path": "https://www.medium.com/"
+    },
+    {
+        "name": "Hacker News",
+        "path": "https://news.ycombinator.com/"
+    },
+    {
+        "name": "TechCrunch",
+        "path": "https://www.techcrunch.com/"
+    },
+    {
+        "name": "Product Hunt",
+        "path": "https://www.producthunt.com/"
+    },
+    {
+        "name": "Mashable",
+        "path": "https://www.mashable.com/"
+    },
+    {
+        "name": "Dribbble",
+        "path": "https://www.dribbble.com/"
+    },
+    {
+        "name": "Behance",
+        "path": "https://www.behance.net/"
+    },
+    {
+        "name": "Flickr",
+        "path": "https://www.flickr.com/"
+    },
+    {
+        "name": "Tumblr",
+        "path": "https://www.tumblr.com/"
+    },
+    {
+        "name": "Slack",
+        "path": "https://www.slack.com/"
+    },
+    {
+        "name": "Discord",
+        "path": "https://www.discord.com/"
+    },
+    {
+        "name": "Dropbox",
+        "path": "https://www.dropbox.com/"
+    },
+    {
+        "name": "WeTransfer",
+        "path": "https://www.wetransfer.com/"
+    },
+    {
+        "name": "Microsoft",
+        "path": "https://www.microsoft.com/"
+    }
+]
