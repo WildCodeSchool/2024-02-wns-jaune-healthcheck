@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_URLS = gql`
-    query GetAllURls($searchText: String!) {
-        urls(searchText: $searchText) {
+    query GetAllURls($sortField: String!, $searchText: String!) {
+        urls(sortField: $sortField, searchText: $searchText) {
             id
             name
             path

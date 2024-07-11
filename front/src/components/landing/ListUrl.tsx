@@ -9,6 +9,7 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
+import { useSearchParams } from "react-router-dom";
 import FilterBar from "../custom/FilterBar";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import {
@@ -19,47 +20,25 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
-import useListUrlsStore from "@/stores/url/useListUrlsStore";
 
-export default function URLList() {
-    const { queryFilter, setQueryFilter } = useListUrlsStore((state) => ({
-        queryFilter: state.queryFilter,
-        setQueryFilter: state.setQueryFilter,
-    }));
-
+const URLList: React.FC = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const { loading, error, data } = useGetAllURlsQuery({
-        variables: { searchText: queryFilter },
+        variables: {
+            searchText: searchParams?.get("searchUrl") || "",
+            sortField: searchParams?.get("sortField") || "",
+        },
         fetchPolicy: "cache-and-network",
     });
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const [sortKey, setSortKey] = useState("createdAt");
     const itemsPerPage = 24;
 
     const filteredAndSortedUrls = useMemo(() => {
         if (!data) return [];
-
-        let urls = [...data.urls];
-        urls = urls.sort((a, b) => {
-            if (sortKey === "name") {
-                return a.name.localeCompare(b.name);
-            } else if (sortKey === "status_code") {
-                return (
-                    (a.histories[0]?.status_code || 0) -
-                    (b.histories[0]?.status_code || 0)
-                );
-            } else if (sortKey === "createdAt") {
-                return (
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
-                );
-            }
-            return 0;
-        });
-
-        return urls;
-    }, [data, queryFilter, sortKey]);
+        return [...data.urls];
+    }, [data, searchParams]);
 
     const totalPages = Math.ceil(filteredAndSortedUrls.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -69,20 +48,32 @@ export default function URLList() {
     };
 
     const handleSearch = (query: string) => {
-        setQueryFilter(query);
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (!query) {
+            newSearchParams.delete("searchUrl");
+        } else {
+            newSearchParams.set("searchUrl", query);
+        }
+        setSearchParams(newSearchParams);
         setCurrentPage(1);
     };
 
-    const handleSortChange = (key: string) => {
-        setSortKey(key);
+    const handleSortChange = (field: string) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (!field) {
+            newSearchParams.delete("sortField");
+        } else {
+            newSearchParams.set("sortField", field);
+        }
+        setSearchParams(newSearchParams);
     };
 
     if (error) return "Error";
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
-                searchQuery={queryFilter}
-                sortKey={sortKey}
+                searchQuery={searchParams?.get("searchUrl") || ""}
+                sortKey={searchParams?.get("sortField") || ""}
                 onSearch={handleSearch}
                 onSortChange={handleSortChange}
             />
@@ -106,10 +97,16 @@ export default function URLList() {
                                         >
                                             <Card className="w-full">
                                                 <CardHeader>
-                                                    <CardTitle>
+                                                    <CardTitle
+                                                        className="truncate"
+                                                        title={item.name}
+                                                    >
                                                         {item.name}
                                                     </CardTitle>
-                                                    <CardDescription>
+                                                    <CardDescription
+                                                        className="truncate"
+                                                        title={item.path}
+                                                    >
                                                         {item.path}
                                                     </CardDescription>
                                                 </CardHeader>
@@ -173,4 +170,6 @@ export default function URLList() {
             )}
         </div>
     );
-}
+};
+
+export default URLList;
