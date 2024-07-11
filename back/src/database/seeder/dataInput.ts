@@ -1,4 +1,4 @@
-import FakeDataUrls from './urls.json';
+import FakeDataUrls from "./urls.json";
 
 export const urlsData = FakeDataUrls;
 

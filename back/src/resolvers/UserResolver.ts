@@ -32,6 +32,7 @@ class UserResolver {
         @Arg("username") username: string,
         @Arg("email") email: string,
         @Arg("password") password: string,
+        @Ctx() context: MyContext,
     ) {
         if (process.env.JWT_SECRET_KEY === undefined) {
             throw new Error("NO JWT SECRET KEY DEFINED");
@@ -49,7 +50,9 @@ class UserResolver {
             process.env.JWT_SECRET_KEY,
         );
 
-        return token;
+        setCookie(context, token);
+
+        return JSON.stringify(getUserBasicInfo(userFromDB));
     }
 
     @Mutation(() => String)
