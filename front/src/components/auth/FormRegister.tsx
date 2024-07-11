@@ -65,7 +65,7 @@ export default function FormRegister() {
             <DialogHeader>
                 <DialogTitle className="text-2xl">Créer un compte</DialogTitle>
                 <DialogDescription>
-                    Vous aurez accès à des fonctionnalitées avancées de
+                    Vous aurez accès à des fonctionnalités avancées de
                     monitoring.
                 </DialogDescription>
             </DialogHeader>

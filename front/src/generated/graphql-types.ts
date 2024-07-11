@@ -56,6 +56,8 @@ export type Query = {
   __typename?: 'Query';
   histories: Array<History>;
   history: History;
+  logout: Scalars['String']['output'];
+  me: Scalars['String']['output'];
   url: Url;
   urls: Array<Url>;
 };
@@ -67,11 +69,12 @@ export type QueryHistoryArgs = {
 
 
 export type QueryUrlArgs = {
-    id: Scalars["String"]["input"];
+  id: Scalars['String']['input'];
 };
 
+
 export type QueryUrlsArgs = {
-    searchText: Scalars["String"]["input"];
+  searchText: Scalars['String']['input'];
 };
 
 export type Url = {
@@ -113,8 +116,9 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
 export type GetAllURlsQueryVariables = Exact<{
-    searchText: Scalars["String"]["input"];
+  searchText: Scalars['String']['input'];
 }>;
+
 
 export type GetAllURlsQuery = { __typename?: 'Query', urls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number }> }> };
 
@@ -124,6 +128,16 @@ export type UrlQueryVariables = Exact<{
 
 
 export type UrlQuery = { __typename?: 'Query', url: { __typename?: 'Url', id: string, name: string, path: string, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }> } };
+
+export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutQuery = { __typename?: 'Query', logout: string };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: string };
 
 
 export const AddUrlDocument = gql`
@@ -227,19 +241,19 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const GetAllURlsDocument = gql`
     query GetAllURls($searchText: String!) {
-        urls(searchText: $searchText) {
-            id
-            name
-            path
-            createdAt
-            histories {
-                id
-                response
-                status_code
-            }
-        }
+  urls(searchText: $searchText) {
+    id
+    name
+    path
+    createdAt
+    histories {
+      id
+      response
+      status_code
     }
-`;
+  }
+}
+    `;
 
 /**
  * __useGetAllURlsQuery__
@@ -257,46 +271,18 @@ export const GetAllURlsDocument = gql`
  *   },
  * });
  */
-export function useGetAllURlsQuery(
-    baseOptions: Apollo.QueryHookOptions<
-        GetAllURlsQuery,
-        GetAllURlsQueryVariables
-    > &
-        (
-            | { variables: GetAllURlsQueryVariables; skip?: boolean }
-            | { skip: boolean }
-        ),
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
-        GetAllURlsDocument,
-        options,
-    );
-}
-export function useGetAllURlsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<
-        GetAllURlsQuery,
-        GetAllURlsQueryVariables
-    >,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
-        GetAllURlsDocument,
-        options,
-    );
-}
-export function useGetAllURlsSuspenseQuery(
-    baseOptions?: Apollo.SuspenseQueryHookOptions<
-        GetAllURlsQuery,
-        GetAllURlsQueryVariables
-    >,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useSuspenseQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
-        GetAllURlsDocument,
-        options,
-    );
-}
+export function useGetAllURlsQuery(baseOptions: Apollo.QueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables> & ({ variables: GetAllURlsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+      }
+export function useGetAllURlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+        }
+export function useGetAllURlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
+        }
 export type GetAllURlsQueryHookResult = ReturnType<typeof useGetAllURlsQuery>;
 export type GetAllURlsLazyQueryHookResult = ReturnType<typeof useGetAllURlsLazyQuery>;
 export type GetAllURlsSuspenseQueryHookResult = ReturnType<typeof useGetAllURlsSuspenseQuery>;
@@ -349,3 +335,77 @@ export type UrlQueryHookResult = ReturnType<typeof useUrlQuery>;
 export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
+export const LogoutDocument = gql`
+    query Logout {
+  logout
+}
+    `;
+
+/**
+ * __useLogoutQuery__
+ *
+ * To run a query within a React component, call `useLogoutQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLogoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLogoutQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutQuery(baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
+      }
+export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
+        }
+export function useLogoutSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
+        }
+export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
+export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
+export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
+export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export const MeDocument = gql`
+    query Me {
+  me
+}
+    `;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export function useMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;

@@ -21,6 +21,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { loginSchema } from "@/constants/validator";
 import { useLoginMutation } from "@/generated/graphql-types";
+import useAuthStore from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../ui/use-toast";
 
 type FormLoginProps = {
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,20 +39,27 @@ export default function FormLogin({ setOpenDialog }: FormLoginProps) {
         },
     });
 
-    const [login, { loading }] = useLoginMutation();
+    const [loginMutation, { loading }] = useLoginMutation();
+    const login = useAuthStore((state) => state.login);
+    const navigate = useNavigate();
+    const { toast } = useToast();
 
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        login({
+        loginMutation({
             variables: {
                 email: values.email,
                 password: values.password,
             },
-            onCompleted() {
-                console.log("Connexion réussie");
+            onCompleted(data) {
+                login(data.login);
                 setOpenDialog(false);
+                navigate("/dashboard");
             },
-            onError(error) {
-                console.log(error);
+            onError() {
+                toast({
+                    variant: "destructive",
+                    description: `La requête a échouée`,
+                });
             },
         });
     };
