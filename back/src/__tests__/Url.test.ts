@@ -24,7 +24,7 @@ describe("Integration Test Url Entity", () => {
         });
     });
 
-    it("find with where method should return a list of Url in clause", async () => {
+    it("find with where method and order should return a list of Url in clause", async () => {
         const urls = await Url.find({
             where: [{ name: ILike(`%Fa%`) }, { path: ILike(`%Fa%`) }],
             order: { createdAt: "DESC" },

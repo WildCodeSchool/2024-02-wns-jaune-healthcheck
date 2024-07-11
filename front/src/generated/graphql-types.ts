@@ -1,7 +1,29 @@
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = {
+    [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+    [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+    [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+    T extends { [key: string]: unknown },
+    K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+    | T
+    | {
+          [P in keyof T]?: P extends " $fragmentName" | "__typename"
+              ? T[P]
+              : never;
+      };
 export type Exact<T extends { [key: string]: unknown }> = {
     [K in keyof T]: T[K];
 };
@@ -31,9 +53,21 @@ export type Scalars = {
     Int: { input: number; output: number };
     Float: { input: number; output: number };
     DateTimeISO: { input: any; output: any };
+    ID: { input: string; output: string };
+    String: { input: string; output: string };
+    Boolean: { input: boolean; output: boolean };
+    Int: { input: number; output: number };
+    Float: { input: number; output: number };
+    DateTimeISO: { input: any; output: any };
 };
 
 export type History = {
+    __typename?: "History";
+    created_at: Scalars["DateTimeISO"]["output"];
+    id: Scalars["String"]["output"];
+    response: Scalars["String"]["output"];
+    status_code: Scalars["Float"]["output"];
+    url: Url;
     __typename?: "History";
     created_at: Scalars["DateTimeISO"]["output"];
     id: Scalars["String"]["output"];
@@ -47,9 +81,14 @@ export type Mutation = {
     addUrl: Url;
     createUser: Scalars["String"]["output"];
     login: Scalars["String"]["output"];
+    __typename?: "Mutation";
+    addUrl: Url;
+    createUser: Scalars["String"]["output"];
+    login: Scalars["String"]["output"];
 };
 
 export type MutationAddUrlArgs = {
+    urlData: UrlInput;
     urlData: UrlInput;
 };
 
@@ -57,9 +96,14 @@ export type MutationCreateUserArgs = {
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
     username: Scalars["String"]["input"];
+    email: Scalars["String"]["input"];
+    password: Scalars["String"]["input"];
+    username: Scalars["String"]["input"];
 };
 
 export type MutationLoginArgs = {
+    email: Scalars["String"]["input"];
+    password: Scalars["String"]["input"];
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
 };
@@ -76,6 +120,7 @@ export type Query = {
 
 export type QueryHistoryArgs = {
     id: Scalars["String"]["input"];
+    id: Scalars["String"]["input"];
 };
 
 export type QueryUrlArgs = {
@@ -84,9 +129,16 @@ export type QueryUrlArgs = {
 
 export type QueryUrlsArgs = {
     searchText: Scalars["String"]["input"];
+    sortField: Scalars["String"]["input"];
 };
 
 export type Url = {
+    __typename?: "Url";
+    createdAt: Scalars["DateTimeISO"]["output"];
+    histories: Array<History>;
+    id: Scalars["String"]["output"];
+    name: Scalars["String"]["output"];
+    path: Scalars["String"]["output"];
     __typename?: "Url";
     createdAt: Scalars["DateTimeISO"]["output"];
     histories: Array<History>;
@@ -98,12 +150,19 @@ export type Url = {
 export type UrlInput = {
     name: Scalars["String"]["input"];
     path: Scalars["String"]["input"];
+    name: Scalars["String"]["input"];
+    path: Scalars["String"]["input"];
 };
 
 export type AddUrlMutationVariables = Exact<{
     urlData: UrlInput;
+    urlData: UrlInput;
 }>;
 
+export type AddUrlMutation = {
+    __typename?: "Mutation";
+    addUrl: { __typename?: "Url"; name: string; path: string };
+};
 export type AddUrlMutation = {
     __typename?: "Mutation";
     addUrl: { __typename?: "Url"; name: string; path: string };
@@ -113,18 +172,26 @@ export type AddUserMutationVariables = Exact<{
     username: Scalars["String"]["input"];
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
+    username: Scalars["String"]["input"];
+    email: Scalars["String"]["input"];
+    password: Scalars["String"]["input"];
 }>;
 
+export type AddUserMutation = { __typename?: "Mutation"; createUser: string };
 export type AddUserMutation = { __typename?: "Mutation"; createUser: string };
 
 export type LoginMutationVariables = Exact<{
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
+    email: Scalars["String"]["input"];
+    password: Scalars["String"]["input"];
 }>;
 
 export type LoginMutation = { __typename?: "Mutation"; login: string };
+export type LoginMutation = { __typename?: "Mutation"; login: string };
 
 export type GetAllURlsQueryVariables = Exact<{
+    sortField: Scalars["String"]["input"];
     searchText: Scalars["String"]["input"];
 }>;
 
@@ -144,8 +211,25 @@ export type GetAllURlsQuery = {
         }>;
     }>;
 };
+export type GetAllURlsQuery = {
+    __typename?: "Query";
+    urls: Array<{
+        __typename?: "Url";
+        id: string;
+        name: string;
+        path: string;
+        createdAt: any;
+        histories: Array<{
+            __typename?: "History";
+            id: string;
+            response: string;
+            status_code: number;
+        }>;
+    }>;
+};
 
 export type UrlQueryVariables = Exact<{
+    urlId: Scalars["String"]["input"];
     urlId: Scalars["String"]["input"];
 }>;
 
@@ -186,6 +270,16 @@ export type AddUrlMutationFn = Apollo.MutationFunction<
     AddUrlMutation,
     AddUrlMutationVariables
 >;
+        addUrl(urlData: $urlData) {
+            name
+            path
+        }
+    }
+`;
+export type AddUrlMutationFn = Apollo.MutationFunction<
+    AddUrlMutation,
+    AddUrlMutationVariables
+>;
 
 /**
  * __useAddUrlMutation__
@@ -216,14 +310,37 @@ export function useAddUrlMutation(
         options,
     );
 }
+export function useAddUrlMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        AddUrlMutation,
+        AddUrlMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<AddUrlMutation, AddUrlMutationVariables>(
+        AddUrlDocument,
+        options,
+    );
+}
 export type AddUrlMutationHookResult = ReturnType<typeof useAddUrlMutation>;
 export type AddUrlMutationResult = Apollo.MutationResult<AddUrlMutation>;
 export type AddUrlMutationOptions = Apollo.BaseMutationOptions<
     AddUrlMutation,
     AddUrlMutationVariables
 >;
+export type AddUrlMutationOptions = Apollo.BaseMutationOptions<
+    AddUrlMutation,
+    AddUrlMutationVariables
+>;
 export const AddUserDocument = gql`
     mutation AddUser($username: String!, $email: String!, $password: String!) {
+        createUser(username: $username, email: $email, password: $password)
+    }
+`;
+export type AddUserMutationFn = Apollo.MutationFunction<
+    AddUserMutation,
+    AddUserMutationVariables
+>;
         createUser(username: $username, email: $email, password: $password)
     }
 `;
@@ -263,14 +380,37 @@ export function useAddUserMutation(
         options,
     );
 }
+export function useAddUserMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        AddUserMutation,
+        AddUserMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(
+        AddUserDocument,
+        options,
+    );
+}
 export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
 export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
 export type AddUserMutationOptions = Apollo.BaseMutationOptions<
     AddUserMutation,
     AddUserMutationVariables
 >;
+export type AddUserMutationOptions = Apollo.BaseMutationOptions<
+    AddUserMutation,
+    AddUserMutationVariables
+>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password)
+    }
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+    LoginMutation,
+    LoginMutationVariables
+>;
         login(email: $email, password: $password)
     }
 `;
@@ -309,15 +449,31 @@ export function useLoginMutation(
         options,
     );
 }
+export function useLoginMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        LoginMutation,
+        LoginMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+        LoginDocument,
+        options,
+    );
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
     LoginMutation,
     LoginMutationVariables
 >;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+    LoginMutation,
+    LoginMutationVariables
+>;
 export const GetAllURlsDocument = gql`
-    query GetAllURls($searchText: String!) {
-        urls(searchText: $searchText) {
+    query GetAllURls($sortField: String!, $searchText: String!) {
+        urls(sortField: $sortField, searchText: $searchText) {
             id
             name
             path
@@ -343,6 +499,7 @@ export const GetAllURlsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllURlsQuery({
  *   variables: {
+ *      sortField: // value for 'sortField'
  *      searchText: // value for 'searchText'
  *   },
  * });
@@ -398,8 +555,31 @@ export type GetAllURlsQueryResult = Apollo.QueryResult<
     GetAllURlsQuery,
     GetAllURlsQueryVariables
 >;
+export type GetAllURlsLazyQueryHookResult = ReturnType<
+    typeof useGetAllURlsLazyQuery
+>;
+export type GetAllURlsSuspenseQueryHookResult = ReturnType<
+    typeof useGetAllURlsSuspenseQuery
+>;
+export type GetAllURlsQueryResult = Apollo.QueryResult<
+    GetAllURlsQuery,
+    GetAllURlsQueryVariables
+>;
 export const UrlDocument = gql`
     query Url($urlId: String!) {
+        url(id: $urlId) {
+            histories {
+                id
+                response
+                status_code
+                created_at
+            }
+            id
+            name
+            path
+        }
+    }
+`;
         url(id: $urlId) {
             histories {
                 id
@@ -430,6 +610,31 @@ export const UrlDocument = gql`
  *   },
  * });
  */
+export function useUrlQuery(
+    baseOptions: Apollo.QueryHookOptions<UrlQuery, UrlQueryVariables> &
+        ({ variables: UrlQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<UrlQuery, UrlQueryVariables>(UrlDocument, options);
+}
+export function useUrlLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<UrlQuery, UrlQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<UrlQuery, UrlQueryVariables>(
+        UrlDocument,
+        options,
+    );
+}
+export function useUrlSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<UrlQuery, UrlQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<UrlQuery, UrlQueryVariables>(
+        UrlDocument,
+        options,
+    );
+}
 export function useUrlQuery(
     baseOptions: Apollo.QueryHookOptions<UrlQuery, UrlQueryVariables> &
         ({ variables: UrlQueryVariables; skip?: boolean } | { skip: boolean }),

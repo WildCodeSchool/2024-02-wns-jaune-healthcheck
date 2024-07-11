@@ -41,4 +41,5 @@ export class Url extends BaseEntity {
     @Field(() => [History])
     @OneToMany(() => History, (history) => history.url, { eager: true })
     histories: History[];
+
 }

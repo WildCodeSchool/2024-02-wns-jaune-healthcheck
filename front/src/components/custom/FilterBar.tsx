@@ -27,6 +27,9 @@ const FilterBar: React.FC<FilterBarProps> = ({
     return (
         <div className="flex max-md:flex-col justify-between items-center gap-4 mb-4">
             <Input
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                    e.target.scrollIntoView(true);
+                }}
                 type="text"
                 placeholder="Rechercher..."
                 value={searchQuery}
@@ -39,7 +42,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="name">Trier par nom</SelectItem>
-                    <SelectItem value="status_code">
+                    <SelectItem value="status">
                         Trier par code de statut
                     </SelectItem>
                     <SelectItem value="createdAt">
