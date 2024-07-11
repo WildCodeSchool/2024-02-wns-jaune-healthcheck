@@ -67,7 +67,11 @@ export type QueryHistoryArgs = {
 
 
 export type QueryUrlArgs = {
-  id: Scalars['String']['input'];
+    id: Scalars["String"]["input"];
+};
+
+export type QueryUrlsArgs = {
+    searchText: Scalars["String"]["input"];
 };
 
 export type Url = {
@@ -108,8 +112,9 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
-export type GetAllURlsQueryVariables = Exact<{ [key: string]: never; }>;
-
+export type GetAllURlsQueryVariables = Exact<{
+    searchText: Scalars["String"]["input"];
+}>;
 
 export type GetAllURlsQuery = { __typename?: 'Query', urls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number }> }> };
 
@@ -221,20 +226,20 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const GetAllURlsDocument = gql`
-    query GetAllURls {
-  urls {
-    id
-    name
-    path
-    createdAt
-    histories {
-      id
-      response
-      status_code
+    query GetAllURls($searchText: String!) {
+        urls(searchText: $searchText) {
+            id
+            name
+            path
+            createdAt
+            histories {
+                id
+                response
+                status_code
+            }
+        }
     }
-  }
-}
-    `;
+`;
 
 /**
  * __useGetAllURlsQuery__
@@ -248,21 +253,50 @@ export const GetAllURlsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllURlsQuery({
  *   variables: {
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */
-export function useGetAllURlsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
-      }
-export function useGetAllURlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
-        }
-export function useGetAllURlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllURlsQuery, GetAllURlsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(GetAllURlsDocument, options);
-        }
+export function useGetAllURlsQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        GetAllURlsQuery,
+        GetAllURlsQueryVariables
+    > &
+        (
+            | { variables: GetAllURlsQueryVariables; skip?: boolean }
+            | { skip: boolean }
+        ),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
+        GetAllURlsDocument,
+        options,
+    );
+}
+export function useGetAllURlsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetAllURlsQuery,
+        GetAllURlsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
+        GetAllURlsDocument,
+        options,
+    );
+}
+export function useGetAllURlsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        GetAllURlsQuery,
+        GetAllURlsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<GetAllURlsQuery, GetAllURlsQueryVariables>(
+        GetAllURlsDocument,
+        options,
+    );
+}
 export type GetAllURlsQueryHookResult = ReturnType<typeof useGetAllURlsQuery>;
 export type GetAllURlsLazyQueryHookResult = ReturnType<typeof useGetAllURlsLazyQuery>;
 export type GetAllURlsSuspenseQueryHookResult = ReturnType<typeof useGetAllURlsSuspenseQuery>;

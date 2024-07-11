@@ -27,7 +27,6 @@ const mocks = [
     },
 ];
 
-
 describe("Form url tests", () => {
     it("should contain a form", () => {
         render(
