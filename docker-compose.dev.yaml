@@ -1,4 +1,4 @@
-name: 'health-checker-dev'
+name: "health-checker-dev"
 services:
   backend:
     container_name: backend
@@ -8,13 +8,13 @@ services:
     volumes:
       - ./back/src:/app/src
     ports:
-      - 3000:4000
+      - 4000:4000
     restart: always
     depends_on:
       database:
         condition: service_healthy
     healthcheck:
-      test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:3000/'' --data ''{"query":"query { __typename }"}'' || exit 1'
+      test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/'' --data ''{"query":"query { __typename }"}'' || exit 1'
       interval: 5s
       timeout: 5s
       retries: 20
@@ -22,7 +22,7 @@ services:
   frontend:
     container_name: frontend
     build: ./front
-    command: npm run dev
+    command: sh -c "npm run codegen && npm run dev"
     env_file: .env
     volumes:
       - ./front/src/:/app/src/
@@ -34,6 +34,9 @@ services:
       interval: 1s
       timeout: 2s
       retries: 100
+    depends_on:
+      backend:
+        condition: service_healthy
 
   database:
     container_name: database
