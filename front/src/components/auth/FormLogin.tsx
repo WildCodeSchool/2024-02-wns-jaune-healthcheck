@@ -44,7 +44,9 @@ export default function FormLogin({ setOpenDialog }: FormLoginProps) {
                 email: values.email,
                 password: values.password,
             },
-            onCompleted() {
+            onCompleted(data) {
+                /* Store useAuth */
+                console.log(JSON.parse(data.login));
                 console.log("Connexion réussie");
                 setOpenDialog(false);
             },
