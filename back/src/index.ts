@@ -1,13 +1,25 @@
 import "reflect-metadata";
 import "dotenv/config";
 import * as jwt from "jsonwebtoken";
-import { ApolloServer } from "@apollo/server";
+import { ApolloServer, BaseContext } from "@apollo/server";
 import { buildSchema } from "type-graphql";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
 import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
+
+interface JwtPayload {
+    id: string;
+    email: string;
+}
+
+export interface MyContext extends BaseContext {
+    res: {
+        setHeader: (name: string, value: string) => void;
+    };
+    payload?: JwtPayload;
+}
 
 const start = async () => {
     // Initialisation de la connexion à la base de données
@@ -28,19 +40,18 @@ const start = async () => {
     // Démarrage du serveur
     const { url } = await startStandaloneServer(server, {
         listen: { port: 4000 },
-        context: async ({ req, res }) => {
+        context: async ({ req, res }): Promise<MyContext> => {
             if (!process.env.JWT_SECRET_KEY) return { res };
 
-            if (!req.headers.authorization) return { res };
-
-            if (!req.headers.cookie) return { res };
-
-            const payload = jwt.verify(
-                req.headers.cookie.split("token=")[1],
-                process.env.JWT_SECRET_KEY,
-            );
-            if (payload) {
-                return { payload, res };
+            const token = req.headers.cookie?.split("token=")[1];
+            if (token) {
+                const payload = jwt.verify(
+                    token,
+                    process.env.JWT_SECRET_KEY,
+                ) as JwtPayload;
+                if (payload) {
+                    return { payload, res };
+                }
             }
 
             return { res };

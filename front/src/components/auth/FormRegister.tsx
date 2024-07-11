@@ -22,6 +22,7 @@ import { z } from "zod";
 import { registerSchema } from "@/constants/validator";
 import { useAddUserMutation } from "@/generated/graphql-types";
 import { useToast } from "../ui/use-toast";
+import useAuthStore from "@/stores/authStore";
 
 export default function FormRegister() {
     const registerForm = useForm<z.infer<typeof registerSchema>>({
@@ -36,6 +37,7 @@ export default function FormRegister() {
 
     const [registerUser, { loading }] = useAddUserMutation();
     const { toast } = useToast();
+    const login = useAuthStore((state) => state.login);
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
         registerUser({
@@ -44,12 +46,13 @@ export default function FormRegister() {
                 email: values.email,
                 password: values.password,
             },
-            onCompleted() {
+            onCompleted(data) {
                 toast({
                     variant: "default",
                     description: `Votre compte à bien été créé`,
                 });
                 registerForm.reset();
+                login(data.createUser);
             },
             onError(error) {
                 toast({
@@ -65,7 +68,7 @@ export default function FormRegister() {
             <DialogHeader>
                 <DialogTitle className="text-2xl">Créer un compte</DialogTitle>
                 <DialogDescription>
-                    Vous aurez accès à des fonctionnalitées avancées de
+                    Vous aurez accès à des fonctionnalités avancées de
                     monitoring.
                 </DialogDescription>
             </DialogHeader>

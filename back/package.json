@@ -8,6 +8,7 @@
         "lint": "npx eslint --ext .ts src",
         "dev": "ts-node-dev --poll src/index.ts",
         "seed": "ts-node-dev src/database/seeder/fixtures.ts",
+        "populate-db": "ts-node src/database/scripts/PopulateDB.ts",
         "migration:create": "typeorm-ts-node-commonjs migration:create",
         "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/dataSource.ts",
         "migration:up": "typeorm-ts-node-commonjs migration:run -d src/database/dataSource.ts",

@@ -1,10 +1,11 @@
-import { Arg, Ctx, Mutation } from "type-graphql";
+import { Arg, Ctx, Mutation, Query } from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
+import { MyContext } from "@/index";
 
-function setCookies(context: any, token: string) {
-    let expireCookieUTC = new Date();
+function setCookie(context: MyContext, token: string) {
+    const expireCookieUTC = new Date();
     expireCookieUTC.setSeconds(
         expireCookieUTC.getSeconds() + Number(process.env.COOKIE_TTL),
     );
@@ -17,12 +18,21 @@ function setCookies(context: any, token: string) {
     );
 }
 
+function getUserBasicInfo(user: User) {
+    return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+    };
+}
+
 class UserResolver {
     @Mutation(() => String)
     async createUser(
         @Arg("username") username: string,
         @Arg("email") email: string,
         @Arg("password") password: string,
+        @Ctx() context: MyContext,
     ) {
         if (process.env.JWT_SECRET_KEY === undefined) {
             throw new Error("NO JWT SECRET KEY DEFINED");
@@ -40,14 +50,16 @@ class UserResolver {
             process.env.JWT_SECRET_KEY,
         );
 
-        return token;
+        setCookie(context, token);
+
+        return JSON.stringify(getUserBasicInfo(userFromDB));
     }
 
     @Mutation(() => String)
     async login(
         @Arg("email") email: string,
         @Arg("password") password: string,
-        @Ctx() context: any,
+        @Ctx() context: MyContext,
     ) {
         try {
             if (process.env.JWT_SECRET_KEY === undefined) {
@@ -69,9 +81,30 @@ class UserResolver {
                 { id: userFromDB.id, email: userFromDB.email },
                 process.env.JWT_SECRET_KEY,
             );
-            setCookies(context, token);
+            setCookie(context, token);
 
-            return "Login successfull";
+            return JSON.stringify(getUserBasicInfo(userFromDB));
+        } catch (error) {
+            console.log(error);
+            throw new Error("Bad request");
+        }
+    }
+
+    @Query(() => String)
+    async logout(@Ctx() context: MyContext) {
+        context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
+        return "Logged out";
+    }
+
+    @Query(() => String)
+    async me(@Ctx() context: MyContext) {
+        try {
+            if (context.payload) {
+                const userFromDB = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+                return JSON.stringify(getUserBasicInfo(userFromDB));
+            } else throw new Error();
         } catch (error) {
             console.log(error);
             throw new Error("Bad request");

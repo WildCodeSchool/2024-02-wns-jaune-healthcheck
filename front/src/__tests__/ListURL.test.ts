@@ -286,7 +286,9 @@ describe("URLList", () => {
         expect(reSortedItems[0]).toHaveTextContent("Test URL A");
         expect(reSortedItems[1]).toHaveTextContent("Test URL B");
 
-        const dateOption = screen.getByText("Trier par date de création", { selector: 'span#radix-\\:rq\\:' });
+        const dateOption = screen.getByText("Trier par date de création", {
+            selector: "span#radix-\\:rq\\:",
+        });
         await fireEvent.click(dateOption);
 
         const reReSortedItems = screen.getAllByText(/Test URL/i);

@@ -16,3 +16,6 @@ run-prod:
 # Après la commande, ajouter src/database/migrations/nom_de_la_migration.ts
 generate-migration:
 	docker exec -it backend npm run migration:generate
+
+populate-db:
+	docker exec -it backend npm run populate-db
