@@ -1,13 +1,6 @@
-export const urlsData = [
-    {
-        name: "Youtube",
-        path: "https://www.youtube.com/",
-    },
-    {
-        name: "Facebook",
-        path: "https://www.youtube.com/",
-    },
-];
+import FakeDataUrls from './urls.json';
+
+export const urlsData = FakeDataUrls;
 
 export const historiesData = [
     {
