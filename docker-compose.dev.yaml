@@ -1,4 +1,4 @@
-name: 'health-checker-dev'
+name: "health-checker-dev"
 services:
   backend:
     container_name: backend

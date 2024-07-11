@@ -19,24 +19,28 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import useListUrlsStore from "@/stores/url/useListUrlsStore";
 
 export default function URLList() {
-    const { loading, error, data } = useGetAllURlsQuery();
+    const { queryFilter, setQueryFilter } = useListUrlsStore((state) => ({
+        queryFilter: state.queryFilter,
+        setQueryFilter: state.setQueryFilter,
+    }));
+
+    const { loading, error, data } = useGetAllURlsQuery({
+        variables: { searchText: queryFilter },
+        fetchPolicy: "cache-and-network",
+    });
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchQuery, setSearchQuery] = useState("");
+
     const [sortKey, setSortKey] = useState("createdAt");
     const itemsPerPage = 24;
 
     const filteredAndSortedUrls = useMemo(() => {
         if (!data) return [];
 
-        let urls = data.urls.filter(
-            (item) =>
-                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.path.toLowerCase().includes(searchQuery.toLowerCase()),
-        );
-
+        let urls = [...data.urls];
         urls = urls.sort((a, b) => {
             if (sortKey === "name") {
                 return a.name.localeCompare(b.name);
@@ -55,7 +59,7 @@ export default function URLList() {
         });
 
         return urls;
-    }, [data, searchQuery, sortKey]);
+    }, [data, queryFilter, sortKey]);
 
     const totalPages = Math.ceil(filteredAndSortedUrls.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -65,7 +69,7 @@ export default function URLList() {
     };
 
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
+        setQueryFilter(query);
         setCurrentPage(1);
     };
 
@@ -77,7 +81,7 @@ export default function URLList() {
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
-                searchQuery={searchQuery}
+                searchQuery={queryFilter}
                 sortKey={sortKey}
                 onSearch={handleSearch}
                 onSortChange={handleSortChange}
@@ -93,7 +97,7 @@ export default function URLList() {
                                 .map((item) => (
                                     <ListItem
                                         key={item.id}
-                                        className="flex justify-center items-center w-full"
+                                        className="flex justify-center items-start w-full"
                                     >
                                         <a
                                             href={`/url/${item.id}`}

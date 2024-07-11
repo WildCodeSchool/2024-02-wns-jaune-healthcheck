@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_URLS = gql`
-    query GetAllURls {
-        urls {
+    query GetAllURls($searchText: String!) {
+        urls(searchText: $searchText) {
             id
             name
             path
@@ -28,22 +28,6 @@ export const GET_ONE_URL = gql`
             id
             name
             path
-        }
-    }
-`;
-
-export const GET_FILTERED_URLS = gql`
-    query GetFilteredURls($searchText: String!) {
-        urlsFilter(searchText: $searchText) {
-            id
-            name
-            path
-            createdAt
-            histories {
-                id
-                response
-                status_code
-            }
         }
     }
 `;

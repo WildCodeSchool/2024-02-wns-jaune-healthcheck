@@ -16,6 +16,7 @@ import { newUrlSchema } from "@/constants/validator";
 import { useAddUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS } from "@/graphql/queries";
 import { useToast } from "../ui/use-toast";
+import useListUrlsStore from "@/stores/url/useListUrlsStore";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -27,6 +28,9 @@ export default function FormUrl() {
         },
     });
 
+    const { queryFilter } = useListUrlsStore((state) => ({
+        queryFilter: state.queryFilter,
+    }));
     const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();
 
@@ -51,7 +55,12 @@ export default function FormUrl() {
                     description: `${error.message}`,
                 });
             },
-            refetchQueries: [{ query: GET_ALL_URLS }],
+            refetchQueries: [
+                {
+                    query: GET_ALL_URLS,
+                    variables: { searchText: queryFilter },
+                },
+            ],
         });
     };
 

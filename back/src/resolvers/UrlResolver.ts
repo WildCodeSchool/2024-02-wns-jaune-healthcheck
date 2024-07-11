@@ -15,25 +15,18 @@ class UrlInput implements Partial<Url> {
 @Resolver()
 class UrlResolver {
     @Query(() => [Url])
-    async urls(): Promise<Url[]> {
+    async urls(@Arg("searchText") searchText?: string): Promise<Url[]> {
         try {
-            const urls = await Url.find({ 
-                order: { createdAt: "DESC" },
-            });
-            return urls;
-        } catch (_error) {
-            throw new Error("Internal server error");
-        }
-    }
-    @Query(() => [Url])
-    async urlsFilter(@Arg("searchText") searchText: string): Promise<Url[]> {
-        try {
+            if (!searchText) {
+                return await Url.find({ order: { createdAt: "DESC" } });
+            }
+
             const urls = await Url.find({
                 where: [
                     { name: ILike(`%${searchText}%`) },
-                    { path: ILike(`%${searchText}%`) }
+                    { path: ILike(`%${searchText}%`) },
                 ],
-                order: { createdAt: "DESC" }
+                order: { createdAt: "DESC" },
             });
             return urls;
         } catch (_error) {
@@ -65,7 +58,7 @@ class UrlResolver {
         } catch (error) {
             if (error instanceof QueryFailedError) {
                 throw new Error(
-                    "Erreur lors de l'ajout de l'url dans la base de données"
+                    "Erreur lors de l'ajout de l'url dans la base de données",
                 );
             }
             if (error.message === "Data validation error") {
