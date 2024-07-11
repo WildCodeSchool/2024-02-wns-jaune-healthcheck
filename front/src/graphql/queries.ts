@@ -31,3 +31,15 @@ export const GET_ONE_URL = gql`
         }
     }
 `;
+
+export const LOGOUT = gql`
+    query Logout {
+        logout
+    }
+`;
+
+export const GET_ME = gql`
+    query Me {
+        me
+    }
+`;

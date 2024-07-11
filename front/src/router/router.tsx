@@ -2,8 +2,10 @@ import App from "@/App";
 import Landing from "@/pages/Landing";
 import UrlHistory from "@/pages/UrlHistory";
 import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoutes from "./ProtectedRoutes";
+import Dashboard from "@/pages/Dashboard";
 
-const router = createBrowserRouter([
+const routes = [
     {
         path: "/",
         element: <App />,
@@ -17,8 +19,19 @@ const router = createBrowserRouter([
                 path: "/url/:id",
                 element: <UrlHistory />,
             },
+            {
+                element: <ProtectedRoutes />,
+                children: [
+                    {
+                        path: "/dashboard",
+                        element: <Dashboard />,
+                    },
+                ],
+            },
         ],
     },
-]);
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;
