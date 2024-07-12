@@ -32,6 +32,22 @@ export const GET_ONE_URL = gql`
     }
 `;
 
+export const GET_RECENT_PRIVATE_URLS = gql`
+    query RecentPrivateUrls {
+        recentPrivateUrls {
+            id
+            name
+            path
+            createdAt
+            histories {
+                id
+                status_code
+                created_at
+            }
+        }
+    }
+`;
+
 export const LOGOUT = gql`
     query Logout {
         logout
