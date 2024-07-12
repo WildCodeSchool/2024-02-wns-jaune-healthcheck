@@ -46,29 +46,15 @@ describe("Tests UrlHistory", () => {
         );
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
         expect(
-            await screen.findByText(
-                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df060d",
-            ),
-        ).toBeInTheDocument();
-        expect(
-            await screen.findByText("Date de création : 2023-07-09"),
+            await screen.findByText("Date : 09/07/2023 à 02:00:00"),
         ).toBeInTheDocument();
         expect(await screen.findByText("200")).toBeInTheDocument();
+        expect(await screen.findByText("Success")).toBeInTheDocument();
         expect(
-            await screen.findByText("Réponse : Success"),
-        ).toBeInTheDocument();
-        expect(
-            await screen.findByText(
-                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df268g",
-            ),
-        ).toBeInTheDocument();
-        expect(
-            await screen.findByText("Date de création : 2023-07-08"),
+            await screen.findByText("Date : 08/07/2023 à 02:00:00"),
         ).toBeInTheDocument();
         expect(await screen.findByText("404")).toBeInTheDocument();
-        expect(
-            await screen.findByText("Réponse : Not Found"),
-        ).toBeInTheDocument();
+        expect(await screen.findByText("Not Found")).toBeInTheDocument();
         const historiesContainer = await screen.findByTestId(
             "histories-container",
         );
