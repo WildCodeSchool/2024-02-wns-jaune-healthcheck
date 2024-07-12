@@ -8,6 +8,8 @@ services:
     volumes:
       - ./back/src:/app/src
     restart: always
+    ports:
+      - 4000:4000
     depends_on:
       database:
         condition: service_healthy
