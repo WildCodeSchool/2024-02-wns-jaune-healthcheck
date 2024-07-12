@@ -23,6 +23,7 @@ import { registerSchema } from "@/constants/validator";
 import { useAddUserMutation } from "@/generated/graphql-types";
 import { useToast } from "../ui/use-toast";
 import useAuthStore from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 export default function FormRegister() {
     const registerForm = useForm<z.infer<typeof registerSchema>>({
@@ -38,6 +39,7 @@ export default function FormRegister() {
     const [registerUser, { loading }] = useAddUserMutation();
     const { toast } = useToast();
     const login = useAuthStore((state) => state.login);
+    const navigate = useNavigate();
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
         registerUser({
@@ -53,6 +55,7 @@ export default function FormRegister() {
                 });
                 registerForm.reset();
                 login(data.createUser);
+                navigate("/dashboard");
             },
             onError(error) {
                 toast({

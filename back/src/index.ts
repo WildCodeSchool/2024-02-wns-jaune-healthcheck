@@ -8,6 +8,7 @@ import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
 import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
+import UserUrlResolver from "./resolvers/UserUrlResolver";
 
 interface JwtPayload {
     id: string;
@@ -27,7 +28,12 @@ const start = async () => {
 
     // Création du schéma GraphQL à partir des résolveurs TypeGraphQL
     const schema = await buildSchema({
-        resolvers: [UrlResolver, HistoryResolver, UserResolver],
+        resolvers: [
+            UrlResolver,
+            HistoryResolver,
+            UserResolver,
+            UserUrlResolver,
+        ],
         authChecker: ({ context }) => {
             if (!context.payload) return false;
             return true;
