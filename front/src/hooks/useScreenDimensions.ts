@@ -1,31 +1,33 @@
 import { useState, useEffect } from "react";
 
 type Dimensions = {
-    width: number,
-    height: number
+    width: number;
+    height: number;
 };
 
 const useScreenDimensions = (): Dimensions => {
     const getCurrentDimension = (): Dimensions => {
         return {
             width: innerWidth,
-            height: innerHeight
-        }
-    }
-  const [screenSize, setScreenSize] = useState<Dimensions>(getCurrentDimension());
-  
-  useEffect(() => {
-      const updateDimension = (): void => {
-          setScreenSize(getCurrentDimension());
-      }
-      window.addEventListener('resize', updateDimension);
+            height: innerHeight,
+        };
+    };
+    const [screenSize, setScreenSize] = useState<Dimensions>(
+        getCurrentDimension(),
+    );
 
-      return(() => {
-          window.removeEventListener('resize', updateDimension);
-      })
-  }, [])
+    useEffect(() => {
+        const updateDimension = (): void => {
+            setScreenSize(getCurrentDimension());
+        };
+        window.addEventListener("resize", updateDimension);
 
-  return screenSize;
-}
+        return () => {
+            window.removeEventListener("resize", updateDimension);
+        };
+    }, []);
+
+    return screenSize;
+};
 
 export default useScreenDimensions;
