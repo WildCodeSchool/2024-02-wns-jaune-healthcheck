@@ -21,6 +21,14 @@ const getStatusColor = (statusCode: number | null) => {
     return "bg-gray-500";
 };
 
+const insertLineBreaks = (url: string, maxLength = 30) => {
+    if (url.length <= maxLength) return url;
+    const regex = new RegExp(`.{1,${maxLength}}`, "g");
+    const matches = url.match(regex);
+    if (matches === null) return url;
+    return matches.join("\n");
+};
+
 const Card = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement>
@@ -65,13 +73,15 @@ CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<
     HTMLParagraphElement,
-    React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
+    React.HTMLAttributes<HTMLParagraphElement> & { url?: string }
+>(({ className, url, ...props }, ref) => (
     <p
         ref={ref}
-        className={cn("text-sm text-muted-foreground text-right", className)}
+        className={`text-sm text-muted-foreground text-right whitespace-pre-wrap ${className}`}
         {...props}
-    />
+    >
+        {url ? insertLineBreaks(url) : props.children}
+    </p>
 ));
 CardDescription.displayName = "CardDescription";
 

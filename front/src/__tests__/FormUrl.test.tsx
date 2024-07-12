@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FormUrl from "@/components/landing/FormUrl";
 import { MockedProvider } from "@apollo/client/testing";
 import { CREATE_NEW_URL } from "@/graphql/mutation";
+import { MemoryRouter } from "react-router-dom";
 
 const mocks = [
     {
@@ -31,7 +32,9 @@ describe("Form url tests", () => {
     it("should contain a form", () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
-                <FormUrl />
+                <MemoryRouter>
+                    <FormUrl />
+                </MemoryRouter>
             </MockedProvider>,
         );
 
@@ -42,7 +45,9 @@ describe("Form url tests", () => {
     it("should render loading on add", async () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
-                <FormUrl />
+                <MemoryRouter>
+                    <FormUrl />
+                </MemoryRouter>
             </MockedProvider>,
         );
 

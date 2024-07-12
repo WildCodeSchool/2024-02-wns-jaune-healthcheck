@@ -15,6 +15,7 @@ import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import {
     Pagination,
     PaginationContent,
+    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -103,9 +104,12 @@ const URLList: React.FC = () => {
                                                     >
                                                         {item.name}
                                                     </CardTitle>
+
                                                     <CardDescription
                                                         className="truncate"
                                                         title={item.path}
+                                                        url={item.path}
+
                                                     >
                                                         {item.path}
                                                     </CardDescription>
@@ -155,6 +159,7 @@ const URLList: React.FC = () => {
                                     </PaginationLink>
                                 </PaginationItem>
                             ))}
+                            {totalPages > 3 && <PaginationEllipsis />}
                             <PaginationNext
                                 onClick={() =>
                                     handlePageChange(
