@@ -27,9 +27,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
     return (
         <div className="flex max-md:flex-col justify-between items-center gap-4 mb-4">
             <Input
-                onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
-                    e.target.scrollIntoView(true);
-                }}
                 type="text"
                 placeholder="Rechercher..."
                 value={searchQuery}
