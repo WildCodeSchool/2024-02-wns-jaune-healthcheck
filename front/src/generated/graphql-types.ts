@@ -82,6 +82,7 @@ export type QueryUrlArgs = {
 
 export type QueryUrlsArgs = {
   searchText: Scalars['String']['input'];
+  sortField: Scalars['String']['input'];
 };
 
 export type Url = {
@@ -140,6 +141,7 @@ export type AddUserUrlMutationVariables = Exact<{
 export type AddUserUrlMutation = { __typename?: 'Mutation', addUserUrl: { __typename?: 'Url', name: string, path: string } };
 
 export type GetAllURlsQueryVariables = Exact<{
+  sortField: Scalars['String']['input'];
   searchText: Scalars['String']['input'];
 }>;
 
@@ -299,8 +301,8 @@ export type AddUserUrlMutationHookResult = ReturnType<typeof useAddUserUrlMutati
 export type AddUserUrlMutationResult = Apollo.MutationResult<AddUserUrlMutation>;
 export type AddUserUrlMutationOptions = Apollo.BaseMutationOptions<AddUserUrlMutation, AddUserUrlMutationVariables>;
 export const GetAllURlsDocument = gql`
-    query GetAllURls($searchText: String!) {
-  urls(searchText: $searchText) {
+    query GetAllURls($sortField: String!, $searchText: String!) {
+  urls(sortField: $sortField, searchText: $searchText) {
     id
     name
     path
@@ -326,6 +328,7 @@ export const GetAllURlsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllURlsQuery({
  *   variables: {
+ *      sortField: // value for 'sortField'
  *      searchText: // value for 'searchText'
  *   },
  * });

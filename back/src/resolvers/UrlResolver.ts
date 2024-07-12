@@ -15,20 +15,57 @@ export class UrlInput implements Partial<Url> {
 @Resolver()
 class UrlResolver {
     @Query(() => [Url])
-    async urls(@Arg("searchText") searchText?: string): Promise<Url[]> {
+    async urls(
+        @Arg("searchText") searchText?: string,
+        @Arg("sortField") sortField?: string
+    ): Promise<Url[]> {
         try {
-            if (!searchText) {
-                return await Url.find({ order: { createdAt: "DESC" } });
-            }
+            if (searchText && sortField) {
+                if (sortField !== "status") {
+                    return await Url.find({
+                        where: [
+                            { name: ILike(`%${searchText}%`) },
+                            { path: ILike(`%${searchText}%`) },
+                        ],
+                        order: { [sortField]: "DESC" },
+                    });
+                }
+                const urls = await Url.find({
+                    where: [
+                        { name: ILike(`%${searchText}%`) },
+                        { path: ILike(`%${searchText}%`) },
+                    ]
+                });
+                return urls.sort((url1: Url, url2: Url) => {
+                    const status1 = url1.histories[0]?.status_code || 0;
+                    const status2 = url2.histories[0]?.status_code || 0;
+                    return status1 - status2;
+                });
+            } else if (!searchText && sortField) {
+                if (sortField !== "status") {
+                    return await Url.find({ 
+                        order: { [sortField]: sortField === "createdAt" ?  "DESC" : "ASC" } 
+                    });
+                }
+                const urls = await Url.find();
+                return urls.sort((url1: Url, url2: Url) => {
+                    const status1 = url1.histories[0]?.status_code || 0;
+                    const status2 = url2.histories[0]?.status_code || 0;
+                    return status1 - status2;
+                });
 
-            const urls = await Url.find({
-                where: [
-                    { name: ILike(`%${searchText}%`) },
-                    { path: ILike(`%${searchText}%`) },
-                ],
-                order: { createdAt: "DESC" },
-            });
-            return urls;
+            } else if (searchText && !sortField) {
+                return await Url.find({
+                    where: [
+                        { name: ILike(`%${searchText}%`) },
+                        { path: ILike(`%${searchText}%`) },
+                    ],
+                    order: { createdAt: "DESC" },
+                });
+            }
+            return await Url.find({ order: { createdAt: "DESC" } });
+
+
         } catch (_error) {
             throw new Error("Internal server error");
         }
