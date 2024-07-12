@@ -104,11 +104,12 @@ export default function UserHeader() {
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={handleLogout}
+                            className="cursor-pointer"
+                        >
                             <LogOut className="mr-2 h-4 w-4" />
-                            <button type="button" onClick={handleLogout}>
-                                {loading ? "Chargement..." : "Déconnexion"}
-                            </button>
+                            <p>{loading ? "Chargement..." : "Déconnexion"}</p>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
