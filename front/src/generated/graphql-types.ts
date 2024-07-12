@@ -63,13 +63,13 @@ export type PaginateUrls = {
 };
 
 export type Query = {
-    __typename?: "Query";
-    histories: Array<History>;
-    history: History;
-    logout: Scalars["String"]["output"];
-    me: Scalars["String"]["output"];
-    url: Url;
-    urls: Array<Url>;
+  __typename?: 'Query';
+  histories: Array<History>;
+  history: History;
+  logout: Scalars['String']['output'];
+  me: Scalars['String']['output'];
+  url: Url;
+  urls: Array<Url>;
 };
 
 
@@ -157,6 +157,11 @@ export type UrlQueryVariables = Exact<{
 
 
 export type UrlQuery = { __typename?: 'Query', url: { __typename?: 'Url', id: string, name: string, path: string, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }> } };
+
+export type RecentPrivateUrlsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecentPrivateUrlsQuery = { __typename?: 'Query', recentPrivateUrls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any }> }> };
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never;; }>;
 
@@ -368,6 +373,53 @@ export type UrlQueryHookResult = ReturnType<typeof useUrlQuery>;
 export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
+export const RecentPrivateUrlsDocument = gql`
+    query RecentPrivateUrls {
+  recentPrivateUrls {
+    id
+    name
+    path
+    createdAt
+    histories {
+      id
+      status_code
+      created_at
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecentPrivateUrlsQuery__
+ *
+ * To run a query within a React component, call `useRecentPrivateUrlsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentPrivateUrlsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecentPrivateUrlsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecentPrivateUrlsQuery(baseOptions?: Apollo.QueryHookOptions<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>(RecentPrivateUrlsDocument, options);
+      }
+export function useRecentPrivateUrlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>(RecentPrivateUrlsDocument, options);
+        }
+export function useRecentPrivateUrlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>(RecentPrivateUrlsDocument, options);
+        }
+export type RecentPrivateUrlsQueryHookResult = ReturnType<typeof useRecentPrivateUrlsQuery>;
+export type RecentPrivateUrlsLazyQueryHookResult = ReturnType<typeof useRecentPrivateUrlsLazyQuery>;
+export type RecentPrivateUrlsSuspenseQueryHookResult = ReturnType<typeof useRecentPrivateUrlsSuspenseQuery>;
+export type RecentPrivateUrlsQueryResult = Apollo.QueryResult<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
   logout

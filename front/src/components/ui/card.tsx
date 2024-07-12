@@ -1,25 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-
-const getStatusColor = (statusCode: number | null) => {
-    if (statusCode === null) {
-        return "bg-gray-500";
-    }
-    if (statusCode >= 200 && statusCode < 300) {
-        return "bg-green-500";
-    }
-    if (statusCode >= 300 && statusCode < 400) {
-        return "bg-yellow-500";
-    }
-    if (statusCode >= 400 && statusCode < 500) {
-        return "bg-red-500";
-    }
-    if (statusCode >= 500 && statusCode < 600) {
-        return "bg-red-500";
-    }
-    return "bg-gray-500";
-};
+import { getStatusColor } from "@/constants/globalFunction";
 
 const insertLineBreaks = (url: string, maxLength = 30) => {
     if (url.length <= maxLength) return url;
@@ -110,7 +92,7 @@ const CardStatus = React.forwardRef<
         >
             <span
                 data-testid="status-indicator"
-                className={`w-4 h-4 rounded-full ${statusColor} mr-2`}
+                className={`w-5 h-5 rounded-full ${statusColor} mr-2`}
             ></span>
         </div>
     );

@@ -14,7 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
 import { useAddUserUrlMutation } from "@/generated/graphql-types";
-import { GET_ALL_URLS } from "@/graphql/queries";
+import { GET_ALL_URLS, GET_RECENT_PRIVATE_URLS } from "@/graphql/queries";
 import { useToast } from "@/components/ui/use-toast";
 import {
     DialogClose,
@@ -68,6 +68,9 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
             refetchQueries: [
                 {
                     query: GET_ALL_URLS,
+                },
+                {
+                    query: GET_RECENT_PRIVATE_URLS,
                 },
             ],
         });

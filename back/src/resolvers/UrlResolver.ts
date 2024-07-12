@@ -5,10 +5,12 @@ import {
     Arg, 
     InputType, 
     Field,
-    ObjectType } from "type-graphql";
+    ObjectType,
+    Ctx } from "type-graphql";
 import { Url } from "../entities/Url";
 import { validate } from "class-validator";
 import { QueryFailedError, ILike } from "typeorm";
+import { MyContext } from "@/index";
 
 @InputType()
 export class UrlInput implements Partial<Url> {
@@ -75,7 +77,6 @@ class UrlResolver {
                         return status1 - status2;
                     });
                 }
-
             } else if (!searchText && sortField) {
 
                 if (sortField !== "status") {
@@ -135,6 +136,7 @@ class UrlResolver {
             throw new Error("Internal server error");
         }
     }
+
     @Query(() => Url)
     async url(@Arg("id") id: string): Promise<Url> {
         try {
@@ -142,6 +144,27 @@ class UrlResolver {
                 id: id,
             });
             return url;
+        } catch (_error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => [Url])
+    async recentPrivateUrls(@Ctx() context: MyContext): Promise<Url[]> {
+        try {
+            if (context.payload) {
+                return await Url.find({
+                    order: { createdAt: "DESC" },
+                    where: {
+                        userUrl: {
+                            userId: context.payload.id,
+                        },
+                    },
+                    take: 5,
+                });
+            } else {
+                throw new Error();
+            }
         } catch (_error) {
             throw new Error("Internal server error");
         }
