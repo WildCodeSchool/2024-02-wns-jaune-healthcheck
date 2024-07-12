@@ -24,7 +24,6 @@ class UserUrlResolver {
                 await url.save();
 
                 if (isPrivate) {
-                    console.log("toto");
                     await UserUrl.save({
                         urlId: url.id,
                         userId: context.payload.id,

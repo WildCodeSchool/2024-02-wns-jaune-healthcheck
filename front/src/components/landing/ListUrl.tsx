@@ -109,7 +109,6 @@ const URLList: React.FC = () => {
                                                         className="truncate"
                                                         title={item.path}
                                                         url={item.path}
-
                                                     >
                                                         {item.path}
                                                     </CardDescription>

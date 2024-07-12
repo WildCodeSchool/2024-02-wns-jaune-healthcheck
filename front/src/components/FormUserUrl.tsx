@@ -13,10 +13,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
-import {
-    useAddUrlMutation,
-    useAddUserUrlMutation,
-} from "@/generated/graphql-types";
+import { useAddUserUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS } from "@/graphql/queries";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -29,8 +26,9 @@ import {
 } from "./ui/dialog";
 import { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
+import { FormLoginProps } from "@/types/form";
 
-export default function FormUserUrl() {
+export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -42,8 +40,7 @@ export default function FormUserUrl() {
         },
     });
 
-    const [createNewUrl, { loading }] = useAddUrlMutation();
-    const [createNewUserUrl] = useAddUserUrlMutation();
+    const [createNewUserUrl, { loading }] = useAddUserUrlMutation();
     const { toast } = useToast();
 
     const onSubmit = (values: z.infer<typeof newUrlSchema>) => {
@@ -52,52 +49,28 @@ export default function FormUserUrl() {
             path: values.path,
         };
 
-        if (isPrivate) {
-            createNewUserUrl({
-                variables: { urlData: urlInput, isPrivate },
-                onCompleted() {
-                    toast({
-                        variant: "default",
-                        description: `${values.name} à bien été ajouté`,
-                    });
-                    newUrlForm.reset();
+        createNewUserUrl({
+            variables: { urlData: urlInput, isPrivate },
+            onCompleted() {
+                toast({
+                    variant: "default",
+                    description: `${values.name} à bien été ajouté`,
+                });
+                newUrlForm.reset();
+                setOpenDialog(false);
+            },
+            onError(error) {
+                toast({
+                    variant: "destructive",
+                    description: `${error.message}`,
+                });
+            },
+            refetchQueries: [
+                {
+                    query: GET_ALL_URLS,
                 },
-                onError(error) {
-                    console.log(error);
-                    toast({
-                        variant: "destructive",
-                        description: `${error.message}`,
-                    });
-                },
-                refetchQueries: [
-                    {
-                        query: GET_ALL_URLS,
-                    },
-                ],
-            });
-        } else {
-            createNewUrl({
-                variables: { urlData: urlInput },
-                onCompleted() {
-                    toast({
-                        variant: "default",
-                        description: `${values.name} à bien été ajouté`,
-                    });
-                    newUrlForm.reset();
-                },
-                onError(error) {
-                    toast({
-                        variant: "destructive",
-                        description: `${error.message}`,
-                    });
-                },
-                refetchQueries: [
-                    {
-                        query: GET_ALL_URLS,
-                    },
-                ],
-            });
-        }
+            ],
+        });
     };
 
     return (

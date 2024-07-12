@@ -12,9 +12,9 @@ import {
 } from "../ui/dropdown-menu";
 import { LogOut } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
+import { useState } from "react";
 
 type NavigationList = {
     id: number;
@@ -32,9 +32,12 @@ const navigationList: NavigationList[] = [
         id: 2,
         name: "Ajouter une URL",
     },
+    /* Ajouter la suite de la navigation ici; si dialog : pas de path */
 ];
 
 export default function UserHeader() {
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+
     const user = useAuthStore((state) => state.user);
 
     const [logoutQuery, { loading }] = useLogoutLazyQuery();
@@ -59,11 +62,7 @@ export default function UserHeader() {
         <div className="w-full flex justify-between items-center">
             <section className="flex items-center gap-2">
                 <img src={Logo} alt="Logo" className="w-8 h-8" />
-                <nav
-                    className={cn(
-                        "flex items-center space-x-4 lg:space-x-6 mx-6",
-                    )}
-                >
+                <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
                     {navigationList.map((item) =>
                         item.path ? (
                             <NavLink
@@ -76,13 +75,17 @@ export default function UserHeader() {
                                 {item.name}
                             </NavLink>
                         ) : (
-                            <Dialog key={item.id}>
+                            <Dialog
+                                open={openDialog}
+                                onOpenChange={setOpenDialog}
+                                key={item.id}
+                            >
                                 <DialogTrigger asChild>
                                     <button className="text-sm font-medium transition-colors hover:text-primary">
                                         {item.name}
                                     </button>
                                 </DialogTrigger>
-                                <FormUserUrl />
+                                <FormUserUrl setOpenDialog={setOpenDialog} />
                             </Dialog>
                         ),
                     )}

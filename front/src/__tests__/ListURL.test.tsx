@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter } from 'react-router-dom'; // Import as value
+import { MemoryRouter } from "react-router-dom"; // Import as value
 import URLList from "@/components/landing/ListUrl";
 import * as graphqlTypes from "@/generated/graphql-types";
 import { vi, describe, it, expect, afterEach } from "vitest";
-import create from 'zustand';
-import { act } from 'react-dom/test-utils';
+import create from "zustand";
+import { act } from "react-dom/test-utils";
 
 vi.mock("@/generated/graphql-types", async () => {
     const actual = await vi.importActual("@/generated/graphql-types");
@@ -39,7 +39,7 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
         expect(screen.getByText("Loading")).toBeInTheDocument();
     });
@@ -51,7 +51,7 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
         expect(screen.getByText("Error")).toBeInTheDocument();
     });
@@ -82,26 +82,26 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
         expect(screen.getByText("Test URL 1")).toBeInTheDocument();
         expect(screen.getByText("Test URL 2")).toBeInTheDocument();
     });
 
-    it('should handle search', async () => {
+    it("should handle search", async () => {
         const mockData = {
             urls: [
                 {
-                    id: '1',
-                    name: 'Test URL 1',
-                    path: '/test1',
+                    id: "1",
+                    name: "Test URL 1",
+                    path: "/test1",
                     createdAt: new Date().toISOString(),
                     histories: [{ status_code: 200 }],
                 },
                 {
-                    id: '2',
-                    name: 'Test URL 2',
-                    path: '/test2',
+                    id: "2",
+                    name: "Test URL 2",
+                    path: "/test2",
                     createdAt: new Date().toISOString(),
                     histories: [{ status_code: 200 }],
                 },
@@ -117,29 +117,28 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
-        const searchInput = screen.getByRole('textbox');
-        await fireEvent.change(searchInput, { target: { value: 'Test URL 1' } });
-
-
-        expect(handleSearchMock).toHaveBeenCalledWith('Test URL 1');
-
-
-        act(() => {
-            useListUrlsStoreMock.setState({ queryFilter: 'Test URL 1' });
+        const searchInput = screen.getByRole("textbox");
+        await fireEvent.change(searchInput, {
+            target: { value: "Test URL 1" },
         });
 
+        expect(handleSearchMock).toHaveBeenCalledWith("Test URL 1");
+
+        act(() => {
+            useListUrlsStoreMock.setState({ queryFilter: "Test URL 1" });
+        });
 
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
-        expect(screen.getByText('Test URL 1')).toBeInTheDocument();
-        expect(screen.queryByText('Test URL 2')).not.toBeInTheDocument();
+        expect(screen.getByText("Test URL 1")).toBeInTheDocument();
+        expect(screen.queryByText("Test URL 2")).not.toBeInTheDocument();
     });
 
     it("should handle pagination", async () => {
@@ -160,7 +159,7 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
         await screen.findByText("Test URL 1");
@@ -257,7 +256,7 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
         const url200 = await screen.findByText("URL with 200 status");
@@ -317,7 +316,7 @@ describe("URLList", () => {
         render(
             <MemoryRouter>
                 <URLList />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
         const items = screen.getAllByText(/Test URL/i);
@@ -330,7 +329,6 @@ describe("URLList", () => {
         await fireEvent.keyDown(selectTrigger1, { key: "ArrowUp" });
         await fireEvent.keyDown(selectTrigger1, { key: "ArrowUp" });
         await fireEvent.keyDown(selectTrigger1, { key: "Enter" });
-
 
         const selectTrigger2 = screen.getByText("Trier par code de statut");
         await fireEvent.click(selectTrigger2);
@@ -347,6 +345,5 @@ describe("URLList", () => {
         const reReSortedItems = screen.getAllByText(/Test URL/i);
         expect(reReSortedItems[0]).toHaveTextContent("Test URL B");
         expect(reReSortedItems[1]).toHaveTextContent("Test URL A");
-
     });
 });
