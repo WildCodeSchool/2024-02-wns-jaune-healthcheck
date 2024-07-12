@@ -59,6 +59,7 @@ export default function FormUrl() {
                     variables: {
                         searchText: searchParams?.get("searchUrl") || "",
                         sortField: searchParams?.get("sortField") || "",
+                        currentPage: Number(searchParams?.get("currentPage")) || 1,
                     },
                 },
             ],
