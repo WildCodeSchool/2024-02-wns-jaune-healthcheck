@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUrlQuery } from "@/generated/graphql-types";
 import {
     Card,
@@ -10,6 +10,7 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function UrlHistory() {
     const { id } = useParams();
@@ -18,13 +19,18 @@ export default function UrlHistory() {
             urlId: id!,
         },
     });
+    const navigate = useNavigate();
 
     if (loading) return <div>En attente...</div>;
     if (error) return <div>Erreur : {error.message}</div>;
     return (
         <>
             <div className="flex-grow">
-                <h1 className="text-4xl font-bold mb-10">
+                <h1 className="flex items-center text-4xl font-bold mb-10">
+                    <Button
+                        className="w-8 h-8 center text-xl pb-2.5 mt-0.5 mr-4"
+                        onClick={() => navigate(-1)}
+                    >{`<`}</Button>
                     <span className="text-primary">{data?.url.name} </span> -{" "}
                     {data?.url.path}
                 </h1>
