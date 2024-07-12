@@ -20,3 +20,12 @@ export const LOGIN = gql`
         login(email: $email, password: $password)
     }
 `;
+
+export const CREATE_NEW_PRIVATE_URL = gql`
+    mutation AddUserUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
+        addUserUrl(urlData: $urlData, isPrivate: $isPrivate) {
+            name
+            path
+        }
+    }
+`;

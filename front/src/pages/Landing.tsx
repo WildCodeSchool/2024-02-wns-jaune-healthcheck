@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Landing() {
     return (
-        <div className="pt-12 space-y-14 flex flex-col justify-center items-center">
+        <div className="pt-10 space-y-14 flex flex-col justify-center items-center">
             <section className="text-center space-y-6">
                 <h1 className="text-6xl font-bold">
                     Le Monitoring <br />à portée{" "}

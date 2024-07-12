@@ -24,10 +24,7 @@ import { useLoginMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../ui/use-toast";
-
-type FormLoginProps = {
-    setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { FormLoginProps } from "@/types/form";
 
 export default function FormLogin({ setOpenDialog }: FormLoginProps) {
     const loginForm = useForm<z.infer<typeof loginSchema>>({

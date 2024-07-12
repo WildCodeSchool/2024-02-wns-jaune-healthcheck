@@ -16,14 +16,16 @@ export default function GuestHeader() {
 
     return (
         <div className="w-full max-w-6xl mx-auto flex items-center">
-            <img src={Logo} alt="Logo" className="w-10 h-10" />
+            <img src={Logo} alt="Logo" className="w-8 h-8" />
             <NavigationMenu className="ml-auto">
                 <NavigationMenuList className="flex gap-2">
                     <NavigationMenuItem>
                         <NavigationMenuLink>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="ghost">S'inscrire</Button>
+                                    <Button variant="ghost" size={"sm"}>
+                                        S'inscrire
+                                    </Button>
                                 </DialogTrigger>
                                 <FormRegister />
                             </Dialog>
@@ -36,7 +38,9 @@ export default function GuestHeader() {
                                 onOpenChange={setOpenDialog}
                             >
                                 <DialogTrigger asChild>
-                                    <Button variant="outline">Connexion</Button>
+                                    <Button variant="outline" size={"sm"}>
+                                        Connexion
+                                    </Button>
                                 </DialogTrigger>
                                 <FormLogin setOpenDialog={setOpenDialog} />
                             </Dialog>

@@ -5,10 +5,12 @@ import {
     BaseEntity,
     CreateDateColumn,
     OneToMany,
+    OneToOne,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
 import { History } from "./History";
+import { UserUrl } from "./UserUrl";
 
 @Entity()
 @ObjectType()
@@ -42,4 +44,7 @@ export class Url extends BaseEntity {
     @OneToMany(() => History, (history) => history.url, { eager: true })
     histories: History[];
 
+    @Field(() => UserUrl, { nullable: true })
+    @OneToOne(() => UserUrl, (userUrl) => userUrl.url, { eager: true })
+    userUrl?: UserUrl;
 }

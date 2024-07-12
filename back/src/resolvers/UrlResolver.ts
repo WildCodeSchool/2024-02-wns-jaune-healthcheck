@@ -4,7 +4,7 @@ import { validate } from "class-validator";
 import { QueryFailedError, ILike } from "typeorm";
 
 @InputType()
-class UrlInput implements Partial<Url> {
+export class UrlInput implements Partial<Url> {
     @Field()
     name: string;
 

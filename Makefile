@@ -25,9 +25,9 @@ build-prod:
 run-prod:
 	docker compose -f docker-compose.yaml up
 
-# Après la commande, ajouter src/database/migrations/nom_de_la_migration.ts
+# Après la commande, ajouter name=(NomDeLaMigration)
 generate-migration:
-	docker exec -it backend npm run migration:generate
+	docker exec -it backend npm run migration:generate -- src/database/migrations/$(name)
 
 populate-db:
 	docker exec -it backend npm run populate-db
