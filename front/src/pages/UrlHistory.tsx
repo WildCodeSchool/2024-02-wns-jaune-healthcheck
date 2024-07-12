@@ -13,13 +13,14 @@ import {
 
 export default function UrlHistory() {
     const { id } = useParams();
-    const { data, loading } = useUrlQuery({
+    const { data, loading, error } = useUrlQuery({
         variables: {
             urlId: id!,
         },
     });
 
     if (loading) return <div>En attente...</div>;
+    if (error) return <div>Erreur : {error.message}</div>;
     return (
         <>
             <div className="flex-grow">
@@ -27,7 +28,10 @@ export default function UrlHistory() {
                     <span className="text-primary">{data?.url.name} </span> -{" "}
                     {data?.url.path}
                 </h1>
-                <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
+                <List
+                    data-testid="histories-container"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0"
+                >
                     {data?.url.histories.map((history) => (
                         <ListItem key={history.id}>
                             <Card>
