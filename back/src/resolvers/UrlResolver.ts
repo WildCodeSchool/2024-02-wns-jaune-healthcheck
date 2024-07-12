@@ -1,12 +1,13 @@
-import { 
-    Resolver, 
-    Query, 
-    Mutation, 
-    Arg, 
-    InputType, 
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Arg,
+    InputType,
     Field,
     ObjectType,
-    Ctx } from "type-graphql";
+    Ctx,
+} from "type-graphql";
 import { Url } from "../entities/Url";
 import { validate } from "class-validator";
 import { QueryFailedError, ILike } from "typeorm";
@@ -51,7 +52,6 @@ class UrlResolver {
             let urls: Url[];
             const skip: number = currentPage * 16 - 16;
             if (searchText && sortField) {
-
                 if (sortField !== "status") {
                     urls = await Url.find({
                         where: [
@@ -78,10 +78,12 @@ class UrlResolver {
                     });
                 }
             } else if (!searchText && sortField) {
-
                 if (sortField !== "status") {
-                    urls = await Url.find({ 
-                        order: { [sortField]: sortField === "createdAt" ?  "DESC" : "ASC" },
+                    urls = await Url.find({
+                        order: {
+                            [sortField]:
+                                sortField === "createdAt" ? "DESC" : "ASC",
+                        },
                         skip: skip,
                         take: 16,
                     });
@@ -93,9 +95,7 @@ class UrlResolver {
                         return status1 - status2;
                     });
                 }
-
             } else if (searchText && !sortField) {
-
                 urls = await Url.find({
                     where: [
                         { name: ILike(`%${searchText}%`) },
@@ -105,21 +105,19 @@ class UrlResolver {
                     skip: skip,
                     take: 16,
                 });
-
             } else {
-                urls = await Url.find({ 
+                urls = await Url.find({
                     order: { createdAt: "DESC" },
                     skip: skip,
                     take: 16,
                 });
             }
-            
 
             const countUrls = await Url.count({
                 where: [
                     { name: ILike(`%${searchText}%`) },
                     { path: ILike(`%${searchText}%`) },
-                ]
+                ],
             });
 
             const totalPages: number = Math.ceil(countUrls / 16);
@@ -131,7 +129,6 @@ class UrlResolver {
                 previousPage: Math.max(currentPage - 1, 0),
                 nextPage: Math.min(currentPage + 1, totalPages),
             };
-
         } catch (_error) {
             throw new Error("Internal server error");
         }

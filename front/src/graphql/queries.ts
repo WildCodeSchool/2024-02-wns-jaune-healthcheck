@@ -1,8 +1,16 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_URLS = gql`
-    query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!) {
-        urls(currentPage: $currentPage, sortField: $sortField, searchText: $searchText) {
+    query GetAllURls(
+        $currentPage: Float!
+        $sortField: String!
+        $searchText: String!
+    ) {
+        urls(
+            currentPage: $currentPage
+            sortField: $sortField
+            searchText: $searchText
+        ) {
             urls {
                 id
                 name

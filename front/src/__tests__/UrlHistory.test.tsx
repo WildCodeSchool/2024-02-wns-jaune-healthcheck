@@ -42,35 +42,35 @@ describe("Tests UrlHistory", () => {
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
                 <UrlHistory />
-            </MockedProvider>
+            </MockedProvider>,
         );
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
         expect(
             await screen.findByText(
-                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df060d"
-            )
+                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df060d",
+            ),
         ).toBeInTheDocument();
         expect(
-            await screen.findByText("Date de création : 2023-07-09")
+            await screen.findByText("Date de création : 2023-07-09"),
         ).toBeInTheDocument();
         expect(await screen.findByText("200")).toBeInTheDocument();
         expect(
-            await screen.findByText("Réponse : Success")
+            await screen.findByText("Réponse : Success"),
         ).toBeInTheDocument();
         expect(
             await screen.findByText(
-                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df268g"
-            )
+                "ID de l'historique : 82075add-02ed-4a2e-9127-1a0e70df268g",
+            ),
         ).toBeInTheDocument();
         expect(
-            await screen.findByText("Date de création : 2023-07-08")
+            await screen.findByText("Date de création : 2023-07-08"),
         ).toBeInTheDocument();
         expect(await screen.findByText("404")).toBeInTheDocument();
         expect(
-            await screen.findByText("Réponse : Not Found")
+            await screen.findByText("Réponse : Not Found"),
         ).toBeInTheDocument();
         const historiesContainer = await screen.findByTestId(
-            "histories-container"
+            "histories-container",
         );
         expect(historiesContainer.children).toHaveLength(2);
     });
@@ -89,11 +89,11 @@ describe("Tests UrlHistory", () => {
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
                 <UrlHistory />
-            </MockedProvider>
+            </MockedProvider>,
         );
 
         expect(
-            await screen.findByText("Erreur : request error")
+            await screen.findByText("Erreur : request error"),
         ).toBeInTheDocument();
     });
 
@@ -121,11 +121,11 @@ describe("Tests UrlHistory", () => {
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
                 <UrlHistory />
-            </MockedProvider>
+            </MockedProvider>,
         );
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
         const historiesContainer = await screen.findByTestId(
-            "histories-container"
+            "histories-container",
         );
         expect(historiesContainer.children).toHaveLength(0);
     });
