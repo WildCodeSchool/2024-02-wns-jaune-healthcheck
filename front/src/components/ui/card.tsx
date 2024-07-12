@@ -1,6 +1,15 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { getStatusColor } from "@/constants/globalFunction";
+
+const insertLineBreaks = (url: string, maxLength = 30) => {
+    if (url.length <= maxLength) return url;
+    const regex = new RegExp(`.{1,${maxLength}}`, "g");
+    const matches = url.match(regex);
+    if (matches === null) return url;
+    return matches.join("\n");
+};
 
 const Card = React.forwardRef<
     HTMLDivElement,
@@ -46,13 +55,15 @@ CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<
     HTMLParagraphElement,
-    React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
+    React.HTMLAttributes<HTMLParagraphElement> & { url?: string }
+>(({ className, url, ...props }, ref) => (
     <p
         ref={ref}
-        className={cn("text-sm text-muted-foreground text-right", className)}
+        className={`text-sm text-muted-foreground text-right whitespace-pre-wrap ${className}`}
         {...props}
-    />
+    >
+        {url ? insertLineBreaks(url) : props.children}
+    </p>
 ));
 CardDescription.displayName = "CardDescription";
 
@@ -64,33 +75,28 @@ const CardContent = React.forwardRef<
 ));
 CardContent.displayName = "CardContent";
 
-const CardFooter = React.forwardRef<
-    HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-    <div
-        ref={ref}
-        className={cn("flex items-center p-6 pt-0", className)}
-        {...props}
-    />
-));
-CardFooter.displayName = "CardFooter";
-
 const CardStatus = React.forwardRef<
     HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-    <div
-        ref={ref}
-        className={cn(
-            "text-sm font-semibold text-right flex items-center",
-            className,
-        )}
-        {...props}
-    >
-        <span className="w-4 h-4 rounded-full bg-green-500 mr-2"></span>
-    </div>
-));
+    React.HTMLAttributes<HTMLDivElement> & { statusCode: number | null }
+>(({ className, statusCode, ...props }, ref) => {
+    const statusColor = getStatusColor(statusCode);
+
+    return (
+        <div
+            ref={ref}
+            className={cn(
+                "text-sm font-semibold text-right flex items-center",
+                className,
+            )}
+            {...props}
+        >
+            <span
+                data-testid="status-indicator"
+                className={`w-5 h-5 rounded-full ${statusColor} mr-2`}
+            ></span>
+        </div>
+    );
+});
 CardStatus.displayName = "CardStatus";
 
 const List = React.forwardRef<
@@ -112,7 +118,6 @@ ListItem.displayName = "ListItem";
 export {
     Card,
     CardHeader,
-    CardFooter,
     CardTitle,
     CardDescription,
     CardContent,

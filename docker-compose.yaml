@@ -1,4 +1,4 @@
-name: 'health-checker-prod'
+name: "health-checker-prod"
 services:
   backend:
     build: ./back

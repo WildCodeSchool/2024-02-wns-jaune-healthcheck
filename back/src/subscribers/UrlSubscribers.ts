@@ -47,8 +47,9 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
         transactionalEntityManager: EntityManager,
     ) {
         try {
-            const response = await axios.get(url.path);
-
+            const response = await axios.get(url.path, {
+                validateStatus: () => true, // Do not throw on non-2xx status codes
+            });
             const history = new History();
             history.url = url;
             history.response = response.data;
