@@ -14,7 +14,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Build and test
-        run: docker compose -f docker-compose.test.yaml up
+        run: docker compose -f docker-compose.test.yaml up --abort-on-container-exit
         env:
           APP_ENV: ${{ secrets.APP_ENV }}
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
