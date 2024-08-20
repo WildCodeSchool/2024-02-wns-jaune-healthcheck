@@ -2,11 +2,9 @@ name: test-ci
 
 on: 
   pull_request:
-    paths:
-    - 'back/src/**'
-    - 'front/src/**'
     paths-ignore:
-    - 'front/src/generated/**'
+      - 'data/**'
+      - 'front/src/generated/**'
 
 jobs:
   test:
