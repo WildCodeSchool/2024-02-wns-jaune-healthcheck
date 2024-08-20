@@ -35,11 +35,7 @@ const URLList: React.FC = () => {
         nextPage: 2,
     });
 
-    const { 
-        totalPages, 
-        currentPage, 
-        previousPage, 
-        nextPage } = PaginateUrls;
+    const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
 
     useEffect(() => {
         if (!data) return;
@@ -88,36 +84,59 @@ const URLList: React.FC = () => {
             />
             <div className="flex-grow">
                 <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
-                {
-                    data ? (
-                        data.urls.urls.map((item) => (
-                        <ListItem key={item.id} className="flex justify-center items-start w-full">
-                            <a href={`/url/${item.id}`} rel="noopener noreferrer" className="w-full max-w-lg">
-                            <Card className="w-full hover:border hover:border-primary">
-                                <CardHeader>
-                                <CardTitle className="truncate" title={item.name}>
-                                    {item.name}
-                                </CardTitle>
-                                <CardDescription className="truncate" title={item.path}>
-                                    {item.path}
-                                </CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex">
-                                <CardStatus statusCode={item.histories[0] ? item.histories[0].status_code : null} />
-                                <p className="text-sm">
-                                    {item.histories[0] ? `Status ${item.histories[0].status_code}` : ""}
-                                </p>
-                                </CardContent>
-                            </Card>
-                            </a>
-                        </ListItem>
-                        ))
-                    ) : (
-                        Array.from({ length: 16 }, (_, index) => {
-                            return <Skeleton key={index} className="h-[143px] rounded-lg" />
-                        })
-                    )
-                    }
+                    {data
+                        ? data.urls.urls.map((item) => (
+                              <ListItem
+                                  key={item.id}
+                                  className="flex justify-center items-start w-full"
+                              >
+                                  <a
+                                      href={`/url/${item.id}`}
+                                      rel="noopener noreferrer"
+                                      className="w-full max-w-lg"
+                                  >
+                                      <Card className="w-full hover:border hover:border-primary">
+                                          <CardHeader>
+                                              <CardTitle
+                                                  className="truncate"
+                                                  title={item.name}
+                                              >
+                                                  {item.name}
+                                              </CardTitle>
+                                              <CardDescription
+                                                  className="truncate"
+                                                  title={item.path}
+                                              >
+                                                  {item.path}
+                                              </CardDescription>
+                                          </CardHeader>
+                                          <CardContent className="flex">
+                                              <CardStatus
+                                                  statusCode={
+                                                      item.histories[0]
+                                                          ? item.histories[0]
+                                                                .status_code
+                                                          : null
+                                                  }
+                                              />
+                                              <p className="text-sm">
+                                                  {item.histories[0]
+                                                      ? `Status ${item.histories[0].status_code}`
+                                                      : ""}
+                                              </p>
+                                          </CardContent>
+                                      </Card>
+                                  </a>
+                              </ListItem>
+                          ))
+                        : Array.from({ length: 16 }, (_, index) => {
+                              return (
+                                  <Skeleton
+                                      key={index}
+                                      className="h-[143px] rounded-lg"
+                                  />
+                              );
+                          })}
                 </List>
             </div>
             <CustomPagination

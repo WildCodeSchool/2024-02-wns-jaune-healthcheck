@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { LogOut } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
 import { useState } from "react";
@@ -39,6 +39,7 @@ export default function UserHeader() {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
 
     const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
 
     const [logoutQuery, { loading }] = useLogoutLazyQuery();
     const logout = useAuthStore((state) => state.logout);
@@ -61,7 +62,12 @@ export default function UserHeader() {
     return (
         <div className="w-full flex justify-between items-center">
             <section className="flex items-center gap-2">
-                <img src={Logo} alt="Logo" className="w-8 h-8" />
+                <img
+                    src={Logo}
+                    alt="Logo"
+                    className="w-8 h-8 cursor-pointer"
+                    onClick={() => navigate("/")}
+                />
                 <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
                     {navigationList.map((item) =>
                         item.path ? (
