@@ -20,6 +20,6 @@ class HistoryResolver {
             throw new Error("Internal server error");
         }
     }
-} //test CI
+}
 
 export default HistoryResolver;
