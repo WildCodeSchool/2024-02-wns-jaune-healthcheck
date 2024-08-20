@@ -1,5 +1,6 @@
 name: test-ci
 
+
 on: 
   pull_request:
     paths-ignore:
@@ -12,11 +13,16 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
       - name: Build and test
-        run: docker compose -f docker-compose.test.yaml up
+        run: docker compose -f docker-compose.test.yaml up --abort-on-container-exit
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          COOKIE_TTL: ${{ secrets.COOKIE_TTL }}
