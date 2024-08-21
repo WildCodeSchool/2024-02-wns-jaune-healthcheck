@@ -62,7 +62,7 @@ export class Url extends BaseEntity {
             .innerJoinAndSelect("url.histories", "history")
             .leftJoinAndSelect("url.userUrl", "userUrl")
     
-        let whereConditions: string[] = ["1 = 1"];
+        const whereConditions: string[] = ["1 = 1"];
 
         if (privateUrls && authenticatedUserId) {
             whereConditions.push("userUrl.id = :authenticatedUserId");
