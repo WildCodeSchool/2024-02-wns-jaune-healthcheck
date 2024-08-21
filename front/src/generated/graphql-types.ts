@@ -191,6 +191,12 @@ export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutQuery = { __typename?: 'Query', logout: string };
 
+
+export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutQuery = { __typename?: 'Query', logout: string };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
