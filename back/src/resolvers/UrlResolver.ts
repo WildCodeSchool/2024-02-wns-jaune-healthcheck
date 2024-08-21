@@ -5,13 +5,15 @@ import {
     Arg,
     InputType,
     Field,
-    ObjectType,
     Ctx,
 } from "type-graphql";
 import { Url } from "../entities/Url";
 import { validate } from "class-validator";
-import { QueryFailedError, ILike } from "typeorm";
+import { QueryFailedError } from "typeorm";
 import { MyContext } from "@/index";
+import PaginateUrls from "../types/PaginatesUrls";
+     
+
 
 @InputType()
 export class UrlInput implements Partial<Url> {
@@ -22,113 +24,27 @@ export class UrlInput implements Partial<Url> {
     path: string;
 }
 
-@ObjectType()
-class PaginateUrls {
-    @Field(() => [Url])
-    urls: Url[];
-
-    @Field()
-    totalPages: number;
-
-    @Field()
-    currentPage: number;
-
-    @Field()
-    previousPage: number;
-
-    @Field()
-    nextPage: number;
-}
-
 @Resolver()
 class UrlResolver {
     @Query(() => PaginateUrls)
     async urls(
+        @Ctx() context: MyContext,
+        @Arg("privateUrls", { defaultValue: false }) privateUrls: boolean,
         @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
         @Arg("searchText") searchText?: string,
         @Arg("sortField") sortField?: string,
     ): Promise<PaginateUrls> {
         try {
-            let urls: Url[];
-            const skip: number = currentPage * 16 - 16;
-            if (searchText && sortField) {
-                if (sortField !== "status") {
-                    urls = await Url.find({
-                        where: [
-                            { name: ILike(`%${searchText}%`) },
-                            { path: ILike(`%${searchText}%`) },
-                        ],
-                        order: { [sortField]: "DESC" },
-                        skip: skip,
-                        take: 16,
-                    });
-                } else {
-                    urls = await Url.find({
-                        where: [
-                            { name: ILike(`%${searchText}%`) },
-                            { path: ILike(`%${searchText}%`) },
-                        ],
-                        skip: skip,
-                        take: 16,
-                    });
-                    urls.sort((url1: Url, url2: Url) => {
-                        const status1 = url1.histories[0]?.status_code || 0;
-                        const status2 = url2.histories[0]?.status_code || 0;
-                        return status1 - status2;
-                    });
-                }
-            } else if (!searchText && sortField) {
-                if (sortField !== "status") {
-                    urls = await Url.find({
-                        order: {
-                            [sortField]:
-                                sortField === "createdAt" ? "DESC" : "ASC",
-                        },
-                        skip: skip,
-                        take: 16,
-                    });
-                } else {
-                    urls = await Url.find({ skip: skip, take: 16 });
-                    urls.sort((url1: Url, url2: Url) => {
-                        const status1 = url1.histories[0]?.status_code || 0;
-                        const status2 = url2.histories[0]?.status_code || 0;
-                        return status1 - status2;
-                    });
-                }
-            } else if (searchText && !sortField) {
-                urls = await Url.find({
-                    where: [
-                        { name: ILike(`%${searchText}%`) },
-                        { path: ILike(`%${searchText}%`) },
-                    ],
-                    order: { createdAt: "DESC" },
-                    skip: skip,
-                    take: 16,
-                });
-            } else {
-                urls = await Url.find({
-                    order: { createdAt: "DESC" },
-                    skip: skip,
-                    take: 16,
-                });
+            if (context.payload) {
+                return await Url.getPaginateUrls(
+                    currentPage,
+                    searchText,
+                    sortField,
+                    privateUrls,
+                    context.payload.id,
+                );
             }
-
-            const countUrls = await Url.count({
-                where: [
-                    { name: ILike(`%${searchText}%`) },
-                    { path: ILike(`%${searchText}%`) },
-                ],
-            });
-
-            const totalPages: number = Math.ceil(countUrls / 16);
-
-            return {
-                urls: urls,
-                totalPages: totalPages,
-                currentPage: currentPage,
-                previousPage: Math.max(currentPage - 1, 0),
-                nextPage: Math.min(currentPage + 1, totalPages),
-            };
+            return await Url.getPaginateUrls(currentPage, searchText, sortField);
         } catch (_error) {
             throw new Error("Internal server error");
         }
