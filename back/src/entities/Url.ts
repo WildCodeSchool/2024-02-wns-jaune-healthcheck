@@ -40,6 +40,10 @@ export class Url extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date;
 
+    @Field(() => Date)
+    @CreateDateColumn()
+    lastCheckDate: Date;
+
     @Field(() => [History])
     @OneToMany(() => History, (history) => history.url, { eager: true })
     histories: History[];

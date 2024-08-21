@@ -191,6 +191,23 @@ class UrlResolver {
             throw new Error("Internal server error");
         }
     }
+
+    @Mutation(() => Url)
+    async checkUrl(@Arg("id") id: string): Promise<Url> {
+        try {
+            const url = await Url.findOneByOrFail({ id });
+
+            url.lastCheckDate = new Date();
+            await url.save();
+
+            return url;
+        } catch (error) {
+            if (error.name === "EntityNotFound") {
+                throw new Error("URL not found");
+            }
+            throw new Error("Internal server error");
+        }
+    }
 }
 
 export default UrlResolver;

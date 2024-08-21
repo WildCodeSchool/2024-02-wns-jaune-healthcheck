@@ -29,3 +29,12 @@ export const CREATE_NEW_PRIVATE_URL = gql`
         }
     }
 `;
+
+export const CHECK_URL = gql`
+    mutation CheckUrl($id: String!) {
+        checkUrl(id: $id) {
+            name
+            path
+        }
+    }
+`;
