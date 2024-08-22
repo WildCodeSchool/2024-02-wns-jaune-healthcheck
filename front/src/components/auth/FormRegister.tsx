@@ -51,7 +51,7 @@ export default function FormRegister() {
             onCompleted(data) {
                 toast({
                     variant: "default",
-                    description: `Votre compte à bien été créé`,
+                    description: `Votre compte a bien été créé`,
                 });
                 registerForm.reset();
                 login(data.createUser);

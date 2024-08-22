@@ -31,6 +31,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addUrl: Url;
   addUserUrl: Url;
+  checkUrl: Url;
   createUser: Scalars['String']['output'];
   login: Scalars['String']['output'];
 };
@@ -44,6 +45,11 @@ export type MutationAddUrlArgs = {
 export type MutationAddUserUrlArgs = {
   isPrivate: Scalars['Boolean']['input'];
   urlData: UrlInput;
+};
+
+
+export type MutationCheckUrlArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -101,6 +107,7 @@ export type Url = {
   createdAt: Scalars['DateTimeISO']['output'];
   histories: Array<History>;
   id: Scalars['String']['output'];
+  lastCheckDate: Scalars['DateTimeISO']['output'];
   name: Scalars['String']['output'];
   path: Scalars['String']['output'];
   userUrl?: Maybe<UserUrl>;
@@ -151,6 +158,13 @@ export type AddUserUrlMutationVariables = Exact<{
 
 export type AddUserUrlMutation = { __typename?: 'Mutation', addUserUrl: { __typename?: 'Url', name: string, path: string } };
 
+export type CheckUrlMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type CheckUrlMutation = { __typename?: 'Mutation', checkUrl: { __typename?: 'Url', name: string, path: string } };
+
 export type GetAllURlsQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
   sortField: Scalars['String']['input'];
@@ -171,6 +185,12 @@ export type RecentPrivateUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RecentPrivateUrlsQuery = { __typename?: 'Query', recentPrivateUrls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any }> }> };
+
+export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutQuery = { __typename?: 'Query', logout: string };
+
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -317,6 +337,40 @@ export function useAddUserUrlMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddUserUrlMutationHookResult = ReturnType<typeof useAddUserUrlMutation>;
 export type AddUserUrlMutationResult = Apollo.MutationResult<AddUserUrlMutation>;
 export type AddUserUrlMutationOptions = Apollo.BaseMutationOptions<AddUserUrlMutation, AddUserUrlMutationVariables>;
+export const CheckUrlDocument = gql`
+    mutation CheckUrl($id: String!) {
+  checkUrl(id: $id) {
+    name
+    path
+  }
+}
+    `;
+export type CheckUrlMutationFn = Apollo.MutationFunction<CheckUrlMutation, CheckUrlMutationVariables>;
+
+/**
+ * __useCheckUrlMutation__
+ *
+ * To run a mutation, you first call `useCheckUrlMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckUrlMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkUrlMutation, { data, loading, error }] = useCheckUrlMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCheckUrlMutation(baseOptions?: Apollo.MutationHookOptions<CheckUrlMutation, CheckUrlMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckUrlMutation, CheckUrlMutationVariables>(CheckUrlDocument, options);
+      }
+export type CheckUrlMutationHookResult = ReturnType<typeof useCheckUrlMutation>;
+export type CheckUrlMutationResult = Apollo.MutationResult<CheckUrlMutation>;
+export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<CheckUrlMutation, CheckUrlMutationVariables>;
 export const GetAllURlsDocument = gql`
     query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!) {
   urls(currentPage: $currentPage, sortField: $sortField, searchText: $searchText) {
