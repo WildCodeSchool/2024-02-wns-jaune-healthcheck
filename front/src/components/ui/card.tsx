@@ -45,7 +45,7 @@ const CardTitle = React.forwardRef<
     <h3
         ref={ref}
         className={cn(
-            "text-2xl font-semibold leading-none tracking-tight text-right",
+            "text-2xl font-semibold leading-none tracking-tight",
             className,
         )}
         {...props}
@@ -59,7 +59,7 @@ const CardDescription = React.forwardRef<
 >(({ className, url, ...props }, ref) => (
     <p
         ref={ref}
-        className={`text-sm text-muted-foreground text-right whitespace-pre-wrap ${className}`}
+        className={cn("text-sm text-muted-foreground", className)}
         {...props}
     >
         {url ? insertLineBreaks(url) : props.children}
@@ -73,6 +73,20 @@ const CardContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ));
+CardContent.displayName = "CardContent";
+
+const CardFooter = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn("flex items-center p-6 pt-0", className)}
+        {...props}
+    />
+));
+CardFooter.displayName = "CardFooter";
+
 CardContent.displayName = "CardContent";
 
 const CardStatus = React.forwardRef<
@@ -118,6 +132,7 @@ ListItem.displayName = "ListItem";
 export {
     Card,
     CardHeader,
+    CardFooter,
     CardTitle,
     CardDescription,
     CardContent,

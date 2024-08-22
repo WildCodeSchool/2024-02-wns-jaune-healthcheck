@@ -10,11 +10,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { LogOut, Crown } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
 import { useState } from "react";
+import { Pricing } from "@/components/subscription/Pricing";
 
 type NavigationList = {
     id: number;
@@ -37,6 +38,7 @@ const navigationList: NavigationList[] = [
 
 export default function UserHeader() {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [openPricing, setOpenPricing] = useState<boolean>(false);
 
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
@@ -111,6 +113,13 @@ export default function UserHeader() {
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
+                            onClick={() => setOpenPricing(true)}
+                            className="cursor-pointer"
+                        >
+                            <Crown className="mr-2 h-4 w-4" />
+                            <p>{loading ? "Chargement ..." : "Abonnements"}</p>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                             onClick={handleLogout}
                             className="cursor-pointer"
                         >
@@ -120,6 +129,10 @@ export default function UserHeader() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </section>
+            <Pricing
+                openPricing={openPricing}
+                setOpenPricing={setOpenPricing}
+            />
         </div>
     );
 }
