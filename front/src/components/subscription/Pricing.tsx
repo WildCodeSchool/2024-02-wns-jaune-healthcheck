@@ -19,18 +19,27 @@ import {
 
 import { Check, X } from "lucide-react";
 
-export function Pricing(props: any) {
+interface PricingProps {
+    openPricing: boolean;
+    setOpenPricing: (value: boolean) => void;
+}
+
+export function Pricing(props: PricingProps) {
     const { openPricing, setOpenPricing } = props;
     return (
         <Dialog open={openPricing} onOpenChange={setOpenPricing}>
             <DialogContent className="min-w-max">
                 <DialogHeader>
-                    <DialogTitle className="text-center">Abonnements</DialogTitle>
+                    <DialogTitle className="text-center">
+                        Abonnements
+                    </DialogTitle>
                     <DialogDescription className="flex flex-col md:flex-row justify-center items-center py-5 gap-3">
                         <Card className="w-[250px] h-[300px]">
                             <CardHeader>
                                 <CardTitle>Gratuit</CardTitle>
-                                <CardDescription>Profitez gratuitement d'Health Checker</CardDescription>
+                                <CardDescription>
+                                    Profitez gratuitement d'Health Checker
+                                </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
                                 <ul className="flex flex-col gap-2 py-2">
@@ -45,13 +54,17 @@ export function Pricing(props: any) {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full" disabled>Par défaut</Button>
+                                <Button className="w-full" disabled>
+                                    Par défaut
+                                </Button>
                             </CardFooter>
                         </Card>
                         <Card className="w-[250px] h-[300px]">
                             <CardHeader>
                                 <CardTitle>Premium - 10€</CardTitle>
-                                <CardDescription>Levez les limitations de la version gratuite</CardDescription>
+                                <CardDescription>
+                                    Levez les limitations de la version gratuite
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <ul className="flex flex-col gap-2 py-2">

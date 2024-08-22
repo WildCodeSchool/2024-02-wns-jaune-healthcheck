@@ -112,9 +112,10 @@ export default function UserHeader() {
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                             onClick={() => setOpenPricing(true)}
-                            className="cursor-pointer">
+                            className="cursor-pointer"
+                        >
                             <Crown className="mr-2 h-4 w-4" />
                             <p>{loading ? "Chargement ..." : "Abonnements"}</p>
                         </DropdownMenuItem>
@@ -122,13 +123,16 @@ export default function UserHeader() {
                             onClick={handleLogout}
                             className="cursor-pointer"
                         >
-                                <LogOut className="mr-2 h-4 w-4" />
-                                <p>{loading ? "Chargement..." : "Déconnexion"}</p>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <p>{loading ? "Chargement..." : "Déconnexion"}</p>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </section>
-            <Pricing openPricing={openPricing} setOpenPricing={setOpenPricing} />
+            <Pricing
+                openPricing={openPricing}
+                setOpenPricing={setOpenPricing}
+            />
         </div>
     );
 }
