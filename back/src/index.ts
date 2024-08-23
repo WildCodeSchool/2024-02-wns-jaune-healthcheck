@@ -10,7 +10,7 @@ import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
 import UserUrlResolver from "./resolvers/UserUrlResolver";
 
-interface JwtPayload {
+export interface JwtPayload {
     id: string;
     email: string;
 }

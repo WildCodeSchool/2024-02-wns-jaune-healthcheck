@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-type Dimensions = {
+export type Dimensions = {
     width: number;
     height: number;
 };

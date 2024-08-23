@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import UrlHistory from "../pages/UrlHistory";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from "@apollo/client/testing";
 import { GET_ONE_URL } from "@/graphql/queries";
 
@@ -23,13 +24,13 @@ describe("Tests UrlHistory", () => {
                         histories: [
                             {
                                 id: "82075add-02ed-4a2e-9127-1a0e70df060d",
-                                created_at: "2023-07-09",
+                                created_at: "2023-08-21T13:10:29.911Z",
                                 status_code: 200,
                                 response: "Success",
                             },
                             {
                                 id: "82075add-02ed-4a2e-9127-1a0e70df268g",
-                                created_at: "2023-07-08",
+                                created_at: "2024-08-21T13:10:29.911Z",
                                 status_code: 404,
                                 response: "Not Found",
                             },
@@ -41,17 +42,19 @@ describe("Tests UrlHistory", () => {
         };
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
-                <UrlHistory />
+                <MemoryRouter>
+                    <UrlHistory />
+                </MemoryRouter>
             </MockedProvider>,
         );
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
         expect(
-            await screen.findByText("Date : 09/07/2023 à 02:00:00"),
+            await screen.findByText("Date : 21/08/2023 à 15:10:29"),
         ).toBeInTheDocument();
         expect(await screen.findByText("200")).toBeInTheDocument();
         expect(await screen.findByText("Success")).toBeInTheDocument();
         expect(
-            await screen.findByText("Date : 08/07/2023 à 02:00:00"),
+            await screen.findByText("Date : 21/08/2024 à 15:10:29"),
         ).toBeInTheDocument();
         expect(await screen.findByText("404")).toBeInTheDocument();
         expect(await screen.findByText("Not Found")).toBeInTheDocument();
@@ -74,7 +77,9 @@ describe("Tests UrlHistory", () => {
         };
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
-                <UrlHistory />
+                <MemoryRouter>
+                    <UrlHistory />
+                </MemoryRouter>
             </MockedProvider>,
         );
 
@@ -106,7 +111,9 @@ describe("Tests UrlHistory", () => {
         };
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
-                <UrlHistory />
+                <MemoryRouter>
+                    <UrlHistory />
+                </MemoryRouter>
             </MockedProvider>,
         );
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
