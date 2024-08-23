@@ -63,6 +63,20 @@ export const GET_RECENT_PRIVATE_URLS = gql`
     }
 `;
 
+export const GET_RECENT_PRIVATE_HISTORIES = gql`
+    query RecentPrivateHistories {
+        recentPrivateHistories {
+            id
+            status_code
+            created_at
+            url {
+                name
+                path
+            }
+        }
+    }
+`;
+
 export const LOGOUT = gql`
     query Logout {
         logout

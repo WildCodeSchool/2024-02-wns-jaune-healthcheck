@@ -80,6 +80,7 @@ export type Query = {
   history: History;
   logout: Scalars['String']['output'];
   me: Scalars['String']['output'];
+  recentPrivateHistories: Array<History>;
   recentPrivateUrls: Array<Url>;
   url: Url;
   urls: PaginateUrls;
@@ -98,6 +99,7 @@ export type QueryUrlArgs = {
 
 export type QueryUrlsArgs = {
   currentPage?: Scalars['Float']['input'];
+  privateUrls?: Scalars['Boolean']['input'];
   searchText: Scalars['String']['input'];
   sortField: Scalars['String']['input'];
 };
@@ -186,11 +188,10 @@ export type RecentPrivateUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type RecentPrivateUrlsQuery = { __typename?: 'Query', recentPrivateUrls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any }> }> };
 
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+export type RecentPrivateHistoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutQuery = { __typename?: 'Query', logout: string };
-
+export type RecentPrivateHistoriesQuery = { __typename?: 'Query', recentPrivateHistories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any, url: { __typename?: 'Url', name: string, path: string } }> };
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -523,6 +524,51 @@ export type RecentPrivateUrlsQueryHookResult = ReturnType<typeof useRecentPrivat
 export type RecentPrivateUrlsLazyQueryHookResult = ReturnType<typeof useRecentPrivateUrlsLazyQuery>;
 export type RecentPrivateUrlsSuspenseQueryHookResult = ReturnType<typeof useRecentPrivateUrlsSuspenseQuery>;
 export type RecentPrivateUrlsQueryResult = Apollo.QueryResult<RecentPrivateUrlsQuery, RecentPrivateUrlsQueryVariables>;
+export const RecentPrivateHistoriesDocument = gql`
+    query RecentPrivateHistories {
+  recentPrivateHistories {
+    id
+    status_code
+    created_at
+    url {
+      name
+      path
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecentPrivateHistoriesQuery__
+ *
+ * To run a query within a React component, call `useRecentPrivateHistoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentPrivateHistoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecentPrivateHistoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecentPrivateHistoriesQuery(baseOptions?: Apollo.QueryHookOptions<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>(RecentPrivateHistoriesDocument, options);
+      }
+export function useRecentPrivateHistoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>(RecentPrivateHistoriesDocument, options);
+        }
+export function useRecentPrivateHistoriesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>(RecentPrivateHistoriesDocument, options);
+        }
+export type RecentPrivateHistoriesQueryHookResult = ReturnType<typeof useRecentPrivateHistoriesQuery>;
+export type RecentPrivateHistoriesLazyQueryHookResult = ReturnType<typeof useRecentPrivateHistoriesLazyQuery>;
+export type RecentPrivateHistoriesSuspenseQueryHookResult = ReturnType<typeof useRecentPrivateHistoriesSuspenseQuery>;
+export type RecentPrivateHistoriesQueryResult = Apollo.QueryResult<RecentPrivateHistoriesQuery, RecentPrivateHistoriesQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
   logout
