@@ -1,6 +1,5 @@
 import { Url } from "../../entities/Url";
 import { User } from "../../entities/User";
-import { UserUrl } from "../../entities/UserUrl";
 import { History } from "../../entities/History";
 import dataSource from "../dataSource";
 import { urlsData, historiesData } from "./dataInput";
@@ -23,11 +22,6 @@ async function generateFixtures() {
                 return url;
             }),
         );
-        await Url.create({
-            id: "737fbb42-1dd9-40c5-a29e-604407a7bc7b",
-            name: "TestUrl for fetch private urls",
-            path: "https://excalidraw.com"
-        });
 
         await User.save({
             id: "741fbb42-1dd9-40c5-a29e-604407a7bc8c",
@@ -36,9 +30,12 @@ async function generateFixtures() {
             hashedPassword: "hashedPasswordTest",
         });
 
-        await UserUrl.save({
-            userId: "741fbb42-1dd9-40c5-a29e-604407a7bc8c",
-            urlId: "737fbb42-1dd9-40c5-a29e-604407a7bc7b",
+        await Url.save({
+            id: "737fbb42-1dd9-40c5-a29e-604407a7bc7b",
+            name: "TestUrl for fetch private urls",
+            path: "https://excalidraw.com",
+            private: true,
+            user: { id: "741fbb42-1dd9-40c5-a29e-604407a7bc8c" }
         });
 
         await History.save({ ...historiesData[0], url: savedUrls[0] });

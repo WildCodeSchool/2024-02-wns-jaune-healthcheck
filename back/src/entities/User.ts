@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { Field, ObjectType } from "type-graphql";
-import { UserUrl } from "./UserUrl";
+import { Url } from "./Url";
 
 @ObjectType()
 @Entity()
@@ -26,7 +26,7 @@ export class User extends BaseEntity {
     @Column()
     hashedPassword: string;
 
-    @Field(() => [UserUrl])
-    @OneToMany(() => UserUrl, (userUrl) => userUrl.user)
-    userUrls!: UserUrl[];
+    @Field(() => [Url], { nullable: true })
+    @OneToMany(() => Url, (Url) => Url.user)
+    urls!: Url[];
 }

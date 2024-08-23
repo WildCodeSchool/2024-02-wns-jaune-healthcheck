@@ -5,12 +5,12 @@ import {
     BaseEntity,
     CreateDateColumn,
     OneToMany,
-    OneToOne,
+    ManyToOne
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
 import { History } from "./History";
-import { UserUrl } from "./UserUrl";
+import { User } from "./User";
 import PaginateUrls from "../types/PaginatesUrls";
 
 
@@ -39,6 +39,10 @@ export class Url extends BaseEntity {
     path: string;
 
     @Field()
+    @Column({ default: false })
+    private: boolean;
+
+    @Field()
     @CreateDateColumn()
     createdAt: Date;
 
@@ -50,9 +54,12 @@ export class Url extends BaseEntity {
     @OneToMany(() => History, (history) => history.url, { eager: true })
     histories: History[];
 
-    @Field(() => UserUrl, { nullable: true })
-    @OneToOne(() => UserUrl, (userUrl) => userUrl.url, { eager: true })
-    userUrl?: UserUrl;
+    @Field(() => User, { nullable: true })
+    @ManyToOne(() => User, (user) => user.urls, { 
+        eager: true, 
+        nullable: true 
+    })
+    user?: User;
 
     static async getPaginateUrls(
         currentPage: number, 
@@ -64,14 +71,14 @@ export class Url extends BaseEntity {
         const skip = (currentPage - 1) * 16;
         const queryBuilder = this.createQueryBuilder("url")
             .innerJoinAndSelect("url.histories", "history")
-            .leftJoinAndSelect("url.userUrl", "userUrl")
+            .leftJoinAndSelect("url.user", "user")
     
         const whereConditions: string[] = ["1 = 1"];
 
         if (privateUrls && authenticatedUserId) {
-            whereConditions.push("userUrl.id = :authenticatedUserId");
+            whereConditions.push("user.id = :authenticatedUserId");
         } else {
-            whereConditions.push("userUrl.id IS NULL");
+            whereConditions.push("user.id IS NULL");
         }
     
         if (searchText) {

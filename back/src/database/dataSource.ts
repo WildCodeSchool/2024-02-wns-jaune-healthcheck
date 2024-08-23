@@ -6,7 +6,7 @@ import { User } from "../entities/User";
 import { InitDbUrlHistoryUser1720618090787 } from "./migrations/1720618090787-Init_db_Url_History_User";
 import { AddUserUrl1720710308167 } from "./migrations/1720710308167-Add-UserUrl";
 import { Migrations1724168513925 } from "./migrations/1724168513925-migrations";
-import { UserUrl } from "../entities/UserUrl";
+import { RemoveUserUrl1724425092272 } from "./migrations/1724425092272-remove-userUrl";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -17,12 +17,13 @@ const dataSource = new DataSource({
     database: process.env.POSTGRES_DB,
     synchronize: process.env.APP_ENV === "test",
     logging: process.env.APP_ENV === "dev",
-    entities: [Url, History, User, UserUrl],
+    entities: [Url, History, User],
     subscribers: [UrlSubscriber],
     migrations: [
         InitDbUrlHistoryUser1720618090787,
         AddUserUrl1720710308167,
         Migrations1724168513925,
+        RemoveUserUrl1724425092272
     ],
 });
 

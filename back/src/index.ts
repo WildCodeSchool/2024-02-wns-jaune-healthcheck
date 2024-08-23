@@ -8,7 +8,6 @@ import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
 import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
-import UserUrlResolver from "./resolvers/UserUrlResolver";
 
 export interface JwtPayload {
     id: string;
@@ -32,7 +31,6 @@ const start = async () => {
             UrlResolver,
             HistoryResolver,
             UserResolver,
-            UserUrlResolver,
         ],
         authChecker: ({ context }) => {
             if (!context.payload) return false;

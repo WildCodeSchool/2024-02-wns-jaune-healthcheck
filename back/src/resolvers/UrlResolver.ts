@@ -12,7 +12,6 @@ import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
 import { MyContext } from "@/index";
 import PaginateUrls from "../types/PaginatesUrls";
-     
 
 
 @InputType()
@@ -69,8 +68,8 @@ class UrlResolver {
                 return await Url.find({
                     order: { createdAt: "DESC" },
                     where: {
-                        userUrl: {
-                            userId: context.payload.id,
+                        user: {
+                            id: context.payload.id,
                         },
                     },
                     take: 5,
@@ -84,8 +83,25 @@ class UrlResolver {
     }
 
     @Mutation(() => Url)
-    async addUrl(@Arg("urlData") urlData: UrlInput): Promise<Url> {
+    async addUrl(
+        @Ctx() context: MyContext, 
+        @Arg("urlData") urlData: UrlInput,
+        @Arg("isPrivate", { defaultValue: false }) isPrivate: boolean,
+    ): Promise<Url> {
         try {
+            if (context.payload && isPrivate) {
+                const url = Url.create({ 
+                    ...urlData, 
+                    user: { id: context.payload.id }
+                });
+                const dataValidationError = await validate(url);
+                if (dataValidationError.length > 0) {
+                    throw new Error("Data validation error");
+                }
+                await url.save();
+                return url;
+            }
+
             const url = Url.create({ ...urlData });
             const dataValidationError = await validate(url);
             if (dataValidationError.length > 0) {
