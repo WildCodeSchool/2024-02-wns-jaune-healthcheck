@@ -12,6 +12,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Europe/Paris
+      LC_ALL: fr_FR.UTF-8
     depends_on:
       database-test:
         condition: service_healthy
@@ -23,6 +25,8 @@ services:
     environment:
       APP_ENV: ${APP_ENV}
       VITE_API_URL: ${VITE_API_URL}
+      TZ: Europe/Paris
+      LC_ALL: fr_FR.UTF-8
 
   database-test:
     container_name: database-test

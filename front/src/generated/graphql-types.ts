@@ -98,6 +98,7 @@ export type QueryUrlArgs = {
 
 export type QueryUrlsArgs = {
   currentPage?: Scalars['Float']['input'];
+  privateUrls?: Scalars['Boolean']['input'];
   searchText: Scalars['String']['input'];
   sortField: Scalars['String']['input'];
 };
