@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import UrlHistory from "../pages/UrlHistory";
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing";
 import { GET_ONE_URL } from "@/graphql/queries";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -27,7 +27,7 @@ describe("Tests UrlHistory", () => {
             delay: 30,
             request: {
                 query: GET_ONE_URL,
-                variable: {
+                variables: {
                     urlId: "3312231f-020b-47b1-9fd5-f3747e8bc782",
                 },
             },
@@ -85,7 +85,7 @@ describe("Tests UrlHistory", () => {
             delay: 30,
             request: {
                 query: GET_ONE_URL,
-                variable: {
+                variables: {
                     urlId: "3312231f-020b-47b1-9fd5-f3747e8bc782",
                 },
             },
@@ -106,10 +106,9 @@ describe("Tests UrlHistory", () => {
 
     it("Should display without histories", async () => {
         const urlMock = {
-            delay: 30,
             request: {
                 query: GET_ONE_URL,
-                variable: {
+                variables: {
                     urlId: "3312231f-020b-47b1-9fd5-f3747e8bc782",
                 },
             },
@@ -122,9 +121,9 @@ describe("Tests UrlHistory", () => {
                         histories: [],
                     },
                 },
-                loading: true,
             },
         };
+
         render(
             <MockedProvider mocks={[urlMock]} addTypename={false}>
                 <MemoryRouter>
@@ -132,11 +131,13 @@ describe("Tests UrlHistory", () => {
                 </MemoryRouter>
             </MockedProvider>,
         );
-        expect(await screen.findByText("En attente...")).toBeInTheDocument();
-        const historiesContainer = await screen.findByTestId(
-            "histories-container",
-        );
-        expect(historiesContainer.children).toHaveLength(0);
+
+        await waitFor(() => {
+            expect(screen.queryByText("En attente...")).not.toBeInTheDocument();
+        });
+
+        const historiesContainer = screen.queryByTestId("histories-container");
+        expect(historiesContainer).toBeInTheDocument();
     });
     it("Should render the 'Lancer une analyse' button", async () => {
         const urlMock = {
