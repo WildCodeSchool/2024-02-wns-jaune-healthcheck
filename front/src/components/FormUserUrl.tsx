@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
-import { useAddUserUrlMutation } from "@/generated/graphql-types";
+import { useAddUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS, GET_RECENT_PRIVATE_URLS } from "@/graphql/queries";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -27,6 +27,7 @@ import {
 import { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { FormLoginProps } from "@/types/form";
+import { useSearchParams } from "react-router-dom";
 
 export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
@@ -40,7 +41,8 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
         },
     });
 
-    const [createNewUserUrl, { loading }] = useAddUserUrlMutation();
+    const [searchParams] = useSearchParams();
+    const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();
 
     const onSubmit = (values: z.infer<typeof newUrlSchema>) => {
@@ -49,8 +51,8 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
             path: values.path,
         };
 
-        createNewUserUrl({
-            variables: { urlData: urlInput, isPrivate },
+        createNewUrl({
+            variables: { urlData: urlInput, isPrivate: isPrivate },
             onCompleted() {
                 toast({
                     variant: "default",
@@ -68,6 +70,12 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
             refetchQueries: [
                 {
                     query: GET_ALL_URLS,
+                    variables: {
+                        searchText: searchParams?.get("searchUrl") || "",
+                        sortField: searchParams?.get("sortField") || "",
+                        currentPage:
+                            Number(searchParams?.get("currentPage")) || 1,
+                    },
                 },
                 {
                     query: GET_RECENT_PRIVATE_URLS,

@@ -39,7 +39,7 @@ export default function FormUrl() {
         };
 
         createNewUrl({
-            variables: { urlData: urlInput },
+            variables: { urlData: urlInput, isPrivate: false },
             onCompleted() {
                 toast({
                     variant: "default",
