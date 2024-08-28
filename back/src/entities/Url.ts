@@ -11,6 +11,7 @@ import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
 import { History } from "./History";
 import { User } from "./User";
+import { CheckFrequency } from "./CheckFrequency";
 import PaginateUrls from "../types/PaginatesUrls";
 
 
@@ -60,6 +61,13 @@ export class Url extends BaseEntity {
         nullable: true 
     })
     user?: User;
+
+    @Field(() => CheckFrequency, { nullable: true })
+    @ManyToOne(() => CheckFrequency, (checkFrequency) => checkFrequency.urls, { 
+        eager: true, 
+        nullable: true 
+    })
+    checkFrequency?: CheckFrequency;
 
     static async getPaginateUrls(
         currentPage: number, 

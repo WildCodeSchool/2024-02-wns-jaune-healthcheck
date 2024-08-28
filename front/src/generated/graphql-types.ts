@@ -18,6 +18,14 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CheckFrequency = {
+  __typename?: 'CheckFrequency';
+  created_at: Scalars['DateTimeISO']['output'];
+  id: Scalars['String']['output'];
+  interval: Scalars['String']['output'];
+  urls: Array<Url>;
+};
+
 export type History = {
   __typename?: 'History';
   created_at: Scalars['DateTimeISO']['output'];
@@ -99,6 +107,7 @@ export type QueryUrlsArgs = {
 
 export type Url = {
   __typename?: 'Url';
+  checkFrequency?: Maybe<CheckFrequency>;
   createdAt: Scalars['DateTimeISO']['output'];
   histories: Array<History>;
   id: Scalars['String']['output'];
