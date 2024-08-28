@@ -5,11 +5,13 @@ export const GET_ALL_URLS = gql`
         $currentPage: Float!
         $sortField: String!
         $searchText: String!
+        $privateUrls: Boolean
     ) {
         urls(
             currentPage: $currentPage
             sortField: $sortField
             searchText: $searchText
+            privateUrls: $privateUrls
         ) {
             urls {
                 id

@@ -1,3 +1,4 @@
+import ListUrl from "@/components/dashboard/ListUrl";
 import Overview from "@/components/dashboard/Overview";
 import FormUserUrl from "@/components/FormUserUrl";
 import { Button } from "@/components/ui/button";
@@ -100,6 +101,7 @@ export default function Dashboard({ element }: { element: string }) {
 
                 <div className="col-span-2">
                     {element === "overview" && <Overview />}
+                    {element === "urls" && <ListUrl />}
                 </div>
             </div>
         </>

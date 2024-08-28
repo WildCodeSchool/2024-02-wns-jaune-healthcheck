@@ -171,6 +171,7 @@ export type GetAllURlsQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
   sortField: Scalars['String']['input'];
   searchText: Scalars['String']['input'];
+  privateUrls?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -373,8 +374,13 @@ export type CheckUrlMutationHookResult = ReturnType<typeof useCheckUrlMutation>;
 export type CheckUrlMutationResult = Apollo.MutationResult<CheckUrlMutation>;
 export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<CheckUrlMutation, CheckUrlMutationVariables>;
 export const GetAllURlsDocument = gql`
-    query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!) {
-  urls(currentPage: $currentPage, sortField: $sortField, searchText: $searchText) {
+    query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!, $privateUrls: Boolean) {
+  urls(
+    currentPage: $currentPage
+    sortField: $sortField
+    searchText: $searchText
+    privateUrls: $privateUrls
+  ) {
     urls {
       id
       name
@@ -410,6 +416,7 @@ export const GetAllURlsDocument = gql`
  *      currentPage: // value for 'currentPage'
  *      sortField: // value for 'sortField'
  *      searchText: // value for 'searchText'
+ *      privateUrls: // value for 'privateUrls'
  *   },
  * });
  */
