@@ -1,10 +1,19 @@
-name: 'health-checker-test'
+name: "health-checker-test"
 services:
   backend-test:
     container_name: backend-test
     build: ./back
     command: sh -c "npm run seed && npm run test"
-    env_file: .env.test
+    environment:
+      APP_ENV: ${APP_ENV}
+      BACKEND_PORT: ${BACKEND_PORT}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Europe/Paris
+      LC_ALL: fr_FR.UTF-8
     depends_on:
       database-test:
         condition: service_healthy
@@ -13,12 +22,21 @@ services:
     container_name: frontend-test
     build: ./front
     command: npm run test
-    env_file: .env.test
+    environment:
+      APP_ENV: ${APP_ENV}
+      VITE_API_URL: ${VITE_API_URL}
+      TZ: Europe/Paris
+      LC_ALL: fr_FR.UTF-8
 
   database-test:
     container_name: database-test
     image: postgres
-    env_file: .env.test
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
       interval: 5s

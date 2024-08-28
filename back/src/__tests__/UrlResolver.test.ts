@@ -1,5 +1,7 @@
 import { Url } from "../entities/Url";
+import PaginateUrls from "@/types/PaginatesUrls";
 import UrlResolver from "../resolvers/UrlResolver";
+import { MyContext, JwtPayload } from "..";
 
 type PartialUrl = Partial<Url>;
 
@@ -9,6 +11,23 @@ const mockUrl: PartialUrl = {
     path: "https://example.com",
 };
 const mockUrls: PartialUrl[] = [mockUrl];
+const mockPaginateUrls: PaginateUrls = {
+    urls: mockUrls as Url[],
+    totalPages: 1,
+    currentPage: 1,
+    previousPage: 1,
+    nextPage: 1,
+};
+
+const mockContext: MyContext = {
+    res: {
+        setHeader: jest.fn(),
+    },
+    payload: {
+        id: "testId",
+        email: "test@test.fr",
+    } as JwtPayload,
+};
 
 describe("Unit Test Url Resolver", () => {
     let urlResolver: UrlResolver;
@@ -21,19 +40,38 @@ describe("Unit Test Url Resolver", () => {
         jest.restoreAllMocks();
     });
 
-    it("Query urls should return an array of Url", async () => {
-        jest.spyOn(Url, "find").mockImplementation(() =>
-            Promise.resolve(mockUrls as Url[]),
+    it("Query urls whith context should return a pagination of urls", async () => {
+        jest.spyOn(Url, "getPaginateUrls").mockImplementation(() =>
+            Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
-        const result = await urlResolver.urls();
-        expect(result).toEqual(mockUrls);
+        
+        const result = await urlResolver.urls(mockContext, false, 1, "", "");
+        expect(result).toEqual(mockPaginateUrls);
     });
 
-    it("Query urls should throw an error when fetching urls fails", async () => {
-        jest.spyOn(Url, "find").mockRejectedValue(
+    it("Query urls whith context should throw an error when fetching urls fails", async () => {
+        jest.spyOn(Url, "getPaginateUrls").mockRejectedValue(
             new Error("Internal server error"),
         );
-        await expect(urlResolver.urls()).rejects.toThrow(
+        await expect(urlResolver.urls(mockContext, false, 1, "", "")).rejects.toThrow(
+            "Internal server error",
+        );
+    });
+
+    it("Query urls whithout context should return a pagination of urls", async () => {
+        jest.spyOn(Url, "getPaginateUrls").mockImplementation(() =>
+            Promise.resolve(mockPaginateUrls as PaginateUrls),
+        );
+        
+        const result = await urlResolver.urls({} as MyContext, false, 1, "", "");
+        expect(result).toEqual(mockPaginateUrls);
+    });
+
+    it("Query urls whithout context should throw an error when fetching urls fails", async () => {
+        jest.spyOn(Url, "getPaginateUrls").mockRejectedValue(
+            new Error("Internal server error"),
+        );
+        await expect(urlResolver.urls({} as MyContext, false, 1, "", "")).rejects.toThrow(
             "Internal server error",
         );
     });

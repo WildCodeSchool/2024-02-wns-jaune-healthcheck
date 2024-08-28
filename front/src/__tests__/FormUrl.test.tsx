@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FormUrl from "@/components/landing/FormUrl";
 import { MockedProvider } from "@apollo/client/testing";
 import { CREATE_NEW_URL } from "@/graphql/mutation";
+import { MemoryRouter } from "react-router-dom";
 
 const mocks = [
     {
@@ -13,6 +14,7 @@ const mocks = [
                     name: "Google",
                     path: "https://www.google.com/",
                 },
+                private: false,
             },
         },
         result: {
@@ -31,8 +33,10 @@ describe("Form url tests", () => {
     it("should contain a form", () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
-                <FormUrl />
-            </MockedProvider>
+                <MemoryRouter>
+                    <FormUrl />
+                </MemoryRouter>
+            </MockedProvider>,
         );
 
         const formTag = screen.getByRole("add-url-form");
@@ -42,8 +46,10 @@ describe("Form url tests", () => {
     it("should render loading on add", async () => {
         render(
             <MockedProvider mocks={mocks} addTypename={false}>
-                <FormUrl />
-            </MockedProvider>
+                <MemoryRouter>
+                    <FormUrl />
+                </MemoryRouter>
+            </MockedProvider>,
         );
 
         const nameInput = screen.getByRole("name");
@@ -67,9 +73,9 @@ describe("Form url tests", () => {
                             element?.tagName.toLowerCase() === "button" &&
                             content.includes("Ajout en cours")
                         );
-                    })
+                    }),
                 ).toBeInTheDocument(),
-            { timeout: 2000 }
+            { timeout: 2000 },
         );
     });
 });

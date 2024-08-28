@@ -4,20 +4,24 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Landing() {
     return (
-        <div className="pt-12 space-y-14 flex flex-col justify-center items-center">
+        <div className="pt-10 space-y-14 flex flex-col justify-center items-center">
             <section className="text-center space-y-6">
                 <h1 className="text-6xl font-bold">
                     Le Monitoring <br />à portée{" "}
-                    <span className="underline underline-offset-8">d'un</span>{" "}
+                    <span className="underline underline-offset-8 text-primary">
+                        d'un
+                    </span>{" "}
                     Clic
                 </h1>
                 <h2>
                     Suivez{" "}
-                    <span className="underline underline-offset-8">
+                    <span className="underline underline-offset-8 text-primary">
                         l'état de santé
                     </span>{" "}
                     de n'importe quelle{" "}
-                    <span className="underline underline-offset-8">URL</span>{" "}
+                    <span className="underline underline-offset-8 text-primary">
+                        URL
+                    </span>{" "}
                     sans effort.
                 </h2>
             </section>

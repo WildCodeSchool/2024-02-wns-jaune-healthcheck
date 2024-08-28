@@ -1,10 +1,21 @@
-import { Resolver, Query, Mutation, Arg, InputType, Field } from "type-graphql";
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Arg,
+    InputType,
+    Field,
+    Ctx,
+} from "type-graphql";
 import { Url } from "../entities/Url";
 import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
+import { MyContext } from "@/index";
+import PaginateUrls from "../types/PaginatesUrls";
+
 
 @InputType()
-class UrlInput implements Partial<Url> {
+export class UrlInput implements Partial<Url> {
     @Field()
     name: string;
 
@@ -14,30 +25,83 @@ class UrlInput implements Partial<Url> {
 
 @Resolver()
 class UrlResolver {
-    @Query(() => [Url])
-    async urls(): Promise<Url[]> {
+    @Query(() => PaginateUrls)
+    async urls(
+        @Ctx() context: MyContext,
+        @Arg("privateUrls", { defaultValue: false }) privateUrls: boolean,
+        @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
+        @Arg("searchText") searchText?: string,
+        @Arg("sortField") sortField?: string,
+    ): Promise<PaginateUrls> {
         try {
-            const ulrs = await Url.find();
-            return ulrs;
+            if (context.payload) {
+                return await Url.getPaginateUrls(
+                    currentPage,
+                    searchText,
+                    sortField,
+                    privateUrls,
+                    context.payload.id,
+                );
+            }
+            return await Url.getPaginateUrls(currentPage, searchText, sortField);
         } catch (_error) {
             throw new Error("Internal server error");
         }
     }
+
     @Query(() => Url)
     async url(@Arg("id") id: string): Promise<Url> {
         try {
-            const ulr = await Url.findOneByOrFail({
+            const url = await Url.findOneByOrFail({
                 id: id,
             });
-            return ulr;
+            return url;
+        } catch (_error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => [Url])
+    async recentPrivateUrls(@Ctx() context: MyContext): Promise<Url[]> {
+        try {
+            if (context.payload) {
+                return await Url.find({
+                    order: { createdAt: "DESC" },
+                    where: {
+                        user: {
+                            id: context.payload.id,
+                        },
+                    },
+                    take: 5,
+                });
+            } else {
+                throw new Error();
+            }
         } catch (_error) {
             throw new Error("Internal server error");
         }
     }
 
     @Mutation(() => Url)
-    async addUrl(@Arg("urlData") urlData: UrlInput): Promise<Url> {
+    async addUrl(
+        @Ctx() context: MyContext, 
+        @Arg("urlData") urlData: UrlInput,
+        @Arg("isPrivate", { defaultValue: false }) isPrivate: boolean,
+    ): Promise<Url> {
         try {
+            if (context.payload && isPrivate) {
+                const url = Url.create({ 
+                    ...urlData, 
+                    user: { id: context.payload.id }
+                });
+                const dataValidationError = await validate(url);
+                if (dataValidationError.length > 0) {
+                    throw new Error("Data validation error");
+                }
+                await url.save();
+                return url;
+            }
+
             const url = Url.create({ ...urlData });
             const dataValidationError = await validate(url);
             if (dataValidationError.length > 0) {
@@ -47,14 +111,31 @@ class UrlResolver {
             return url;
         } catch (error) {
             if (error instanceof QueryFailedError) {
-                if (error.message.includes("duplicate key value violates unique constraint")) {
-                    throw new Error("Le chemin de l'url doit être unique");
-                } else {
-                    throw new Error("Erreur lors de l'ajout de l'url dans la base de données");
-                }
+                throw new Error(
+                    "Erreur lors de l'ajout de l'url dans la base de données",
+                );
             }
             if (error.message === "Data validation error") {
-                throw new Error(error.message);
+                throw new Error(
+                    "Erreur de validation des données, l'url doit comporter un chemin valide ex: http(s)://...",
+                );
+            }
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Mutation(() => Url)
+    async checkUrl(@Arg("id") id: string): Promise<Url> {
+        try {
+            const url = await Url.findOneByOrFail({ id });
+
+            url.lastCheckDate = new Date();
+            await url.save();
+
+            return url;
+        } catch (error) {
+            if (error.name === "EntityNotFound") {
+                throw new Error("URL not found");
             }
             throw new Error("Internal server error");
         }

@@ -20,4 +20,9 @@ module.exports = {
     rules: {
         // Vous pouvez ajouter ou modifier des règles spécifiques ici
     },
+    overrides: [
+        {
+            files: ["*.ts"],
+        },
+    ],
 };

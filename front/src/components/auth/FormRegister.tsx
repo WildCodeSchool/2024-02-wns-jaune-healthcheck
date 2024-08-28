@@ -20,6 +20,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { registerSchema } from "@/constants/validator";
+import { useAddUserMutation } from "@/generated/graphql-types";
+import { useToast } from "../ui/use-toast";
+import useAuthStore from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 export default function FormRegister() {
     const registerForm = useForm<z.infer<typeof registerSchema>>({
@@ -32,8 +36,34 @@ export default function FormRegister() {
         },
     });
 
+    const [registerUser, { loading }] = useAddUserMutation();
+    const { toast } = useToast();
+    const login = useAuthStore((state) => state.login);
+    const navigate = useNavigate();
+
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        console.log(values);
+        registerUser({
+            variables: {
+                username: values.username,
+                email: values.email,
+                password: values.password,
+            },
+            onCompleted(data) {
+                toast({
+                    variant: "default",
+                    description: `Votre compte a bien été créé`,
+                });
+                registerForm.reset();
+                login(data.createUser);
+                navigate("/dashboard");
+            },
+            onError(error) {
+                toast({
+                    variant: "destructive",
+                    description: `${error}`,
+                });
+            },
+        });
     };
 
     return (
@@ -41,7 +71,7 @@ export default function FormRegister() {
             <DialogHeader>
                 <DialogTitle className="text-2xl">Créer un compte</DialogTitle>
                 <DialogDescription>
-                    Vous aurez accès à des fonctionnalitées avancées de
+                    Vous aurez accès à des fonctionnalités avancées de
                     monitoring.
                 </DialogDescription>
             </DialogHeader>
@@ -112,7 +142,7 @@ export default function FormRegister() {
                             }}
                         />
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="pt-2">
                         <DialogClose asChild>
                             <Button
                                 type="button"
@@ -122,7 +152,9 @@ export default function FormRegister() {
                                 Annuler
                             </Button>
                         </DialogClose>
-                        <Button type="submit">S'enregistrer</Button>
+                        <Button type="submit" disabled={loading}>
+                            {loading ? "Chargement..." : "S'enregistrer"}
+                        </Button>
                     </DialogFooter>
                 </form>
             </Form>

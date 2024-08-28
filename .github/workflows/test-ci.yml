@@ -1,0 +1,28 @@
+name: test-ci
+
+
+on: 
+  pull_request:
+    paths-ignore:
+      - 'data/**'
+      - 'front/src/generated/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Build and test
+        run: docker compose -f docker-compose.test.yaml up --abort-on-container-exit
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          COOKIE_TTL: ${{ secrets.COOKIE_TTL }}

@@ -39,7 +39,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="name">Trier par nom</SelectItem>
-                    <SelectItem value="status_code">
+                    <SelectItem value="status">
                         Trier par code de statut
                     </SelectItem>
                     <SelectItem value="createdAt">

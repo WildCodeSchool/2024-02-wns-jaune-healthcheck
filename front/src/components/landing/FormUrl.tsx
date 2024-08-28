@@ -16,6 +16,7 @@ import { newUrlSchema } from "@/constants/validator";
 import { useAddUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS } from "@/graphql/queries";
 import { useToast } from "../ui/use-toast";
+import { useSearchParams } from "react-router-dom";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -27,6 +28,7 @@ export default function FormUrl() {
         },
     });
 
+    const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();
 
@@ -37,7 +39,7 @@ export default function FormUrl() {
         };
 
         createNewUrl({
-            variables: { urlData: urlInput },
+            variables: { urlData: urlInput, isPrivate: false },
             onCompleted() {
                 toast({
                     variant: "default",
@@ -48,10 +50,20 @@ export default function FormUrl() {
             onError(error) {
                 toast({
                     variant: "destructive",
-                    description: `${error}`,
+                    description: `${error.message}`,
                 });
             },
-            refetchQueries: [{ query: GET_ALL_URLS }],
+            refetchQueries: [
+                {
+                    query: GET_ALL_URLS,
+                    variables: {
+                        searchText: searchParams?.get("searchUrl") || "",
+                        sortField: searchParams?.get("sortField") || "",
+                        currentPage:
+                            Number(searchParams?.get("currentPage")) || 1,
+                    },
+                },
+            ],
         });
     };
 
