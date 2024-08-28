@@ -1,5 +1,5 @@
 class Semaphore {
-  // This class allow to manage tasks in a queue
+  // This class allow to limite the number of concurrent tasks
   private permits: number;
   private tasks: (() => void)[] = [];
 

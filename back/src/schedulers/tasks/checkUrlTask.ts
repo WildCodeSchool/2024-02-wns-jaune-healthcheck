@@ -6,10 +6,10 @@ import dataSource from '../../database/dataSource';
 import Semaphore from '../../thread/Semaphore';
 
 
-const semaphore = new Semaphore(4);
+const semaphore = new Semaphore(1); // Only one task at a time to avoid conflicts in cron jobs
 
 const checkUrl = async (interval?: string) => {
-  await semaphore.acquire();  // New task added to queue
+  await semaphore.acquire();  // Allocate a permit to the semaphore
   try {
 
     if (!dataSource.isInitialized) {
@@ -43,7 +43,7 @@ const checkUrl = async (interval?: string) => {
     }
 
   } finally {
-    semaphore.release();  // task removed from queue
+    semaphore.release();  // Remove a permit from the semaphore
   }
 
 }

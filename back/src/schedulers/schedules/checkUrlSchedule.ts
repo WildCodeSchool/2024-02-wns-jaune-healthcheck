@@ -20,7 +20,6 @@ cron.schedule('* * * * *', async () => {
 // Execute job every hour at minute 0
 cron.schedule('0 * * * *', async() => {
     try {
-      await checkUrl(); // Public urls, no config allowed for user
       await checkUrl('Heure');
       if (parentPort) {
         parentPort.postMessage('Tâche horaire exécutée');
