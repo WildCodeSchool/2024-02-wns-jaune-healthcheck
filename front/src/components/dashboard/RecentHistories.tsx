@@ -1,9 +1,17 @@
+import { useEffect } from "react";
 import { formatLocalDate } from "@/constants/globalFunction";
 import { useRecentPrivateHistoriesQuery } from "@/generated/graphql-types";
+import useSocketStore from "@/stores/webSocketStore";
 import { CardStatus } from "../ui/card";
 
 export default function RecentHistories() {
-    const { loading, error, data } = useRecentPrivateHistoriesQuery();
+    const { loading, error, data, refetch } = useRecentPrivateHistoriesQuery();
+    const messages = useSocketStore((state) => state.messages);
+
+    useEffect(() => {
+        console.log("messages", messages);
+        refetch();
+    }, [messages]);
 
     if (error || !data) return "Erreur";
     return (
