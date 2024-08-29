@@ -1,5 +1,6 @@
-import { Resolver, Query, Arg } from "type-graphql";
+import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { History } from "../entities/History";
+import { MyContext } from "..";
 
 @Resolver()
 class HistoryResolver {
@@ -17,6 +18,32 @@ class HistoryResolver {
         try {
             return await History.findOneByOrFail({ id });
         } catch (error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => [History])
+    async recentPrivateHistories(
+        @Ctx() context: MyContext,
+    ): Promise<History[]> {
+        try {
+            if (context.payload) {
+                return await History.find({
+                    order: { created_at: "DESC" },
+                    relations: ["url"],
+                    where: {
+                        url: {
+                            user: {
+                                id: context.payload.id,
+                            },
+                        },
+                    },
+                    take: 5,
+                });
+            } else {
+                throw new Error();
+            }
+        } catch (_error) {
             throw new Error("Internal server error");
         }
     }

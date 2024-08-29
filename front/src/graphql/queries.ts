@@ -5,11 +5,13 @@ export const GET_ALL_URLS = gql`
         $currentPage: Float!
         $sortField: String!
         $searchText: String!
+        $privateUrls: Boolean
     ) {
         urls(
             currentPage: $currentPage
             sortField: $sortField
             searchText: $searchText
+            privateUrls: $privateUrls
         ) {
             urls {
                 id
@@ -58,6 +60,20 @@ export const GET_RECENT_PRIVATE_URLS = gql`
                 id
                 status_code
                 created_at
+            }
+        }
+    }
+`;
+
+export const GET_RECENT_PRIVATE_HISTORIES = gql`
+    query RecentPrivateHistories {
+        recentPrivateHistories {
+            id
+            status_code
+            created_at
+            url {
+                name
+                path
             }
         }
     }
