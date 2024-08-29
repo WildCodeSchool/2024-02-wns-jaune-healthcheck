@@ -1,7 +1,7 @@
 name: "health-checker-prod"
 services:
   backend:
-    image: ghcr.io/wildcodeschool/backend:latest
+    image: skullyfox/backend:latest
     command: npm run dev
     env_file: .env
     volumes:
@@ -12,7 +12,7 @@ services:
         condition: service_healthy
 
   frontend:
-    image: ghcr.io/wildcodeschool/frontend:latest
+    image: skullyfox/frontend:latest
     command: npm run dev
     env_file: .env
     volumes:
