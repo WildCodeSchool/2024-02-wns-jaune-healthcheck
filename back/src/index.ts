@@ -9,6 +9,7 @@ import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
 import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
+import CheckFrequencyResolver from "./resolvers/CheckFrequencyResolver";
 import WorkerThread from "./thread/Worker";
 
 export interface JwtPayload {
@@ -33,6 +34,7 @@ const start = async () => {
             UrlResolver,
             HistoryResolver,
             UserResolver,
+            CheckFrequencyResolver,
         ],
         authChecker: ({ context }) => {
             if (!context.payload) return false;

@@ -90,3 +90,12 @@ export const GET_ME = gql`
         me
     }
 `;
+
+export const GET_CHECK_FREQUENCIES = gql`
+    query CheckFrequencies {
+    checkFrequencies {
+        id
+        interval
+    }
+    }
+`;

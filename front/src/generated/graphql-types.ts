@@ -45,6 +45,7 @@ export type Mutation = {
 
 
 export type MutationAddUrlArgs = {
+  checkFrequencyId?: InputMaybe<Scalars['String']['input']>;
   isPrivate?: Scalars['Boolean']['input'];
   urlData: UrlInput;
 };
@@ -78,6 +79,7 @@ export type PaginateUrls = {
 
 export type Query = {
   __typename?: 'Query';
+  checkFrequencies: Array<CheckFrequency>;
   histories: Array<History>;
   history: History;
   logout: Scalars['String']['output'];
@@ -135,6 +137,7 @@ export type User = {
 export type AddUrlMutationVariables = Exact<{
   urlData: UrlInput;
   isPrivate: Scalars['Boolean']['input'];
+  checkFrequencyId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -189,15 +192,31 @@ export type RecentPrivateUrlsQuery = { __typename?: 'Query', recentPrivateUrls: 
 export type RecentPrivateHistoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+export type RecentPrivateHistoriesQuery = { __typename?: 'Query', recentPrivateHistories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any, url: { __typename?: 'Url', name: string, path: string } }> };
+
+export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutQuery = { __typename?: 'Query', logout: string };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me: string };
 
+export type CheckFrequenciesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckFrequenciesQuery = { __typename?: 'Query', checkFrequencies: Array<{ __typename?: 'CheckFrequency', id: string, interval: string }> };
+
 
 export const AddUrlDocument = gql`
-    mutation AddUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
-  addUrl(urlData: $urlData, isPrivate: $isPrivate) {
+    mutation AddUrl($urlData: UrlInput!, $isPrivate: Boolean!, $checkFrequencyId: String) {
+  addUrl(
+    urlData: $urlData
+    isPrivate: $isPrivate
+    checkFrequencyId: $checkFrequencyId
+  ) {
     name
     path
   }
@@ -220,6 +239,7 @@ export type AddUrlMutationFn = Apollo.MutationFunction<AddUrlMutation, AddUrlMut
  *   variables: {
  *      urlData: // value for 'urlData'
  *      isPrivate: // value for 'isPrivate'
+ *      checkFrequencyId: // value for 'checkFrequencyId'
  *   },
  * });
  */
@@ -606,3 +626,43 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const CheckFrequenciesDocument = gql`
+    query CheckFrequencies {
+  checkFrequencies {
+    id
+    interval
+  }
+}
+    `;
+
+/**
+ * __useCheckFrequenciesQuery__
+ *
+ * To run a query within a React component, call `useCheckFrequenciesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckFrequenciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckFrequenciesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckFrequenciesQuery(baseOptions?: Apollo.QueryHookOptions<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>(CheckFrequenciesDocument, options);
+      }
+export function useCheckFrequenciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>(CheckFrequenciesDocument, options);
+        }
+export function useCheckFrequenciesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>(CheckFrequenciesDocument, options);
+        }
+export type CheckFrequenciesQueryHookResult = ReturnType<typeof useCheckFrequenciesQuery>;
+export type CheckFrequenciesLazyQueryHookResult = ReturnType<typeof useCheckFrequenciesLazyQuery>;
+export type CheckFrequenciesSuspenseQueryHookResult = ReturnType<typeof useCheckFrequenciesSuspenseQuery>;
+export type CheckFrequenciesQueryResult = Apollo.QueryResult<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>;

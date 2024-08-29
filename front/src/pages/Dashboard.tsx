@@ -33,7 +33,7 @@ export default function Dashboard({ element }: { element: string }) {
                                 <CommandGroup heading="">
                                     <Dialog
                                         open={openDialog}
-                                        onOpenChange={setOpenDialog}
+                                        onOpenChange={() => setOpenDialog(!openDialog)}
                                     >
                                         <DialogTrigger asChild>
                                             <Button
@@ -47,6 +47,7 @@ export default function Dashboard({ element }: { element: string }) {
                                         </DialogTrigger>
                                         <FormUserUrl
                                             setOpenDialog={setOpenDialog}
+                                            openDialog={openDialog}
                                         />
                                     </Dialog>
                                     <div

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,9 +29,12 @@ import { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { FormLoginProps } from "@/types/form";
 import { useSearchParams } from "react-router-dom";
+import SelectCheckFrequency from "./custom/SelectCheckFrequency";
 
-export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
+
+export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
+    const [isCheckFrequency, setIsCheckFrequency] = useState<boolean>(false);
 
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
         resolver: zodResolver(newUrlSchema),
@@ -38,8 +42,18 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
         defaultValues: {
             name: "",
             path: "",
+            checkFrequency: "",
         },
     });
+
+    // Clean form on modal close
+    useEffect(() => {
+        if (!openDialog) {
+            setIsPrivate(false);
+            setIsCheckFrequency(false);
+            newUrlForm.reset();
+        }
+    }, [openDialog, newUrlForm]);
 
     const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
@@ -52,7 +66,11 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
         };
 
         createNewUrl({
-            variables: { urlData: urlInput, isPrivate: isPrivate },
+            variables: { 
+                urlData: urlInput, 
+                isPrivate: isPrivate,
+                checkFrequencyId: values.checkFrequency
+            },
             onCompleted() {
                 toast({
                     variant: "default",
@@ -148,7 +166,10 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
                         <div className="flex items-center space-x-2">
                             <Checkbox
                                 id="isPrivate"
-                                onClick={() => setIsPrivate(!isPrivate)}
+                                onCheckedChange={() => {
+                                    setIsPrivate(!isPrivate)
+                                    setIsCheckFrequency(!isCheckFrequency)
+                                }}
                             />
                             <label
                                 htmlFor="isPrivate"
@@ -157,6 +178,25 @@ export default function FormUserUrl({ setOpenDialog }: FormLoginProps) {
                                 Ajouter l'URL en privée
                             </label>
                         </div>
+                        {isCheckFrequency &&
+                            <FormField
+                                control={newUrlForm.control}
+                                name="checkFrequency"
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Fréquence de vérification de l'url</FormLabel>
+                                            <SelectCheckFrequency 
+                                                onValueChange={field.onChange} 
+                                                defaultValue={field.value} 
+                                            />
+                                        <FormDescription className="italic">
+                                            Fréquence journalière par défaut
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        }
                     </div>
                     <DialogFooter className="pt-2">
                         <DialogClose asChild>
