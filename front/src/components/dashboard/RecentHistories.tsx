@@ -8,8 +8,8 @@ export default function RecentHistories() {
     const { loading, error, data, refetch } = useRecentPrivateHistoriesQuery();
     const messages = useSocketStore((state) => state.messages);
 
+    // Refetch after socket message (cron job)
     useEffect(() => {
-        console.log("messages", messages);
         refetch();
     }, [messages]);
 

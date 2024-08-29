@@ -53,8 +53,8 @@ const startServer = async (
         }),
     );
 
-    // Initialiser socket.io avec le serveur HTTP
-    const io = new Server(httpServer, {
+    // Create a new socket.io server
+    const wsServer = new Server(httpServer, {
         cors: {
             origin: "*",
             methods: ["GET", "POST"]
@@ -62,15 +62,15 @@ const startServer = async (
         path: "/ws"
     });
 
-    // Gérer les connexions socket.io
-    io.on("connection", (socket) => {
+    // Manage connexions
+    wsServer.on("connection", (socket) => {
         console.log("user connected");
         socket.on("disconnect", () => {
             console.log("user disconnected");
         });
     });
 
-    return { apolloServer, httpServer, io };
+    return { apolloServer, httpServer, wsServer };
 };
 
 export default startServer;

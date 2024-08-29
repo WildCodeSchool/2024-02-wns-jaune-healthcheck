@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.BACKEND_PORT
 
 const start = async () => {
-    const { httpServer, io } = await startServer([
+    const { httpServer, wsServer } = await startServer([
         UrlResolver,
         HistoryResolver,
         UserResolver,
@@ -24,7 +24,7 @@ const start = async () => {
     // Add worker thread for checkUrlSchedule and bind io websocket Server
     const checkUrlWorker = new WorkerThread(
         path.join(__dirname, 'schedulers', 'schedules', 'checkUrlSchedule.ts'),
-        io
+        wsServer
     );
     checkUrlWorker.start();
 
