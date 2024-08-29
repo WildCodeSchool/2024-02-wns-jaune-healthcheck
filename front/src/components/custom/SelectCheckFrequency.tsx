@@ -11,7 +11,7 @@ import {
 
 
 type SelectCheckFrequencyProps = {
-  onValueChange: (...event: any[]) => void,
+  onValueChange: (...event: string[]) => void,
   defaultValue: string | undefined,
 };
 

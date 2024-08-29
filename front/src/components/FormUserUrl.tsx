@@ -53,7 +53,7 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
             setIsCheckFrequency(false);
             newUrlForm.reset();
         }
-    }, [openDialog]);
+    }, [openDialog, newUrlForm]);
 
     const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
@@ -64,7 +64,7 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
             name: values.name,
             path: values.path,
         };
-        console.log(values);
+
         createNewUrl({
             variables: { 
                 urlData: urlInput, 
