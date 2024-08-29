@@ -33,8 +33,8 @@ class HistoryResolver {
                     relations: ["url"],
                     where: {
                         url: {
-                            userUrl: {
-                                userId: context.payload.id,
+                            user: {
+                                id: context.payload.id,
                             },
                         },
                     },
