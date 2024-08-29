@@ -1,6 +1,6 @@
 import dataSource from "../database/dataSource";
 import { Url } from "../entities/Url";
-import { ILike } from "typeorm";
+
 
 describe("Integration Test Url Entity", () => {
     beforeAll(async () => {
@@ -10,34 +10,101 @@ describe("Integration Test Url Entity", () => {
         await dataSource.destroy();
     });
 
-    it("find method should return a list of Url", async () => {
-        const urls = await Url.find({
-            order: { createdAt: "DESC" },
+    it("getPaginateUrls method should return a list of Url", async () => {
+        const paginateUrls = await Url.getPaginateUrls(1);
+
+        // Check if the result has the expected structure
+        expect(paginateUrls).toHaveProperty('urls');
+        expect(paginateUrls).toHaveProperty('totalPages');
+        expect(paginateUrls).toHaveProperty('currentPage');
+        expect(paginateUrls).toHaveProperty('previousPage');
+        expect(paginateUrls).toHaveProperty('nextPage');
+        expect(Array.isArray(paginateUrls.urls)).toBe(true);
+
+        // Check if values have the expected structure
+        paginateUrls.urls.forEach((url) => {
+            expect(url).toHaveProperty('id');
+            expect(url).toHaveProperty('name');
+            expect(url).toHaveProperty('path');
         });
+    });
 
-        // Check if the result is an array
-        expect(Array.isArray(urls)).toBeTruthy();
+    it("getPaginateUrls method whith searchText should return a list of Url", async () => {
+        const paginateUrls = await Url.getPaginateUrls(1, "a");
 
-        // Check if values are instances of Url
-        urls.forEach((url) => {
-            expect(url).toBeInstanceOf(Url);
+        // Check if the result has the expected structure
+        expect(paginateUrls).toHaveProperty('urls');
+        expect(paginateUrls).toHaveProperty('totalPages');
+        expect(paginateUrls).toHaveProperty('currentPage');
+        expect(paginateUrls).toHaveProperty('previousPage');
+        expect(paginateUrls).toHaveProperty('nextPage');
+        expect(Array.isArray(paginateUrls.urls)).toBe(true);
+
+        // Check if values have the expected structure
+        paginateUrls.urls.forEach((url) => {
+            expect(url).toHaveProperty('id');
+            expect(url).toHaveProperty('name');
+            expect(url).toHaveProperty('path');
         });
     });
 
-    it("find with where method and order should return a list of Url in clause", async () => {
-        const urls = await Url.find({
-            where: [{ name: ILike(`%Fa%`) }, { path: ILike(`%Fa%`) }],
-            order: { createdAt: "DESC" },
-        });
+    it("getPaginateUrls method whith searchText and sortField should return a list of Url", async () => {
+        const paginateUrls = await Url.getPaginateUrls(1, "a", "name");
 
-        // Check if the result is an array
-        expect(Array.isArray(urls)).toBeTruthy();
+        // Check if the result has the expected structure
+        expect(paginateUrls).toHaveProperty('urls');
+        expect(paginateUrls).toHaveProperty('totalPages');
+        expect(paginateUrls).toHaveProperty('currentPage');
+        expect(paginateUrls).toHaveProperty('previousPage');
+        expect(paginateUrls).toHaveProperty('nextPage');
+        expect(Array.isArray(paginateUrls.urls)).toBe(true);
 
-        // Check if values are instances of Url
-        urls.forEach((url) => {
-            expect(url).toBeInstanceOf(Url);
+        // Check if values have the expected structure
+        paginateUrls.urls.forEach((url) => {
+            expect(url).toHaveProperty('id');
+            expect(url).toHaveProperty('name');
+            expect(url).toHaveProperty('path');
         });
     });
+
+    it("getPaginateUrls method whith connected user and private url should return a list of Url", async () => {
+        const paginateUrls = await Url.getPaginateUrls(1, "a", "name", true, "741fbb42-1dd9-40c5-a29e-604407a7bc8c");
+
+        // Check if the result has the expected structure
+        expect(paginateUrls).toHaveProperty('urls');
+        expect(paginateUrls).toHaveProperty('totalPages');
+        expect(paginateUrls).toHaveProperty('currentPage');
+        expect(paginateUrls).toHaveProperty('previousPage');
+        expect(paginateUrls).toHaveProperty('nextPage');
+        expect(Array.isArray(paginateUrls.urls)).toBe(true);
+
+        // Check if values have the expected structure
+        paginateUrls.urls.forEach((url) => {
+            expect(url).toHaveProperty('id');
+            expect(url).toHaveProperty('name');
+            expect(url).toHaveProperty('path');
+        });
+    });
+
+    it("getPaginateUrls method whith connected user and public url should return a list of Url", async () => {
+        const paginateUrls = await Url.getPaginateUrls(1, "a", "name", false, "741fbb42-1dd9-40c5-a29e-604407a7bc8c");
+
+        // Check if the result has the expected structure
+        expect(paginateUrls).toHaveProperty('urls');
+        expect(paginateUrls).toHaveProperty('totalPages');
+        expect(paginateUrls).toHaveProperty('currentPage');
+        expect(paginateUrls).toHaveProperty('previousPage');
+        expect(paginateUrls).toHaveProperty('nextPage');
+        expect(Array.isArray(paginateUrls.urls)).toBe(true);
+
+        // Check if values have the expected structure
+        paginateUrls.urls.forEach((url) => {
+            expect(url).toHaveProperty('id');
+            expect(url).toHaveProperty('name');
+            expect(url).toHaveProperty('path');
+        });
+    });
+
 
     it("findOneByOrFail method should return a single Url", async () => {
         const url = await Url.findOneByOrFail({

@@ -1,3 +1,4 @@
 .env
 .env.test
 data/*
+docker-compose-local.test.yaml

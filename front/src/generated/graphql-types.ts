@@ -18,6 +18,14 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CheckFrequency = {
+  __typename?: 'CheckFrequency';
+  created_at: Scalars['DateTimeISO']['output'];
+  id: Scalars['String']['output'];
+  interval: Scalars['String']['output'];
+  urls: Array<Url>;
+};
+
 export type History = {
   __typename?: 'History';
   created_at: Scalars['DateTimeISO']['output'];
@@ -30,7 +38,6 @@ export type History = {
 export type Mutation = {
   __typename?: 'Mutation';
   addUrl: Url;
-  addUserUrl: Url;
   checkUrl: Url;
   createUser: Scalars['String']['output'];
   login: Scalars['String']['output'];
@@ -38,12 +45,7 @@ export type Mutation = {
 
 
 export type MutationAddUrlArgs = {
-  urlData: UrlInput;
-};
-
-
-export type MutationAddUserUrlArgs = {
-  isPrivate: Scalars['Boolean']['input'];
+  isPrivate?: Scalars['Boolean']['input'];
   urlData: UrlInput;
 };
 
@@ -106,13 +108,15 @@ export type QueryUrlsArgs = {
 
 export type Url = {
   __typename?: 'Url';
+  checkFrequency?: Maybe<CheckFrequency>;
   createdAt: Scalars['DateTimeISO']['output'];
   histories: Array<History>;
   id: Scalars['String']['output'];
   lastCheckDate: Scalars['DateTimeISO']['output'];
   name: Scalars['String']['output'];
   path: Scalars['String']['output'];
-  userUrl?: Maybe<UserUrl>;
+  private: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
 };
 
 export type UrlInput = {
@@ -120,16 +124,17 @@ export type UrlInput = {
   path: Scalars['String']['input'];
 };
 
-export type UserUrl = {
-  __typename?: 'UserUrl';
-  createdAt: Scalars['DateTimeISO']['output'];
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  urlId: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
+  urls?: Maybe<Array<Url>>;
+  username: Scalars['String']['output'];
 };
 
 export type AddUrlMutationVariables = Exact<{
   urlData: UrlInput;
+  isPrivate: Scalars['Boolean']['input'];
 }>;
 
 
@@ -151,14 +156,6 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
-
-export type AddUserUrlMutationVariables = Exact<{
-  urlData: UrlInput;
-  isPrivate: Scalars['Boolean']['input'];
-}>;
-
-
-export type AddUserUrlMutation = { __typename?: 'Mutation', addUserUrl: { __typename?: 'Url', name: string, path: string } };
 
 export type CheckUrlMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -192,13 +189,6 @@ export type RecentPrivateUrlsQuery = { __typename?: 'Query', recentPrivateUrls: 
 export type RecentPrivateHistoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentPrivateHistoriesQuery = { __typename?: 'Query', recentPrivateHistories: Array<{ __typename?: 'History', id: string, status_code: number, created_at: any, url: { __typename?: 'Url', name: string, path: string } }> };
-
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutQuery = { __typename?: 'Query', logout: string };
-
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -206,8 +196,8 @@ export type MeQuery = { __typename?: 'Query', me: string };
 
 
 export const AddUrlDocument = gql`
-    mutation AddUrl($urlData: UrlInput!) {
-  addUrl(urlData: $urlData) {
+    mutation AddUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
+  addUrl(urlData: $urlData, isPrivate: $isPrivate) {
     name
     path
   }
@@ -229,6 +219,7 @@ export type AddUrlMutationFn = Apollo.MutationFunction<AddUrlMutation, AddUrlMut
  * const [addUrlMutation, { data, loading, error }] = useAddUrlMutation({
  *   variables: {
  *      urlData: // value for 'urlData'
+ *      isPrivate: // value for 'isPrivate'
  *   },
  * });
  */
@@ -304,41 +295,6 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-export const AddUserUrlDocument = gql`
-    mutation AddUserUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
-  addUserUrl(urlData: $urlData, isPrivate: $isPrivate) {
-    name
-    path
-  }
-}
-    `;
-export type AddUserUrlMutationFn = Apollo.MutationFunction<AddUserUrlMutation, AddUserUrlMutationVariables>;
-
-/**
- * __useAddUserUrlMutation__
- *
- * To run a mutation, you first call `useAddUserUrlMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddUserUrlMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addUserUrlMutation, { data, loading, error }] = useAddUserUrlMutation({
- *   variables: {
- *      urlData: // value for 'urlData'
- *      isPrivate: // value for 'isPrivate'
- *   },
- * });
- */
-export function useAddUserUrlMutation(baseOptions?: Apollo.MutationHookOptions<AddUserUrlMutation, AddUserUrlMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddUserUrlMutation, AddUserUrlMutationVariables>(AddUserUrlDocument, options);
-      }
-export type AddUserUrlMutationHookResult = ReturnType<typeof useAddUserUrlMutation>;
-export type AddUserUrlMutationResult = Apollo.MutationResult<AddUserUrlMutation>;
-export type AddUserUrlMutationOptions = Apollo.BaseMutationOptions<AddUserUrlMutation, AddUserUrlMutationVariables>;
 export const CheckUrlDocument = gql`
     mutation CheckUrl($id: String!) {
   checkUrl(id: $id) {

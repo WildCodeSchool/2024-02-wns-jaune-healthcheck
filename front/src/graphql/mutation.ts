@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_NEW_URL = gql`
-    mutation AddUrl($urlData: UrlInput!) {
-        addUrl(urlData: $urlData) {
+    mutation AddUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
+        addUrl(urlData: $urlData, isPrivate: $isPrivate) {
             name
             path
         }
@@ -18,15 +18,6 @@ export const CREATE_NEW_USER = gql`
 export const LOGIN = gql`
     mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password)
-    }
-`;
-
-export const CREATE_NEW_PRIVATE_URL = gql`
-    mutation AddUserUrl($urlData: UrlInput!, $isPrivate: Boolean!) {
-        addUserUrl(urlData: $urlData, isPrivate: $isPrivate) {
-            name
-            path
-        }
     }
 `;
 

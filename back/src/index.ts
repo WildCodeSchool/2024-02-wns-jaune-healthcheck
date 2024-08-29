@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import path from 'path';
 import "dotenv/config";
 import * as jwt from "jsonwebtoken";
 import { ApolloServer, BaseContext } from "@apollo/server";
@@ -8,9 +9,9 @@ import dataSource from "./database/dataSource";
 import UrlResolver from "./resolvers/UrlResolver";
 import HistoryResolver from "./resolvers/HistoryResolver";
 import UserResolver from "./resolvers/UserResolver";
-import UserUrlResolver from "./resolvers/UserUrlResolver";
+import WorkerThread from "./thread/Worker";
 
-interface JwtPayload {
+export interface JwtPayload {
     id: string;
     email: string;
 }
@@ -32,7 +33,6 @@ const start = async () => {
             UrlResolver,
             HistoryResolver,
             UserResolver,
-            UserUrlResolver,
         ],
         authChecker: ({ context }) => {
             if (!context.payload) return false;
@@ -42,6 +42,11 @@ const start = async () => {
 
     // Création du serveur Apollo avec le schéma généré
     const server = new ApolloServer({ schema });
+
+    // Initialisation du worker checkUrlWorker
+    const checkUrlWorker = new WorkerThread(
+        path.join(__dirname, 'schedulers', 'schedules', 'checkUrlSchedule.ts')
+    );
 
     // Démarrage du serveur
     const { url } = await startStandaloneServer(server, {
@@ -63,6 +68,7 @@ const start = async () => {
             return { res };
         },
     });
+    checkUrlWorker.start();
     console.log(`🚀 Server ready at ${url}`);
 };
 
