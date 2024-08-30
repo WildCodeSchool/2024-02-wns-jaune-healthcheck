@@ -1,7 +1,4 @@
-import {
-  Field,
-  ObjectType
-} from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { Url } from "../entities/Url";
 
 @ObjectType()
@@ -23,4 +20,3 @@ class PaginateUrls {
 }
 
 export default PaginateUrls;
-

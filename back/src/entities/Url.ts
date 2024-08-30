@@ -5,14 +5,14 @@ import {
     BaseEntity,
     CreateDateColumn,
     OneToMany,
-    ManyToOne
+    ManyToOne,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length } from "class-validator";
 import { History } from "./History";
 import { User } from "./User";
+import { CheckFrequency } from "./CheckFrequency";
 import PaginateUrls from "../types/PaginatesUrls";
-
 
 @Entity()
 @ObjectType()
@@ -55,24 +55,31 @@ export class Url extends BaseEntity {
     histories: History[];
 
     @Field(() => User, { nullable: true })
-    @ManyToOne(() => User, (user) => user.urls, { 
-        eager: true, 
-        nullable: true 
+    @ManyToOne(() => User, (user) => user.urls, {
+        eager: true,
+        nullable: true,
     })
     user?: User;
 
+    @Field(() => CheckFrequency, { nullable: true })
+    @ManyToOne(() => CheckFrequency, (checkFrequency) => checkFrequency.urls, {
+        eager: true,
+        nullable: true,
+    })
+    checkFrequency?: CheckFrequency;
+
     static async getPaginateUrls(
-        currentPage: number, 
+        currentPage: number,
         searchText?: string,
         sortField?: string,
         privateUrls?: boolean,
-        authenticatedUserId?: string
+        authenticatedUserId?: string,
     ): Promise<PaginateUrls> {
         const skip = (currentPage - 1) * 16;
         const queryBuilder = this.createQueryBuilder("url")
             .innerJoinAndSelect("url.histories", "history")
-            .leftJoinAndSelect("url.user", "user")
-    
+            .leftJoinAndSelect("url.user", "user");
+
         const whereConditions: string[] = ["1 = 1"];
 
         if (privateUrls && authenticatedUserId) {
@@ -80,31 +87,33 @@ export class Url extends BaseEntity {
         } else {
             whereConditions.push("user.id IS NULL");
         }
-    
+
         if (searchText) {
-            whereConditions.push("(url.name ILIKE :searchText OR url.path ILIKE :searchText)");
+            whereConditions.push(
+                "(url.name ILIKE :searchText OR url.path ILIKE :searchText)",
+            );
         }
-    
-        queryBuilder.where(whereConditions.join(" AND "), { 
+
+        queryBuilder.where(whereConditions.join(" AND "), {
             searchText: `%${searchText}%`,
-            authenticatedUserId: authenticatedUserId
+            authenticatedUserId: authenticatedUserId,
         });
 
         if (sortField) {
             if (sortField === "status") {
-                queryBuilder.addSelect((subQuery) => {
-                    return subQuery
-                        .select('history.status_code')
-                        .from(History, 'history')
-                        .where('history.urlId = url.id')
-                        .orderBy('history.created_at', 'DESC')
-                        .limit(1);
-                    }, 'lateststatus')
-                    .orderBy('lateststatus', 'ASC')
+                queryBuilder
+                    .addSelect((subQuery) => {
+                        return subQuery
+                            .select("history.status_code")
+                            .from(History, "history")
+                            .where("history.urlId = url.id")
+                            .orderBy("history.created_at", "DESC")
+                            .limit(1);
+                    }, "lateststatus")
+                    .orderBy("lateststatus", "ASC");
             } else if (sortField === "name") {
                 queryBuilder.orderBy("url.name", "ASC");
-            } 
-            else if (sortField === "createdAt") {
+            } else if (sortField === "createdAt") {
                 queryBuilder.orderBy("url.createdAt", "DESC");
             }
         } else {
@@ -112,7 +121,7 @@ export class Url extends BaseEntity {
         }
 
         queryBuilder.skip(skip).take(16);
-        
+
         const [urls, countUrls] = await queryBuilder.getManyAndCount();
         const totalPages: number = Math.ceil(countUrls / 16);
 

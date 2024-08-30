@@ -8,11 +8,11 @@ import {
     Ctx,
 } from "type-graphql";
 import { Url } from "../entities/Url";
+import { CheckFrequency } from "../entities/CheckFrequency";
 import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
-import { MyContext } from "@/index";
+import MyContext from "../types/MyContext";
 import PaginateUrls from "../types/PaginatesUrls";
-
 
 @InputType()
 export class UrlInput implements Partial<Url> {
@@ -43,7 +43,11 @@ class UrlResolver {
                     context.payload.id,
                 );
             }
-            return await Url.getPaginateUrls(currentPage, searchText, sortField);
+            return await Url.getPaginateUrls(
+                currentPage,
+                searchText,
+                sortField,
+            );
         } catch (_error) {
             throw new Error("Internal server error");
         }
@@ -84,32 +88,40 @@ class UrlResolver {
 
     @Mutation(() => Url)
     async addUrl(
-        @Ctx() context: MyContext, 
+        @Ctx() context: MyContext,
         @Arg("urlData") urlData: UrlInput,
         @Arg("isPrivate", { defaultValue: false }) isPrivate: boolean,
+        @Arg("checkFrequencyId", { nullable: true }) checkFrequencyId?: string,
     ): Promise<Url> {
         try {
+            let url;
+
             if (context.payload && isPrivate) {
-                const url = Url.create({ 
-                    ...urlData, 
-                    user: { id: context.payload.id }
-                });
-                const dataValidationError = await validate(url);
-                if (dataValidationError.length > 0) {
-                    throw new Error("Data validation error");
+                if (!checkFrequencyId) {
+                    const defaultFrequency = await CheckFrequency.findOneBy({
+                        interval: "Jour",
+                    });
+                    if (defaultFrequency)
+                        checkFrequencyId = defaultFrequency.id;
                 }
-                await url.save();
-                return url;
+                url = Url.create({
+                    ...urlData,
+                    user: { id: context.payload.id },
+                    checkFrequency: { id: checkFrequencyId },
+                });
+            } else {
+                url = Url.create({ ...urlData });
             }
 
-            const url = Url.create({ ...urlData });
             const dataValidationError = await validate(url);
             if (dataValidationError.length > 0) {
                 throw new Error("Data validation error");
             }
+
             await url.save();
             return url;
         } catch (error) {
+            console.log(error);
             if (error instanceof QueryFailedError) {
                 throw new Error(
                     "Erreur lors de l'ajout de l'url dans la base de données",

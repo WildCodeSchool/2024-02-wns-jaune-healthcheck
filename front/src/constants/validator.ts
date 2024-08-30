@@ -8,6 +8,7 @@ export const newUrlSchema = z.object({
     path: z.string().min(10, "Minimum 10 caractères").startsWith("https://", {
         message: "L'URL doit être sécurisée pour être ajoutée",
     }),
+    checkFrequency: z.string().optional(),
 });
 
 export const registerSchema = z.object({

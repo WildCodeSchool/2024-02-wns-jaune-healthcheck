@@ -5,11 +5,13 @@ export const GET_ALL_URLS = gql`
         $currentPage: Float!
         $sortField: String!
         $searchText: String!
+        $privateUrls: Boolean
     ) {
         urls(
             currentPage: $currentPage
             sortField: $sortField
             searchText: $searchText
+            privateUrls: $privateUrls
         ) {
             urls {
                 id
@@ -63,6 +65,20 @@ export const GET_RECENT_PRIVATE_URLS = gql`
     }
 `;
 
+export const GET_RECENT_PRIVATE_HISTORIES = gql`
+    query RecentPrivateHistories {
+        recentPrivateHistories {
+            id
+            status_code
+            created_at
+            url {
+                name
+                path
+            }
+        }
+    }
+`;
+
 export const LOGOUT = gql`
     query Logout {
         logout
@@ -72,5 +88,14 @@ export const LOGOUT = gql`
 export const GET_ME = gql`
     query Me {
         me
+    }
+`;
+
+export const GET_CHECK_FREQUENCIES = gql`
+    query CheckFrequencies {
+        checkFrequencies {
+            id
+            interval
+        }
     }
 `;
