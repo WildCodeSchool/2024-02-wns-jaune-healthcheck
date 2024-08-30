@@ -11,7 +11,7 @@ import { Url } from "../entities/Url";
 import { CheckFrequency } from "../entities/CheckFrequency";
 import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
-import { MyContext } from "@/index";
+import MyContext from "../types/MyContext";
 import PaginateUrls from "../types/PaginatesUrls";
 
 
