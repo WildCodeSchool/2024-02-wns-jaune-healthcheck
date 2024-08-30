@@ -33,7 +33,9 @@ export default function Dashboard({ element }: { element: string }) {
                                 <CommandGroup heading="">
                                     <Dialog
                                         open={openDialog}
-                                        onOpenChange={() => setOpenDialog(!openDialog)}
+                                        onOpenChange={() =>
+                                            setOpenDialog(!openDialog)
+                                        }
                                     >
                                         <DialogTrigger asChild>
                                             <Button

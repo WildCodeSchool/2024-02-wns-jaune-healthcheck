@@ -32,7 +32,7 @@ export default function UrlHistory() {
     // Refetch after socket message (cron job)
     useEffect(() => {
         refetch();
-    }, [messages]);
+    }, [messages, refetch]);
 
     const handleCheckUrl = async () => {
         try {

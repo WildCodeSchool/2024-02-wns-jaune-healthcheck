@@ -14,7 +14,7 @@ const useSocketStore = create<SocketState>((set) => ({
     messages: [],
     connect: () => {
         const socket = io({
-          path: import.meta.env.VITE_WS_URL,
+            path: import.meta.env.VITE_WS_URL,
         });
         socket.on("connect", () => {
             console.log("connected to socket.io server");

@@ -1,7 +1,6 @@
 import { Resolver, Query } from "type-graphql";
 import { CheckFrequency } from "../entities/CheckFrequency";
 
-
 @Resolver()
 class CheckFrequencyResolver {
     @Query(() => [CheckFrequency])

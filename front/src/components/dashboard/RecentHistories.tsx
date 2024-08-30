@@ -11,7 +11,7 @@ export default function RecentHistories() {
     // Refetch after socket message (cron job)
     useEffect(() => {
         refetch();
-    }, [messages]);
+    }, [messages, refetch]);
 
     if (error || !data) return "Erreur";
     return (

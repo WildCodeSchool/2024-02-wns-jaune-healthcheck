@@ -93,9 +93,9 @@ export const GET_ME = gql`
 
 export const GET_CHECK_FREQUENCIES = gql`
     query CheckFrequencies {
-    checkFrequencies {
-        id
-        interval
-    }
+        checkFrequencies {
+            id
+            interval
+        }
     }
 `;

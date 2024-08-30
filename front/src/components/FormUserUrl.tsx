@@ -31,8 +31,10 @@ import { FormLoginProps } from "@/types/form";
 import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "./custom/SelectCheckFrequency";
 
-
-export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProps) {
+export default function FormUserUrl({
+    openDialog,
+    setOpenDialog,
+}: FormLoginProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
     const [isCheckFrequency, setIsCheckFrequency] = useState<boolean>(false);
 
@@ -66,10 +68,10 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
         };
 
         createNewUrl({
-            variables: { 
-                urlData: urlInput, 
+            variables: {
+                urlData: urlInput,
                 isPrivate: isPrivate,
-                checkFrequencyId: values.checkFrequency
+                checkFrequencyId: values.checkFrequency,
             },
             onCompleted() {
                 toast({
@@ -167,8 +169,8 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
                             <Checkbox
                                 id="isPrivate"
                                 onCheckedChange={() => {
-                                    setIsPrivate(!isPrivate)
-                                    setIsCheckFrequency(!isCheckFrequency)
+                                    setIsPrivate(!isPrivate);
+                                    setIsCheckFrequency(!isCheckFrequency);
                                 }}
                             />
                             <label
@@ -178,17 +180,19 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
                                 Ajouter l'URL en privée
                             </label>
                         </div>
-                        {isCheckFrequency &&
+                        {isCheckFrequency && (
                             <FormField
                                 control={newUrlForm.control}
                                 name="checkFrequency"
                                 render={({ field }) => (
                                     <FormItem className="w-full">
-                                        <FormLabel>Fréquence de vérification de l'url</FormLabel>
-                                            <SelectCheckFrequency 
-                                                onValueChange={field.onChange} 
-                                                defaultValue={field.value} 
-                                            />
+                                        <FormLabel>
+                                            Fréquence de vérification de l'url
+                                        </FormLabel>
+                                        <SelectCheckFrequency
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        />
                                         <FormDescription className="italic">
                                             Fréquence journalière par défaut
                                         </FormDescription>
@@ -196,7 +200,7 @@ export default function FormUserUrl({ openDialog, setOpenDialog }: FormLoginProp
                                     </FormItem>
                                 )}
                             />
-                        }
+                        )}
                     </div>
                     <DialogFooter className="pt-2">
                         <DialogClose asChild>

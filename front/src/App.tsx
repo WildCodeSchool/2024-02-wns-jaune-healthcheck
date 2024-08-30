@@ -31,7 +31,7 @@ function App() {
     useEffect(() => {
         if (isLogged) {
             connectSocket();
-        }   else {
+        } else {
             disconnectSocket();
         }
         return () => {
