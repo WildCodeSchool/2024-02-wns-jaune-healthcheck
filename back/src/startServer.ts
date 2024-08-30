@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { buildSchema, NonEmptyArray } from "type-graphql";
+import { buildSchema, NonEmptyArray, ClassType } from "type-graphql";
 import http from 'http';
 import cors from 'cors';
 import express from 'express';
@@ -11,7 +11,7 @@ import JwtPayload from './types/JwtPayload';
 import MyContext from './types/MyContext';
 
 const startServer = async (
-    resolvers: NonEmptyArray<Function>,
+    resolvers: NonEmptyArray<ClassType>,
     app: express.Express
 ) => {
     const schema = await buildSchema({
