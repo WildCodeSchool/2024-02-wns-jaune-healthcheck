@@ -38,7 +38,7 @@ services:
 
   database:
     container_name: database
-    image: postgres
+    image: postgres:16
     env_file: .env
     restart: always
     ports:
