@@ -14,7 +14,6 @@ import { QueryFailedError } from "typeorm";
 import { MyContext } from "@/index";
 import PaginateUrls from "../types/PaginatesUrls";
 
-
 @InputType()
 export class UrlInput implements Partial<Url> {
     @Field()
@@ -44,7 +43,11 @@ class UrlResolver {
                     context.payload.id,
                 );
             }
-            return await Url.getPaginateUrls(currentPage, searchText, sortField);
+            return await Url.getPaginateUrls(
+                currentPage,
+                searchText,
+                sortField,
+            );
         } catch (_error) {
             throw new Error("Internal server error");
         }
@@ -85,7 +88,7 @@ class UrlResolver {
 
     @Mutation(() => Url)
     async addUrl(
-        @Ctx() context: MyContext, 
+        @Ctx() context: MyContext,
         @Arg("urlData") urlData: UrlInput,
         @Arg("isPrivate", { defaultValue: false }) isPrivate: boolean,
         @Arg("checkFrequencyId", { nullable: true }) checkFrequencyId?: string,
@@ -95,26 +98,26 @@ class UrlResolver {
 
             if (context.payload && isPrivate) {
                 if (!checkFrequencyId) {
-                    const defaultFrequency = await CheckFrequency.findOneBy({ 
-                        interval: "Jour" 
+                    const defaultFrequency = await CheckFrequency.findOneBy({
+                        interval: "Jour",
                     });
-                    if (defaultFrequency) checkFrequencyId = defaultFrequency.id;
+                    if (defaultFrequency)
+                        checkFrequencyId = defaultFrequency.id;
                 }
-                    url = Url.create({ 
-                        ...urlData, 
-                        user: { id: context.payload.id },
-                        checkFrequency: { id: checkFrequencyId } 
-                    });
-
+                url = Url.create({
+                    ...urlData,
+                    user: { id: context.payload.id },
+                    checkFrequency: { id: checkFrequencyId },
+                });
             } else {
                 url = Url.create({ ...urlData });
             }
-        
+
             const dataValidationError = await validate(url);
             if (dataValidationError.length > 0) {
                 throw new Error("Data validation error");
             }
-        
+
             await url.save();
             return url;
         } catch (error) {

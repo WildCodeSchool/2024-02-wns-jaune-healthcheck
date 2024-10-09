@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import path from 'path';
+import path from "path";
 import "dotenv/config";
 import * as jwt from "jsonwebtoken";
 import { ApolloServer, BaseContext } from "@apollo/server";
@@ -47,7 +47,7 @@ const start = async () => {
 
     // Initialisation du worker checkUrlWorker
     const checkUrlWorker = new WorkerThread(
-        path.join(__dirname, 'schedulers', 'schedules', 'checkUrlSchedule.ts')
+        path.join(__dirname, "schedulers", "schedules", "checkUrlSchedule.ts"),
     );
 
     // Démarrage du serveur

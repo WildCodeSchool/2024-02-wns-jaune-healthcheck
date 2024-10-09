@@ -1,10 +1,10 @@
 import { Field, ObjectType } from "type-graphql";
-import { Url } from "../entities/Url";
+import { History } from "../entities/History";
 
 @ObjectType()
-class PaginateUrls {
-    @Field(() => [Url])
-    urls: Url[];
+class PaginatesHistories {
+    @Field(() => [History])
+    histories: History[];
 
     @Field()
     totalPages: number;
@@ -19,4 +19,4 @@ class PaginateUrls {
     nextPage: number;
 }
 
-export default PaginateUrls;
+export default PaginatesHistories;

@@ -49,6 +49,36 @@ export const GET_ONE_URL = gql`
     }
 `;
 
+export const GET_ALL_HISTORIES = gql`
+    query PaginatesHistories(
+        $privateHistories: Boolean!
+        $currentPage: Float!
+        $searchText: String
+        $sortField: String
+    ) {
+        paginatesHistories(
+            privateHistories: $privateHistories
+            currentPage: $currentPage
+            searchText: $searchText
+            sortField: $sortField
+        ) {
+            currentPage
+            nextPage
+            previousPage
+            totalPages
+            histories {
+                id
+                created_at
+                status_code
+                url {
+                    name
+                    path
+                }
+            }
+        }
+    }
+`;
+
 export const GET_RECENT_PRIVATE_URLS = gql`
     query RecentPrivateUrls {
         recentPrivateUrls {
@@ -93,9 +123,9 @@ export const GET_ME = gql`
 
 export const GET_CHECK_FREQUENCIES = gql`
     query CheckFrequencies {
-    checkFrequencies {
-        id
-        interval
-    }
+        checkFrequencies {
+            id
+            interval
+        }
     }
 `;

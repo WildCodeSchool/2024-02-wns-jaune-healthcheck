@@ -44,7 +44,7 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "getPaginateUrls").mockImplementation(() =>
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
-        
+
         const result = await urlResolver.urls(mockContext, false, 1, "", "");
         expect(result).toEqual(mockPaginateUrls);
     });
@@ -53,17 +53,23 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "getPaginateUrls").mockRejectedValue(
             new Error("Internal server error"),
         );
-        await expect(urlResolver.urls(mockContext, false, 1, "", "")).rejects.toThrow(
-            "Internal server error",
-        );
+        await expect(
+            urlResolver.urls(mockContext, false, 1, "", ""),
+        ).rejects.toThrow("Internal server error");
     });
 
     it("Query urls whithout context should return a pagination of urls", async () => {
         jest.spyOn(Url, "getPaginateUrls").mockImplementation(() =>
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
-        
-        const result = await urlResolver.urls({} as MyContext, false, 1, "", "");
+
+        const result = await urlResolver.urls(
+            {} as MyContext,
+            false,
+            1,
+            "",
+            "",
+        );
         expect(result).toEqual(mockPaginateUrls);
     });
 
@@ -71,9 +77,9 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "getPaginateUrls").mockRejectedValue(
             new Error("Internal server error"),
         );
-        await expect(urlResolver.urls({} as MyContext, false, 1, "", "")).rejects.toThrow(
-            "Internal server error",
-        );
+        await expect(
+            urlResolver.urls({} as MyContext, false, 1, "", ""),
+        ).rejects.toThrow("Internal server error");
     });
 
     it("Query url should return an Url", async () => {

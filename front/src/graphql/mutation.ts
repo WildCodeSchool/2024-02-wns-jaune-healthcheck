@@ -1,8 +1,16 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_NEW_URL = gql`
-    mutation AddUrl($urlData: UrlInput!, $isPrivate: Boolean!, $checkFrequencyId: String) {
-        addUrl(urlData: $urlData, isPrivate: $isPrivate, checkFrequencyId: $checkFrequencyId) {
+    mutation AddUrl(
+        $urlData: UrlInput!
+        $isPrivate: Boolean!
+        $checkFrequencyId: String
+    ) {
+        addUrl(
+            urlData: $urlData
+            isPrivate: $isPrivate
+            checkFrequencyId: $checkFrequencyId
+        ) {
             name
             path
         }
