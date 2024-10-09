@@ -1,7 +1,7 @@
 import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { History } from "../entities/History";
-import { MyContext } from "..";
 import PaginatesHistories from "../types/PaginatesHistories";
+import MyContext from "../types/MyContext";
 
 @Resolver()
 class HistoryResolver {

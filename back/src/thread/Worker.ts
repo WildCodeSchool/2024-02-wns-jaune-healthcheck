@@ -1,22 +1,27 @@
 import { Worker } from "worker_threads";
+import { Server } from "socket.io";
 
 class WorkerThread {
     private worker: Worker;
 
-    constructor(taskPath: string) {
+
+    constructor(taskPath: string, wsServer: Server) {
         this.worker = new Worker(taskPath);
 
         this.worker.on("message", (message) => {
-            console.log("Message from worker:", message);
+            wsServer.emit("cron-job", message);
         });
 
         this.worker.on("error", (error) => {
-            console.error("Worker error:", error);
+            wsServer.emit("cron-job", `Error in worker: ${error.message}`);
         });
 
         this.worker.on("exit", (code) => {
             if (code !== 0) {
-                console.error(`Worker stopped with exit code ${code}`);
+                wsServer.emit(
+                    "cron-job",
+                    `Worker stopped with exit code ${code}`,
+                );
             }
         });
     }

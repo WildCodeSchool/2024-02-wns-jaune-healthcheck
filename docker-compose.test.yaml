@@ -30,7 +30,7 @@ services:
 
   database-test:
     container_name: database-test
-    image: postgres
+    image: postgres:16
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}

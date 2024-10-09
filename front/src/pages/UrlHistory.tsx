@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUrlQuery } from "@/generated/graphql-types";
 import { useMutation } from "@apollo/client";
@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { CHECK_URL } from "@/graphql/mutation";
+import useSocketStore from "@/stores/webSocketStore";
 
 export default function UrlHistory() {
     const { id } = useParams();
@@ -26,6 +27,12 @@ export default function UrlHistory() {
     });
 
     const [checkUrl, { loading: checkUrlLoading }] = useMutation(CHECK_URL);
+    const messages = useSocketStore((state) => state.messages);
+
+    // Refetch after socket message (cron job)
+    useEffect(() => {
+        refetch();
+    }, [messages, refetch]);
 
     const handleCheckUrl = async () => {
         try {

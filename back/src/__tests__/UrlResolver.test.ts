@@ -1,7 +1,8 @@
 import { Url } from "../entities/Url";
 import PaginateUrls from "@/types/PaginatesUrls";
 import UrlResolver from "../resolvers/UrlResolver";
-import { MyContext, JwtPayload } from "..";
+import MyContext from "../types/MyContext";
+import JwtPayload from "../types/JwtPayload";
 
 type PartialUrl = Partial<Url>;
 
