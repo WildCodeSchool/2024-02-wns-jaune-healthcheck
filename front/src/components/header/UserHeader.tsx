@@ -104,11 +104,12 @@ export default function UserHeader() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="cursor-pointer w-8 h-8 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center relative">
-                            {
-                                user.premium && (
-                                    <Crown strokeWidth={3} className="h-4 w-4 absolute left-[-2px] top-[-5px] text-amber-300" />
-                                )
-                            }
+                            {user.premium && (
+                                <Crown
+                                    strokeWidth={3}
+                                    className="h-4 w-4 absolute left-[-2px] top-[-5px] text-amber-300"
+                                />
+                            )}
                             <p className="text-lg text-white">
                                 {user.username?.slice(0, 1)}
                             </p>

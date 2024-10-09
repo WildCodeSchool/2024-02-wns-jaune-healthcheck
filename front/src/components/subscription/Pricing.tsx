@@ -47,7 +47,7 @@ export function Pricing(props: PricingProps) {
                 console.log(error);
             },
         });
-    }
+    };
 
     return (
         <Dialog open={openPricing} onOpenChange={setOpenPricing}>
@@ -107,13 +107,15 @@ export function Pricing(props: PricingProps) {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button 
+                                <Button
                                     className="w-full"
                                     disabled={user.premium}
-                                    onClick={() => subscribeHandler()}>
-                                {user.premium ? "Vous êtes abonné" : "S'abonner"}
+                                    onClick={() => subscribeHandler()}
+                                >
+                                    {user.premium
+                                        ? "Vous êtes abonné"
+                                        : "S'abonner"}
                                 </Button>
-                                
                             </CardFooter>
                         </Card>
                     </DialogDescription>
