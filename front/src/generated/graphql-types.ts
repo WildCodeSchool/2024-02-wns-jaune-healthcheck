@@ -89,6 +89,15 @@ export type PaginateUrls = {
     urls: Array<Url>;
 };
 
+export type PaginatesHistories = {
+    __typename?: "PaginatesHistories";
+    currentPage: Scalars["Float"]["output"];
+    histories: Array<History>;
+    nextPage: Scalars["Float"]["output"];
+    previousPage: Scalars["Float"]["output"];
+    totalPages: Scalars["Float"]["output"];
+};
+
 export type Query = {
     __typename?: "Query";
     checkFrequencies: Array<CheckFrequency>;
@@ -96,14 +105,21 @@ export type Query = {
     history: History;
     logout: Scalars["String"]["output"];
     me: Scalars["String"]["output"];
+    paginatesHistories: PaginatesHistories;
     recentPrivateHistories: Array<History>;
     recentPrivateUrls: Array<Url>;
     url: Url;
     urls: PaginateUrls;
 };
-
 export type QueryHistoryArgs = {
     id: Scalars["String"]["input"];
+};
+
+export type QueryPaginatesHistoriesArgs = {
+    currentPage?: Scalars["Float"]["input"];
+    privateHistories?: Scalars["Boolean"]["input"];
+    searchText?: InputMaybe<Scalars["String"]["input"]>;
+    sortField?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryUrlArgs = {
@@ -232,6 +248,31 @@ export type UrlQuery = {
             response: string;
             status_code: number;
             created_at: any;
+        }>;
+    };
+};
+
+export type PaginatesHistoriesQueryVariables = Exact<{
+    privateHistories: Scalars["Boolean"]["input"];
+    currentPage: Scalars["Float"]["input"];
+    searchText?: InputMaybe<Scalars["String"]["input"]>;
+    sortField?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type PaginatesHistoriesQuery = {
+    __typename?: "Query";
+    paginatesHistories: {
+        __typename?: "PaginatesHistories";
+        currentPage: number;
+        nextPage: number;
+        previousPage: number;
+        totalPages: number;
+        histories: Array<{
+            __typename?: "History";
+            id: string;
+            created_at: any;
+            status_code: number;
+            url: { __typename?: "Url"; name: string; path: string };
         }>;
     };
 };
@@ -488,6 +529,7 @@ export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<
     CheckUrlMutation,
     CheckUrlMutationVariables
 >;
+
 export const SubscribeDocument = gql`
     mutation Subscribe {
         subscribe
@@ -698,6 +740,108 @@ export type UrlQueryHookResult = ReturnType<typeof useUrlQuery>;
 export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
+export const PaginatesHistoriesDocument = gql`
+    query PaginatesHistories(
+        $privateHistories: Boolean!
+        $currentPage: Float!
+        $searchText: String
+        $sortField: String
+    ) {
+        paginatesHistories(
+            privateHistories: $privateHistories
+            currentPage: $currentPage
+            searchText: $searchText
+            sortField: $sortField
+        ) {
+            currentPage
+            nextPage
+            previousPage
+            totalPages
+            histories {
+                id
+                created_at
+                status_code
+                url {
+                    name
+                    path
+                }
+            }
+        }
+    }
+`;
+
+/**
+ * __usePaginatesHistoriesQuery__
+ *
+ * To run a query within a React component, call `usePaginatesHistoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginatesHistoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginatesHistoriesQuery({
+ *   variables: {
+ *      privateHistories: // value for 'privateHistories'
+ *      currentPage: // value for 'currentPage'
+ *      searchText: // value for 'searchText'
+ *      sortField: // value for 'sortField'
+ *   },
+ * });
+ */
+export function usePaginatesHistoriesQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    > &
+        (
+            | { variables: PaginatesHistoriesQueryVariables; skip?: boolean }
+            | { skip: boolean }
+        ),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export function usePaginatesHistoriesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export function usePaginatesHistoriesSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export type PaginatesHistoriesQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesQuery
+>;
+export type PaginatesHistoriesLazyQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesLazyQuery
+>;
+export type PaginatesHistoriesSuspenseQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesSuspenseQuery
+>;
+export type PaginatesHistoriesQueryResult = Apollo.QueryResult<
+    PaginatesHistoriesQuery,
+    PaginatesHistoriesQueryVariables
+>;
 export const RecentPrivateUrlsDocument = gql`
     query RecentPrivateUrls {
         recentPrivateUrls {
