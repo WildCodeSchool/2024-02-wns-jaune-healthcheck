@@ -32,7 +32,7 @@ const checkUrl = async (interval?: string) => {
 
                 await History.save({
                     url: url,
-                    response: response.data,
+                    response: response.status !== 200 ? response.data : "",
                     status_code: response.status,
                 });
             } catch (error) {
