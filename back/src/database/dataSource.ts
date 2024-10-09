@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import { UrlSubscriber } from "../subscribers/UrlSubscribers";
+import { HistorySubscriber } from "../subscribers/HistorySubscriber";
 import { User } from "../entities/User";
 import { CheckFrequency } from "../entities/CheckFrequency";
 import { InitDbUrlHistoryUser1720618090787 } from "./migrations/1720618090787-Init_db_Url_History_User";
@@ -20,7 +21,7 @@ const dataSource = new DataSource({
     synchronize: process.env.APP_ENV === "test",
     logging: process.env.APP_ENV === "dev",
     entities: [Url, History, User, CheckFrequency],
-    subscribers: [UrlSubscriber],
+    subscribers: [UrlSubscriber, HistorySubscriber],
     migrations: [
         InitDbUrlHistoryUser1720618090787,
         AddUserUrl1720710308167,

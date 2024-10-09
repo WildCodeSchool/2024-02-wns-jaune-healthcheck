@@ -1,4 +1,5 @@
 // back/src/subscribers/UrlSubscriber.ts
+import { Not } from "typeorm";
 import {
     EventSubscriber,
     EntitySubscriberInterface,
@@ -9,6 +10,7 @@ import {
 import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import axios from "axios";
+
 
 @EventSubscriber()
 export class UrlSubscriber implements EntitySubscriberInterface<Url> {
@@ -50,6 +52,24 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             const response = await axios.get(url.path, {
                 validateStatus: () => true, // Do not throw on non-2xx status codes
             });
+
+            const existingSuccessMessageHistory = await History.findOne({
+                where: {
+                    url: {
+                        id: url.id,
+                    },
+                    status_code: 200,
+                    response: Not(""),
+                }
+            });
+
+            if (response.status === 200 && existingSuccessMessageHistory) {
+                existingSuccessMessageHistory.response = response.data;
+                existingSuccessMessageHistory.created_at = new Date();
+                await transactionalEntityManager.save(existingSuccessMessageHistory);
+                return;
+            }
+            
             const history = new History();
             history.url = url;
             history.response = response.data;
