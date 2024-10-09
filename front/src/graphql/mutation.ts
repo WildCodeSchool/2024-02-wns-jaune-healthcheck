@@ -37,3 +37,9 @@ export const CHECK_URL = gql`
         }
     }
 `;
+
+export const SUBSCRIBE = gql`
+    mutation Subscribe {
+        subscribe
+    }
+`;

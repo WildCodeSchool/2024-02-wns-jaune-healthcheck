@@ -23,6 +23,7 @@ function getUserBasicInfo(user: User) {
         id: user.id,
         email: user.email,
         username: user.username,
+        premium: user.premium,
     };
 }
 
@@ -84,6 +85,23 @@ class UserResolver {
             setCookie(context, token);
 
             return JSON.stringify(getUserBasicInfo(userFromDB));
+        } catch (error) {
+            console.log(error);
+            throw new Error("Bad request");
+        }
+    }
+
+    @Mutation(() => String)
+    async subscribe(@Ctx() context: MyContext) {
+        try {
+            if (context.payload) {
+                const userFromDB = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+                userFromDB.premium = true;
+                await User.save(userFromDB);
+                return JSON.stringify(getUserBasicInfo(userFromDB));
+            } else throw new Error();
         } catch (error) {
             console.log(error);
             throw new Error("Bad request");
