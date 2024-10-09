@@ -41,6 +41,7 @@ export type Mutation = {
   checkUrl: Url;
   createUser: Scalars['String']['output'];
   login: Scalars['String']['output'];
+  subscribe: Scalars['String']['output'];
 };
 
 
@@ -130,6 +131,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  premium: Scalars['Boolean']['output'];
   urls?: Maybe<Array<Url>>;
   username: Scalars['String']['output'];
 };
@@ -166,6 +168,11 @@ export type CheckUrlMutationVariables = Exact<{
 
 
 export type CheckUrlMutation = { __typename?: 'Mutation', checkUrl: { __typename?: 'Url', name: string, path: string } };
+
+export type SubscribeMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeMutation = { __typename?: 'Mutation', subscribe: string };
 
 export type GetAllURlsQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
@@ -349,6 +356,36 @@ export function useCheckUrlMutation(baseOptions?: Apollo.MutationHookOptions<Che
 export type CheckUrlMutationHookResult = ReturnType<typeof useCheckUrlMutation>;
 export type CheckUrlMutationResult = Apollo.MutationResult<CheckUrlMutation>;
 export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<CheckUrlMutation, CheckUrlMutationVariables>;
+export const SubscribeDocument = gql`
+    mutation Subscribe {
+  subscribe
+}
+    `;
+export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, SubscribeMutationVariables>;
+
+/**
+ * __useSubscribeMutation__
+ *
+ * To run a mutation, you first call `useSubscribeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subscribeMutation, { data, loading, error }] = useSubscribeMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeMutation(baseOptions?: Apollo.MutationHookOptions<SubscribeMutation, SubscribeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubscribeMutation, SubscribeMutationVariables>(SubscribeDocument, options);
+      }
+export type SubscribeMutationHookResult = ReturnType<typeof useSubscribeMutation>;
+export type SubscribeMutationResult = Apollo.MutationResult<SubscribeMutation>;
+export type SubscribeMutationOptions = Apollo.BaseMutationOptions<SubscribeMutation, SubscribeMutationVariables>;
 export const GetAllURlsDocument = gql`
     query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!, $privateUrls: Boolean) {
   urls(

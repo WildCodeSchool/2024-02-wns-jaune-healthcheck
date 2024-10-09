@@ -19,6 +19,10 @@ import {
 
 import { Check, X } from "lucide-react";
 
+import { useSubscribeMutation } from "@/generated/graphql-types";
+import useAuthStore from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
+
 interface PricingProps {
     openPricing: boolean;
     setOpenPricing: (value: boolean) => void;
@@ -26,6 +30,25 @@ interface PricingProps {
 
 export function Pricing(props: PricingProps) {
     const { openPricing, setOpenPricing } = props;
+    const [subscribe] = useSubscribeMutation();
+    const me = useAuthStore((state) => state.me);
+    const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
+
+    const subscribeHandler = () => {
+        subscribe({
+            onCompleted: (data) => {
+                me(data.subscribe);
+                navigate("/dashboard/subscribe");
+                setOpenPricing(false);
+                console.log(data);
+            },
+            onError: (error) => {
+                console.log(error);
+            },
+        });
+    }
+
     return (
         <Dialog open={openPricing} onOpenChange={setOpenPricing}>
             <DialogContent className="min-w-max">
@@ -84,7 +107,13 @@ export function Pricing(props: PricingProps) {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full">S'abonner</Button>
+                                <Button 
+                                    className="w-full"
+                                    disabled={user.premium}
+                                    onClick={() => subscribeHandler()}>
+                                {user.premium ? "Vous êtes abonné" : "S'abonner"}
+                                </Button>
+                                
                             </CardFooter>
                         </Card>
                     </DialogDescription>

@@ -29,4 +29,8 @@ export class User extends BaseEntity {
     @Field(() => [Url], { nullable: true })
     @OneToMany(() => Url, (Url) => Url.user)
     urls!: Url[];
+
+    @Field()
+    @Column({ default: false })
+    premium: boolean;
 }
