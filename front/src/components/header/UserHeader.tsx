@@ -55,7 +55,7 @@ export default function UserHeader() {
                         Abonnement
                     </span>
                     <span className="text-sm text-primary">
-                        Free plan
+                        {isPremium ? Premium : Gratuit}
                     </span>
                 </div>
                 <DropdownMenu>
