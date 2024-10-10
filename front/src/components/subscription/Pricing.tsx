@@ -22,6 +22,7 @@ import { Check, X } from "lucide-react";
 import { useSubscribeMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
+import { Roles } from "@/types/user";
 
 interface PricingProps {
     openPricing: boolean;
@@ -34,9 +35,13 @@ export function Pricing(props: PricingProps) {
     const me = useAuthStore((state) => state.me);
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
+    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
 
     const subscribeHandler = () => {
         subscribe({
+            variables: {
+                role: Roles.PREMIUM,
+            },
             onCompleted: (data) => {
                 me(data.subscribe);
                 navigate("/dashboard/subscribe");
@@ -109,10 +114,10 @@ export function Pricing(props: PricingProps) {
                             <CardFooter>
                                 <Button
                                     className="w-full"
-                                    disabled={user.premium}
+                                    disabled={isPremium}
                                     onClick={() => subscribeHandler()}
                                 >
-                                    {user.premium
+                                    {isPremium
                                         ? "Vous êtes abonné"
                                         : "S'abonner"}
                                 </Button>

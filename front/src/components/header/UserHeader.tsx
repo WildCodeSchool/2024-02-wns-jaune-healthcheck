@@ -13,6 +13,7 @@ import {
 import { LogOut, Crown } from "lucide-react";
 import { useState } from "react";
 import { Pricing } from "@/components/subscription/Pricing";
+import { Roles } from "@/types/user";
 
 export default function UserHeader() {
     const [openPricing, setOpenPricing] = useState<boolean>(false);
@@ -22,6 +23,8 @@ export default function UserHeader() {
     const [logoutQuery, { loading }] = useLogoutLazyQuery();
     const logout = useAuthStore((state) => state.logout);
     const { toast } = useToast();
+
+    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
 
     const handleLogout = () => {
         logoutQuery({

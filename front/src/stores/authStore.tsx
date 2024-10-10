@@ -1,11 +1,5 @@
 import { create } from "zustand";
-
-type UserData = {
-    id: string;
-    username: string;
-    email: string;
-    premium: boolean;
-};
+import { UserData } from "../types/user";
 
 interface AuthState {
     isLogged: boolean;

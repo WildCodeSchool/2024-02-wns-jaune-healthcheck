@@ -64,11 +64,6 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationLoginArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-};
-
 export type PaginateUrls = {
   __typename?: 'PaginateUrls';
   currentPage: Scalars['Float']['output'];
@@ -145,14 +140,6 @@ export type UrlInput = {
   path: Scalars['String']['input'];
 };
 
-export type User = {
-  __typename?: 'User';
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  premium: Scalars['Boolean']['output'];
-  urls?: Maybe<Array<Url>>;
-  username: Scalars['String']['output'];
-};
 
 export type AddUrlMutationVariables = Exact<{
   urlData: UrlInput;
@@ -186,9 +173,6 @@ export type CheckUrlMutationVariables = Exact<{
 
 
 export type CheckUrlMutation = { __typename?: 'Mutation', checkUrl: { __typename?: 'Url', name: string, path: string } };
-
-export type SubscribeMutationVariables = Exact<{ [key: string]: never; }>;
-
 
 export type SubscribeMutation = { __typename?: 'Mutation', subscribe: string };
 
@@ -385,8 +369,7 @@ export type CheckUrlMutationHookResult = ReturnType<typeof useCheckUrlMutation>;
 export type CheckUrlMutationResult = Apollo.MutationResult<CheckUrlMutation>;
 export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<CheckUrlMutation, CheckUrlMutationVariables>;
 export const SubscribeDocument = gql`
-    mutation Subscribe {
-  subscribe
+
 }
     `;
 export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, SubscribeMutationVariables>;
@@ -404,6 +387,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, Sub
  * @example
  * const [subscribeMutation, { data, loading, error }] = useSubscribeMutation({
  *   variables: {
+ *      role: // value for 'role'
  *   },
  * });
  */
