@@ -63,6 +63,7 @@ export class History extends BaseEntity {
             .delete()
             .where(query, { urlId: url.id })
             .execute();
+    }
 
     static async getPaginateHistories(
         currentPage: number,
