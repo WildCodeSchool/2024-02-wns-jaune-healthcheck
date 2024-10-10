@@ -49,19 +49,18 @@ export default function UserHeader() {
             )}
         >
             <section className="flex items-center gap-4">
-                {/* Emplacement pour l'abonnement */}
                 <div className="flex flex-col items-end italic">
                     <span className="font-semibold leading-[16px]">
                         Abonnement
                     </span>
                     <span className="text-sm text-primary">
-                        {isPremium ? Premium : Gratuit}
+                        {isPremium ? "Premium" : "Gratuit"}
                     </span>
                 </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="cursor-pointer w-10 h-10 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center relative">
-                            {user.premium && (
+                            {isPremium && (
                                 <Crown
                                     strokeWidth={3}
                                     className="h-4 w-4 absolute left-[-2px] top-[-5px] text-amber-300"
