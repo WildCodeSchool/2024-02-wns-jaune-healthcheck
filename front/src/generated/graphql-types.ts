@@ -80,6 +80,10 @@ export type MutationLoginArgs = {
     password: Scalars["String"]["input"];
 };
 
+export type MutationSubscribeArgs = {
+    role: Scalars["String"]["input"];
+};
+
 export type PaginateUrls = {
     __typename?: "PaginateUrls";
     currentPage: Scalars["Float"]["output"];
@@ -155,7 +159,7 @@ export type User = {
     __typename?: "User";
     email: Scalars["String"]["output"];
     id: Scalars["String"]["output"];
-    premium: Scalars["Boolean"]["output"];
+    role: Scalars["String"]["output"];
     urls?: Maybe<Array<Url>>;
     username: Scalars["String"]["output"];
 };
@@ -195,7 +199,9 @@ export type CheckUrlMutation = {
     checkUrl: { __typename?: "Url"; name: string; path: string };
 };
 
-export type SubscribeMutationVariables = Exact<{ [key: string]: never }>;
+export type SubscribeMutationVariables = Exact<{
+    role: Scalars["String"]["input"];
+}>;
 
 export type SubscribeMutation = { __typename?: "Mutation"; subscribe: string };
 
@@ -531,8 +537,8 @@ export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<
 >;
 
 export const SubscribeDocument = gql`
-    mutation Subscribe {
-        subscribe
+    mutation Subscribe($role: String!) {
+        subscribe(role: $role)
     }
 `;
 export type SubscribeMutationFn = Apollo.MutationFunction<
@@ -553,6 +559,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<
  * @example
  * const [subscribeMutation, { data, loading, error }] = useSubscribeMutation({
  *   variables: {
+ *      role: // value for 'role'
  *   },
  * });
  */

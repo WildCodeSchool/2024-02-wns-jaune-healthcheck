@@ -11,6 +11,7 @@ import { Migrations1724168513925 } from "./migrations/1724168513925-migrations";
 import { RemoveUserUrl1724425092272 } from "./migrations/1724425092272-remove-userUrl";
 import { AddCheckFrequencyTable1724667282358 } from "./migrations/1724667282358-add-check_frequency_table";
 import { Migrations1728463402298 } from "./migrations/1728463402298-migrations";
+import { UserRoles1728546932904 } from "./migrations/1728546932904-UserRoles";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -30,6 +31,7 @@ const dataSource = new DataSource({
         RemoveUserUrl1724425092272,
         AddCheckFrequencyTable1724667282358,
         Migrations1728463402298,
+        UserRoles1728546932904,
     ],
 });
 

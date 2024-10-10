@@ -3,6 +3,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 import MyContext from "../types/MyContext";
+import { Roles } from "../entities/User";
 
 function setCookie(context: MyContext, token: string) {
     const expireCookieUTC = new Date();
@@ -23,7 +24,7 @@ function getUserBasicInfo(user: User) {
         id: user.id,
         email: user.email,
         username: user.username,
-        premium: user.premium,
+        role: user.role,
     };
 }
 
@@ -92,13 +93,17 @@ class UserResolver {
     }
 
     @Mutation(() => String)
-    async subscribe(@Ctx() context: MyContext) {
+    async subscribe(@Arg("role") role: string, @Ctx() context: MyContext) {
         try {
+            if (role in Roles) {
+                throw new Error("Bad request");
+            }
             if (context.payload) {
                 const userFromDB = await User.findOneByOrFail({
                     id: context.payload.id,
                 });
-                userFromDB.premium = true;
+                userFromDB.role =
+                    Roles[role.toLocaleUpperCase() as keyof typeof Roles];
                 await User.save(userFromDB);
                 return JSON.stringify(getUserBasicInfo(userFromDB));
             } else throw new Error();
