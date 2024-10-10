@@ -6,7 +6,7 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import FilterBar from "../custom/FilterBarPrivate";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -91,8 +91,9 @@ const URLList: React.FC = () => {
                                   key={item.id}
                                   className="flex justify-center items-start w-full"
                               >
-                                  <a
-                                      href={`/url/${item.id}`}
+                                  <Link
+                                      key={item.id}
+                                      to={`/dashboard/url/${item.id}`}
                                       rel="noopener noreferrer"
                                       className="w-full"
                                   >
@@ -127,7 +128,7 @@ const URLList: React.FC = () => {
                                               <button>:</button>
                                           </CardContent>
                                       </Card>
-                                  </a>
+                                  </Link>
                               </ListItem>
                           ))
                         : Array.from({ length: 16 }, (_, index) => {

@@ -35,6 +35,10 @@ const routes = [
                         element: <Dashboard element="urls" />,
                     },
                     {
+                        path: "/dashboard/url/:id",
+                        element: <Dashboard element="urlHistories" />,
+                    },
+                    {
                         path: "/dashboard/histories",
                         element: <Dashboard element="histories" />,
                     },
