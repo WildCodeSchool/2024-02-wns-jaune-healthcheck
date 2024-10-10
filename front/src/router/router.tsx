@@ -1,7 +1,7 @@
 import App from "@/App";
 import Landing from "@/pages/Landing";
 import UrlHistory from "@/pages/UrlHistory";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Dashboard from "@/pages/Dashboard";
 
@@ -24,7 +24,7 @@ const routes = [
                 children: [
                     {
                         path: "/dashboard",
-                        element: <Dashboard element="overview" />,
+                        element: <Navigate to="/dashboard/overview" />,
                     },
                     {
                         path: "/dashboard/overview",

@@ -10,10 +10,22 @@ import RecentUrls from "./RecentUrls";
 
 const Overview = () => {
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="col-span-1"></div>
-            {/* Contenu du Dashboard : Charts */}
-            <div className="col-span-1 flex flex-col gap-y-10">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="col-span-1 flex flex-col gap-4">
+                {/* Contenu du Dashboard : Charts */}
+                <Card className="w-full h-[400px] p-5">
+                    <CardTitle className="text-lg mr-auto">
+                        Chart
+                    </CardTitle>
+                </Card>
+                <Card className="w-full h-[400px] p-5">
+                    <CardTitle className="text-lg mr-auto">
+                        Chart
+                    </CardTitle>
+                </Card>
+            </div>
+            
+            <div className="col-span-1 flex flex-col gap-4">
                 <Card className="shadow-md shadow-muted">
                     <CardHeader className="w-full">
                         <CardTitle className="text-lg mr-auto">

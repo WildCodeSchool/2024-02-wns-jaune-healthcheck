@@ -1,5 +1,5 @@
-import Logo from "@/assets/logo.svg";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
+import clsx from "clsx";
 import useAuthStore from "@/stores/authStore";
 import { useToast } from "../ui/use-toast";
 import {
@@ -11,37 +11,13 @@ import {
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { LogOut, Crown } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import FormUserUrl from "../FormUserUrl";
 import { useState } from "react";
 import { Pricing } from "@/components/subscription/Pricing";
 
-type NavigationList = {
-    id: number;
-    name: string;
-    path?: string;
-};
-
-const navigationList: NavigationList[] = [
-    {
-        id: 1,
-        name: "Dashboard",
-        path: "/dashboard",
-    },
-    {
-        id: 2,
-        name: "Ajouter une URL",
-    },
-    /* Ajouter la suite de la navigation ici; si dialog : pas de path */
-];
-
 export default function UserHeader() {
-    const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [openPricing, setOpenPricing] = useState<boolean>(false);
 
     const user = useAuthStore((state) => state.user);
-    const navigate = useNavigate();
 
     const [logoutQuery, { loading }] = useLogoutLazyQuery();
     const logout = useAuthStore((state) => state.logout);
@@ -62,48 +38,26 @@ export default function UserHeader() {
     };
 
     return (
-        <div className="w-full flex justify-between items-center">
-            <section className="flex items-center gap-2">
-                <img
-                    src={Logo}
-                    alt="Logo"
-                    className="w-8 h-8 cursor-pointer"
-                    onClick={() => navigate("/")}
-                />
-                <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
-                    {navigationList.map((item) =>
-                        item.path ? (
-                            <NavLink
-                                key={item.id}
-                                to={item.path || ""}
-                                className={({ isActive }) =>
-                                    `${isActive && "text-primary"} text-sm font-medium transition-colors hover:text-primary`
-                                }
-                            >
-                                {item.name}
-                            </NavLink>
-                        ) : (
-                            <Dialog
-                                open={openDialog}
-                                onOpenChange={setOpenDialog}
-                                key={item.id}
-                            >
-                                <DialogTrigger asChild>
-                                    <button className="text-sm font-medium transition-colors hover:text-primary">
-                                        {item.name}
-                                    </button>
-                                </DialogTrigger>
-                                <FormUserUrl setOpenDialog={setOpenDialog} />
-                            </Dialog>
-                        ),
-                    )}
-                </nav>
-            </section>
+        <header 
+            className={clsx(
+                "fixed top-0 z-50", 
+                "backdrop-blur-lg bg-white bg-opacity-60",
+                "w-full flex justify-end items-center p-4"
+            )}
+        >
             <section className="flex items-center gap-4">
                 {/* Emplacement pour l'abonnement */}
+                <div className="flex flex-col items-end italic">
+                    <span className="font-semibold leading-[16px]">
+                        Abonnement
+                    </span>
+                    <span className="text-sm text-primary">
+                        Free plan
+                    </span>
+                </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <div className="cursor-pointer w-8 h-8 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center relative">
+                        <div className="cursor-pointer w-10 h-10 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center relative">
                             {user.premium && (
                                 <Crown
                                     strokeWidth={3}
@@ -139,6 +93,6 @@ export default function UserHeader() {
                 openPricing={openPricing}
                 setOpenPricing={setOpenPricing}
             />
-        </div>
+        </header>
     );
 }
