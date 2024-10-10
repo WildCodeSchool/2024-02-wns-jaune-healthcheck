@@ -37,6 +37,10 @@ export class User extends BaseEntity {
     urls!: Url[];
 
     @Field()
-    @Column({ default: Roles.FREE })
+    @Column({
+        type: "enum",
+        enum: Roles, 
+        default: Roles.FREE 
+    })
     role: Roles;
 }

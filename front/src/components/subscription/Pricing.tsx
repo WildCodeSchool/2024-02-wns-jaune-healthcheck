@@ -35,7 +35,7 @@ export function Pricing(props: PricingProps) {
     const me = useAuthStore((state) => state.me);
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
-    const isPremium = user.role === Roles.PREMIUM;
+    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
 
     const subscribeHandler = () => {
         subscribe({

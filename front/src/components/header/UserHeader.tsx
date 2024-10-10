@@ -48,7 +48,7 @@ export default function UserHeader() {
     const logout = useAuthStore((state) => state.logout);
     const { toast } = useToast();
 
-    const isPremium = user.role === Roles.PREMIUM;
+    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
 
     const handleLogout = () => {
         logoutQuery({
