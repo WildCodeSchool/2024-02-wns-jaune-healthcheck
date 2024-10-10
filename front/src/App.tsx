@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import { useNavigate } from "react-router-dom";
 import GuestLayout from "./layouts/GuestLayout";
 import useAuthStore from "./stores/authStore";
 import useSocketStore from "./stores/webSocketStore";
@@ -8,6 +9,7 @@ import { useMeLazyQuery } from "./generated/graphql-types";
 
 function App() {
     const isLogged = useAuthStore((state) => state.isLogged);
+    const navigate = useNavigate();
 
     /* TODO : Voir pour ajouter un loader animé sur la première visite */
     const [meQuery] = useMeLazyQuery();
@@ -38,6 +40,15 @@ function App() {
             disconnectSocket();
         };
     }, [connectSocket, disconnectSocket, isLogged]);
+
+    useEffect(() => {
+        if (!isLogged) {
+            navigate("/");
+            console.log("isLogged", isLogged);
+        } else {
+            navigate("/dashboard");
+        }
+    }, [isLogged, navigate]);
 
     return (
         <>
