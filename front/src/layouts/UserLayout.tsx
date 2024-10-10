@@ -9,7 +9,7 @@ export default function UserLayout() {
         <>
             <UserHeader />
             <div 
-                className="mx-1 sm:mx-2 lg:mx-6 xl:mx-20 2xl:mx-32"
+                className="mx-1 sm:mx-2 lg:mx-6 xl:mx-40 2xl:mx-64"
             >
                 <div 
                     className={clsx(
@@ -18,13 +18,15 @@ export default function UserLayout() {
                         "xl:gap-8"
                     )}
                 >
-                    <div className="col-span-2 sm:col-span-1 xl:col-span-3">
+                    <div className="col-span-2 sm:col-span-1 xl:col-span-4">
                         <SideBar />
                     </div>
                     <main 
                         className={clsx(
-                            "col-[3_/_span_16] sm:col-[2_/_span_16] xl:col-span-11", 
-                            "ms-0 sm:ms-2 md:ms-0"
+                            "col-[3_/_span_16] sm:col-[2_/_span_16]",
+                            "xl:col-[5_/_span_16]", 
+                            "ms-0 sm:ms-2 md:ms-0",
+                            "pb-10"
                         )}
                     >
                         <Outlet />
