@@ -50,7 +50,7 @@ function App() {
         } else {
             if (location.pathname === "/") navigate("/dashboard");
         }
-    }, [isLogged, navigate]);
+    }, [isLogged, navigate, location.pathname]);
 
     return (
         <>
