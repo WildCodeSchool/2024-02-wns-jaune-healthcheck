@@ -16,6 +16,7 @@ import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
 import { useState } from "react";
 import { Pricing } from "@/components/subscription/Pricing";
+import { Roles } from "@/types/user";
 
 type NavigationList = {
     id: number;
@@ -46,6 +47,8 @@ export default function UserHeader() {
     const [logoutQuery, { loading }] = useLogoutLazyQuery();
     const logout = useAuthStore((state) => state.logout);
     const { toast } = useToast();
+
+    const isPremium = user.role === Roles.PREMIUM;
 
     const handleLogout = () => {
         logoutQuery({
@@ -104,7 +107,7 @@ export default function UserHeader() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="cursor-pointer w-8 h-8 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center relative">
-                            {user.premium && (
+                            {isPremium && (
                                 <Crown
                                     strokeWidth={3}
                                     className="h-4 w-4 absolute left-[-2px] top-[-5px] text-amber-300"

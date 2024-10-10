@@ -8,6 +8,12 @@ import {
 import { Field, ObjectType } from "type-graphql";
 import { Url } from "./Url";
 
+export enum Roles {
+    ADMIN = "admin",
+    FREE = "free",
+    PREMIUM = "premium",
+}
+
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -31,6 +37,6 @@ export class User extends BaseEntity {
     urls!: Url[];
 
     @Field()
-    @Column({ default: false })
-    premium: boolean;
+    @Column({ default: Roles.FREE })
+    role: Roles;
 }
