@@ -1,5 +1,6 @@
 import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { History } from "../entities/History";
+import PaginatesHistories from "../types/PaginatesHistories";
 import MyContext from "../types/MyContext";
 
 @Resolver()
@@ -45,6 +46,35 @@ class HistoryResolver {
             }
         } catch (_error) {
             throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => PaginatesHistories)
+    async paginatesHistories(
+        @Ctx() context: MyContext,
+        @Arg("privateHistories", { defaultValue: false })
+        privateHistories: boolean,
+        @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
+        @Arg("searchText", { nullable: true }) searchText?: string,
+        @Arg("sortField", { nullable: true }) sortField?: string,
+    ): Promise<PaginatesHistories> {
+        try {
+            if (context.payload) {
+                return await History.getPaginateHistories(
+                    currentPage,
+                    searchText,
+                    sortField,
+                    privateHistories,
+                    context.payload.id,
+                );
+            }
+            return await History.getPaginateHistories(
+                currentPage,
+                searchText,
+                sortField,
+            );
+        } catch (err) {
+            throw new Error(err);
         }
     }
 }
