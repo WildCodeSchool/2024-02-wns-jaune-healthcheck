@@ -42,7 +42,7 @@ export class History extends BaseEntity {
                             FROM history 
                             WHERE urlId = :urlId 
                             ORDER BY created_at DESC 
-                            LIMIT 1
+                            LIMIT 29
                         )
 
                         UNION

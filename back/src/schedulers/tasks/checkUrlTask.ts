@@ -27,7 +27,7 @@ const checkUrl = async (interval?: string) => {
 
         for (const url of urls) {
             try {
-                // Mise à jour directe de lastCheckDate sans déclencher le subscriber
+                // Update lastCheckDate without triggering the subscriber
                 await dataSource
                     .createQueryBuilder()
                     .update(Url)
