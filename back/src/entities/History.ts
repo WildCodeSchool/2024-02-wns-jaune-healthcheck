@@ -33,6 +33,38 @@ export class History extends BaseEntity {
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
 
+
+    static async deleteOldHistoriesByUrl(url: Url) {
+        const query = `
+            id NOT IN (
+                SELECT id FROM
+                    (
+                        (
+                            SELECT id
+                            FROM history 
+                            WHERE urlId = :urlId 
+                            ORDER BY created_at DESC 
+                            LIMIT 29
+                        )
+
+                        UNION
+
+                        (
+                            SELECT id
+                            FROM history
+                            WHERE urlId = :urlId 
+                            AND status_code = 200 AND response != ''
+                        )
+                    ) AS conserved_ids
+                ) 
+                AND urlId = :urlId
+        `;
+        return this.createQueryBuilder("history")
+            .delete()
+            .where(query, { urlId: url.id })
+            .execute();
+    }
+
     static async getPaginateHistories(
         currentPage: number,
         searchText?: string,
