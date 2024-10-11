@@ -128,7 +128,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
     useEffect(() => {
         refetch();
         refectchHistoryResponse();
-    }, [messages, refetch]);
+    }, [messages, refetch, refectchHistoryResponse]);
 
     const handleCheckUrl = async () => {
         try {
