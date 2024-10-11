@@ -18,13 +18,10 @@ import { CHECK_URL } from "@/graphql/mutation";
 import useSocketStore from "@/stores/webSocketStore";
 
 type ListUrlHistoriesProps = {
-    urlId: string
+    urlId: string;
 };
 
-const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
-  urlId
-}) => {
-
+const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
     const navigate = useNavigate();
     const { data, loading, error, refetch } = useUrlQuery({
         variables: {
@@ -126,6 +123,6 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
             </div>
         </>
     );
-}
+};
 
 export default ListUrlHistories;

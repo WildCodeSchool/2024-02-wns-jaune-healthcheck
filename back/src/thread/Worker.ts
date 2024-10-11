@@ -4,7 +4,6 @@ import { Server } from "socket.io";
 class WorkerThread {
     private worker: Worker;
 
-
     constructor(taskPath: string, wsServer: Server) {
         this.worker = new Worker(taskPath);
 

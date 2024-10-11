@@ -41,11 +41,11 @@ export default function UserHeader() {
     };
 
     return (
-        <header 
+        <header
             className={clsx(
-                "fixed top-0 z-50", 
+                "fixed top-0 z-50",
                 "backdrop-blur-lg bg-white bg-opacity-60",
-                "w-full flex justify-end items-center p-4"
+                "w-full flex justify-end items-center p-4",
             )}
         >
             <section className="flex items-center gap-4">

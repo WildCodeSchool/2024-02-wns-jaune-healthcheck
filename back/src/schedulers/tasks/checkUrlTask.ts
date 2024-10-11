@@ -5,7 +5,6 @@ import { History } from "../../entities/History";
 import dataSource from "../../database/dataSource";
 import Semaphore from "../../thread/Semaphore";
 
-
 const semaphore = new Semaphore(1); // Only one task at a time to avoid conflicts in cron jobs
 
 const checkUrl = async (interval?: string) => {
@@ -34,7 +33,7 @@ const checkUrl = async (interval?: string) => {
                     .set({ lastCheckDate: new Date() })
                     .where("id = :id", { id: url.id })
                     .execute();
-                    
+
                 const response = await axios.get(url.path, {
                     validateStatus: () => true,
                 });
@@ -46,12 +45,12 @@ const checkUrl = async (interval?: string) => {
                         },
                         status_code: 200,
                         response: Not(""),
-                    }
+                    },
                 });
 
                 let historyResponse: string = response.data;
                 if (response.status === 200 && existingSuccessMessageHistory) {
-                    historyResponse = '';
+                    historyResponse = "";
                 }
 
                 await History.save({
@@ -59,7 +58,6 @@ const checkUrl = async (interval?: string) => {
                     response: historyResponse,
                     status_code: response.status,
                 });
-
             } catch (error) {
                 console.error("Failed to log URL response", error);
             }

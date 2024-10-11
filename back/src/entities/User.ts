@@ -39,8 +39,8 @@ export class User extends BaseEntity {
     @Field()
     @Column({
         type: "enum",
-        enum: Roles, 
-        default: Roles.FREE 
+        enum: Roles,
+        default: Roles.FREE,
     })
     role: Roles;
 }

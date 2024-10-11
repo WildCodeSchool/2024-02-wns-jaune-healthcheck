@@ -5,7 +5,6 @@ import Overview from "@/components/dashboard/Overview";
 import ListUrlHistories from "@/components/ListUrlHistories";
 
 export default function Dashboard({ element }: { element: string }) {
-
     const { id } = useParams();
 
     return (
@@ -14,9 +13,9 @@ export default function Dashboard({ element }: { element: string }) {
                 {element === "overview" && <Overview />}
                 {element === "urls" && <ListUrl />}
                 {element === "histories" && <ListHistories />}
-                {(element === "urlHistories" && id) && 
-                    <ListUrlHistories urlId={id}/>
-                }
+                {element === "urlHistories" && id && (
+                    <ListUrlHistories urlId={id} />
+                )}
             </div>
         </div>
     );

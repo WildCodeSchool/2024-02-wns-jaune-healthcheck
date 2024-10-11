@@ -129,3 +129,9 @@ export const GET_CHECK_FREQUENCIES = gql`
         }
     }
 `;
+
+export const GET_ALL_USERS = gql`
+    query GetAllUsers {
+        getAllUsers
+    }
+`;

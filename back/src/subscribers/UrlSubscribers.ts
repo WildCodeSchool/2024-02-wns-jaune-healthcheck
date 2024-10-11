@@ -11,7 +11,6 @@ import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import axios from "axios";
 
-
 @EventSubscriber()
 export class UrlSubscriber implements EntitySubscriberInterface<Url> {
     listenTo() {
@@ -60,16 +59,18 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
                     },
                     status_code: 200,
                     response: Not(""),
-                }
+                },
             });
 
             if (response.status === 200 && existingSuccessMessageHistory) {
                 existingSuccessMessageHistory.response = response.data;
                 existingSuccessMessageHistory.created_at = new Date();
-                await transactionalEntityManager.save(existingSuccessMessageHistory);
+                await transactionalEntityManager.save(
+                    existingSuccessMessageHistory,
+                );
                 return;
             }
-            
+
             const history = new History();
             history.url = url;
             history.response = response.data;

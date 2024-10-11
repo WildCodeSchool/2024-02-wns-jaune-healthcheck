@@ -14,17 +14,13 @@ const Overview = () => {
             <div className="col-span-1 flex flex-col gap-4">
                 {/* Contenu du Dashboard : Charts */}
                 <Card className="w-full h-[400px] p-5">
-                    <CardTitle className="text-lg mr-auto">
-                        Chart
-                    </CardTitle>
+                    <CardTitle className="text-lg mr-auto">Chart</CardTitle>
                 </Card>
                 <Card className="w-full h-[400px] p-5">
-                    <CardTitle className="text-lg mr-auto">
-                        Chart
-                    </CardTitle>
+                    <CardTitle className="text-lg mr-auto">Chart</CardTitle>
                 </Card>
             </div>
-            
+
             <div className="col-span-1 flex flex-col gap-4">
                 <Card className="shadow-md shadow-muted">
                     <CardHeader className="w-full">

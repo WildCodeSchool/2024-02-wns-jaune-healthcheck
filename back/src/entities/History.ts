@@ -33,7 +33,6 @@ export class History extends BaseEntity {
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
 
-
     static async deleteOldHistoriesByUrl(url: Url) {
         const query = `
             id NOT IN (
