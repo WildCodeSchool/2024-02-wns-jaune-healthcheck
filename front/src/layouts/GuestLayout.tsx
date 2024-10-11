@@ -2,7 +2,6 @@ import GuestHeader from "@/components/header/GuestHeader";
 import { Outlet } from "react-router-dom";
 
 export default function GuestLayout() {
-
     return (
         <>
             <header className="flex h-16 items-center border-b-[1px]">

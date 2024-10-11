@@ -133,6 +133,27 @@ class UserResolver {
             throw new Error("Bad request");
         }
     }
+
+    @Query(() => String)
+    async getAllUsers(@Ctx() context: MyContext) {
+        try {
+            if (context.payload) {
+                const requestingUser = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+
+                if (requestingUser.role !== Roles.ADMIN) {
+                    throw new Error("Unauthorized");
+                }
+
+                const users = await User.find();
+                return JSON.stringify(users.map(getUserBasicInfo));
+            } else throw new Error();
+        } catch (error) {
+            console.log(error);
+            throw new Error("Bad request");
+        }
+    }
 }
 
 export default UserResolver;

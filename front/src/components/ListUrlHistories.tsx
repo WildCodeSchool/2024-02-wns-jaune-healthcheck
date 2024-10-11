@@ -30,8 +30,9 @@ import CustomPagination from "./custom/CustomPagination";
 
 
 type ListUrlHistoriesProps = {
-    urlId: string
+    urlId: string;
 };
+
 
 const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
   urlId
@@ -261,6 +262,6 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
             </div>
         </>
     );
-}
+};
 
 export default ListUrlHistories;

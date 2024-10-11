@@ -6,6 +6,11 @@ import useSocketStore from "./stores/webSocketStore";
 import UserLayout from "./layouts/UserLayout";
 import { useEffect } from "react";
 import { useMeLazyQuery } from "./generated/graphql-types";
+import { Roles } from "@/types/user";
+import { Dialog, DialogTrigger } from "./components/ui/dialog";
+import { Button } from "./components/ui/button";
+import { Shield } from "lucide-react";
+import AdminPanel from "./components/admin/AdminPanel";
 
 function App() {
     const isLogged = useAuthStore((state) => state.isLogged);
@@ -15,6 +20,7 @@ function App() {
     /* TODO : Voir pour ajouter un loader animé sur la première visite */
     const [meQuery] = useMeLazyQuery();
     const me = useAuthStore((state) => state.me);
+    const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const connectSocket = useSocketStore((state) => state.connect);
     const disconnectSocket = useSocketStore((state) => state.disconnect);
@@ -53,10 +59,26 @@ function App() {
     }, [isLogged, navigate, location.pathname]);
 
     return (
-        <>
+        <div className="relative">
+            {user.role === Roles.ADMIN && (
+                <>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="default"
+                                size={"sm"}
+                                className="fixed right-2 bottom-2"
+                            >
+                                <Shield />
+                            </Button>
+                        </DialogTrigger>
+                        <AdminPanel />
+                    </Dialog>
+                </>
+            )}
             {isLogged ? <UserLayout /> : <GuestLayout />}
             <Toaster />
-        </>
+        </div>
     );
 }
 
