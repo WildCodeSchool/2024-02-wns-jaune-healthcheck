@@ -26,22 +26,15 @@ import {
 
 const columns: ColumnDef<UserData>[] = [
     {
-        accessorKey: "id",
-        header: "ID",
-    },
-    {
         accessorKey: "username",
         header: "Username",
-    },
-    {
-        accessorKey: "email",
-        header: "Email",
     },
     {
         accessorKey: "role",
         header: "Role",
     },
     {
+        header: "Actions",
         id: "actions",
         cell: ({ row }) => {
             const user = row.original;
