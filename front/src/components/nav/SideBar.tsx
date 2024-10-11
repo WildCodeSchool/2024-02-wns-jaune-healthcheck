@@ -43,7 +43,6 @@ const NavItem: React.FC<NavItemProps> = ({
         className={clsx(
           "py-[10.5px] px-[10.5px] xl:px-3 xl:py-2",
           "flex xl:space-x-4 items-center",
-          
         )}
         to={path}
       >

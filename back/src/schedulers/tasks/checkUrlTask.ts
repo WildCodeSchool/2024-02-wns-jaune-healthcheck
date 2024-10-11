@@ -39,24 +39,23 @@ const checkUrl = async (interval?: string) => {
                     validateStatus: () => true,
                 });
 
-                const existingSuccessMessageHistory = await History.findOne({
+                const existingMessageHistory = await History.findOne({
                     where: {
                         url: {
                             id: url.id,
                         },
-                        status_code: 200,
                         response: Not(""),
                     }
                 });
 
-                let historyResponse: string = response.data;
-                if (response.status === 200 && existingSuccessMessageHistory) {
-                    historyResponse = '';
+                if (existingMessageHistory) {
+                    existingMessageHistory.response = '';
+                    existingMessageHistory.save();
                 }
 
                 await History.save({
                     url: url,
-                    response: historyResponse,
+                    response: response.data,
                     status_code: response.status,
                 });
 

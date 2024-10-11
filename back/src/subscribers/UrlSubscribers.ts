@@ -53,20 +53,19 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
                 validateStatus: () => true, // Do not throw on non-2xx status codes
             });
 
-            const existingSuccessMessageHistory = await History.findOne({
+            const existingMessageHistory = await History.findOne({
                 where: {
                     url: {
                         id: url.id,
                     },
-                    status_code: 200,
                     response: Not(""),
                 }
             });
 
-            if (response.status === 200 && existingSuccessMessageHistory) {
-                existingSuccessMessageHistory.response = response.data;
-                existingSuccessMessageHistory.created_at = new Date();
-                await transactionalEntityManager.save(existingSuccessMessageHistory);
+            if (existingMessageHistory) {
+                existingMessageHistory.response = response.data;
+                existingMessageHistory.created_at = new Date();
+                await transactionalEntityManager.save(existingMessageHistory);
                 return;
             }
             

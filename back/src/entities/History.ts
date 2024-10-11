@@ -53,7 +53,7 @@ export class History extends BaseEntity {
                             SELECT id
                             FROM history
                             WHERE urlId = :urlId 
-                            AND status_code = 200 AND response != ''
+                            AND response != ''
                         )
                     ) AS conserved_ids
                 ) 
@@ -71,6 +71,7 @@ export class History extends BaseEntity {
         sortField?: string,
         privateHistories?: boolean,
         authenticatedUserId?: string,
+        urlId?: string,
     ): Promise<PaginatesHistories> {
         const skip = (currentPage - 1) * 16;
         const queryBuilder = this.createQueryBuilder("history")
@@ -86,11 +87,15 @@ export class History extends BaseEntity {
         if (searchText) {
             whereConditions.push("url.name ILIKE :searchText");
         }
+        if (urlId) {
+            whereConditions.push("url.id = :urlId");
+        }
 
         queryBuilder.where(whereConditions.join(" AND "), {
             searchText: `%${searchText}%`,
             authenticatedUserId: authenticatedUserId,
             privateUrls: privateHistories,
+            urlId: urlId,
         });
 
         if (sortField) {

@@ -97,6 +97,7 @@ export type Query = {
   checkFrequencies: Array<CheckFrequency>;
   histories: Array<History>;
   history: History;
+  historyWithResponse: History;
   logout: Scalars['String']['output'];
   me: Scalars['String']['output'];
   paginatesHistories: PaginatesHistories;
@@ -112,11 +113,17 @@ export type QueryHistoryArgs = {
 };
 
 
+export type QueryHistoryWithResponseArgs = {
+  urlId: Scalars['String']['input'];
+};
+
+
 export type QueryPaginatesHistoriesArgs = {
   currentPage?: Scalars['Float']['input'];
   privateHistories?: Scalars['Boolean']['input'];
   searchText?: InputMaybe<Scalars['String']['input']>;
   sortField?: InputMaybe<Scalars['String']['input']>;
+  urlId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -221,6 +228,7 @@ export type PaginatesHistoriesQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
   searchText?: InputMaybe<Scalars['String']['input']>;
   sortField?: InputMaybe<Scalars['String']['input']>;
+  urlId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -250,6 +258,13 @@ export type CheckFrequenciesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CheckFrequenciesQuery = { __typename?: 'Query', checkFrequencies: Array<{ __typename?: 'CheckFrequency', id: string, interval: string }> };
+
+export type HistoryWithResponseQueryVariables = Exact<{
+  historyWithResponseUrlId: Scalars['String']['input'];
+}>;
+
+
+export type HistoryWithResponseQuery = { __typename?: 'Query', historyWithResponse: { __typename?: 'History', response: string, id: string, status_code: number } };
 
 
 export const AddUrlDocument = gql`
@@ -534,12 +549,13 @@ export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
 export const PaginatesHistoriesDocument = gql`
-    query PaginatesHistories($privateHistories: Boolean!, $currentPage: Float!, $searchText: String, $sortField: String) {
+    query PaginatesHistories($privateHistories: Boolean!, $currentPage: Float!, $searchText: String, $sortField: String, $urlId: String) {
   paginatesHistories(
     privateHistories: $privateHistories
     currentPage: $currentPage
     searchText: $searchText
     sortField: $sortField
+    urlId: $urlId
   ) {
     currentPage
     nextPage
@@ -574,6 +590,7 @@ export const PaginatesHistoriesDocument = gql`
  *      currentPage: // value for 'currentPage'
  *      searchText: // value for 'searchText'
  *      sortField: // value for 'sortField'
+ *      urlId: // value for 'urlId'
  *   },
  * });
  */
@@ -799,3 +816,45 @@ export type CheckFrequenciesQueryHookResult = ReturnType<typeof useCheckFrequenc
 export type CheckFrequenciesLazyQueryHookResult = ReturnType<typeof useCheckFrequenciesLazyQuery>;
 export type CheckFrequenciesSuspenseQueryHookResult = ReturnType<typeof useCheckFrequenciesSuspenseQuery>;
 export type CheckFrequenciesQueryResult = Apollo.QueryResult<CheckFrequenciesQuery, CheckFrequenciesQueryVariables>;
+export const HistoryWithResponseDocument = gql`
+    query HistoryWithResponse($historyWithResponseUrlId: String!) {
+  historyWithResponse(urlId: $historyWithResponseUrlId) {
+    response
+    id
+    status_code
+  }
+}
+    `;
+
+/**
+ * __useHistoryWithResponseQuery__
+ *
+ * To run a query within a React component, call `useHistoryWithResponseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryWithResponseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryWithResponseQuery({
+ *   variables: {
+ *      historyWithResponseUrlId: // value for 'historyWithResponseUrlId'
+ *   },
+ * });
+ */
+export function useHistoryWithResponseQuery(baseOptions: Apollo.QueryHookOptions<HistoryWithResponseQuery, HistoryWithResponseQueryVariables> & ({ variables: HistoryWithResponseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>(HistoryWithResponseDocument, options);
+      }
+export function useHistoryWithResponseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>(HistoryWithResponseDocument, options);
+        }
+export function useHistoryWithResponseSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>(HistoryWithResponseDocument, options);
+        }
+export type HistoryWithResponseQueryHookResult = ReturnType<typeof useHistoryWithResponseQuery>;
+export type HistoryWithResponseLazyQueryHookResult = ReturnType<typeof useHistoryWithResponseLazyQuery>;
+export type HistoryWithResponseSuspenseQueryHookResult = ReturnType<typeof useHistoryWithResponseSuspenseQuery>;
+export type HistoryWithResponseQueryResult = Apollo.QueryResult<HistoryWithResponseQuery, HistoryWithResponseQueryVariables>;

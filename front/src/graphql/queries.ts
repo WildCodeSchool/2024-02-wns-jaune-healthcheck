@@ -55,12 +55,14 @@ export const GET_ALL_HISTORIES = gql`
         $currentPage: Float!
         $searchText: String
         $sortField: String
+        $urlId: String
     ) {
         paginatesHistories(
             privateHistories: $privateHistories
             currentPage: $currentPage
             searchText: $searchText
             sortField: $sortField
+            urlId: $urlId
         ) {
             currentPage
             nextPage
@@ -127,5 +129,15 @@ export const GET_CHECK_FREQUENCIES = gql`
             id
             interval
         }
+    }
+`;
+
+export const GET_HISTORY_WITH_RESPONSE = gql`
+    query HistoryWithResponse($historyWithResponseUrlId: String!) {
+    historyWithResponse(urlId: $historyWithResponseUrlId) {
+        response
+        id
+        status_code
+    }
     }
 `;
