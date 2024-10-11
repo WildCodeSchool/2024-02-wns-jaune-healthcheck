@@ -1,4 +1,5 @@
 import { Resolver, Query, Arg, Ctx } from "type-graphql";
+import { Not } from "typeorm";
 import { History } from "../entities/History";
 import PaginatesHistories from "../types/PaginatesHistories";
 import MyContext from "../types/MyContext";
@@ -57,6 +58,7 @@ class HistoryResolver {
         @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
         @Arg("searchText", { nullable: true }) searchText?: string,
         @Arg("sortField", { nullable: true }) sortField?: string,
+        @Arg("urlId", { nullable: true }) urlId?: string,
     ): Promise<PaginatesHistories> {
         try {
             if (context.payload) {
@@ -66,15 +68,34 @@ class HistoryResolver {
                     sortField,
                     privateHistories,
                     context.payload.id,
+                    urlId,
                 );
             }
             return await History.getPaginateHistories(
                 currentPage,
                 searchText,
                 sortField,
+                privateHistories,
+                undefined,
+                urlId,
             );
         } catch (err) {
             throw new Error(err);
+        }
+    }
+
+    @Query(() => History)
+    async historyWithResponse(@Arg("urlId") urlId: string): Promise<History> {
+        try {
+            const history = await History.findOneOrFail({
+                where: { 
+                    url: { id: urlId },
+                    response: Not('')
+                },
+            });
+            return history;
+        } catch (error) {
+            throw new Error("Internal server error");
         }
     }
 }

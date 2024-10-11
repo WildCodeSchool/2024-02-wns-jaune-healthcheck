@@ -33,7 +33,7 @@ const URLList: React.FC = () => {
         previousPage: 1,
         nextPage: 2,
     });
-
+    console.log(PaginateUrls);
     const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
 
     useEffect(() => {
