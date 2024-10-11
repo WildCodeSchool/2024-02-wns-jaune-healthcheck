@@ -141,3 +141,9 @@ export const GET_HISTORY_WITH_RESPONSE = gql`
     }
     }
 `;
+
+export const GET_ALL_USERS = gql`
+    query GetAllUsers {
+        getAllUsers
+    }
+`;
