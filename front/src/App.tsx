@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import GuestLayout from "./layouts/GuestLayout";
 import useAuthStore from "./stores/authStore";
 import useSocketStore from "./stores/webSocketStore";
-import UserLayout from "./layouts/UserLayout";
+import UserLayout from "./layouts/UserLayout.tsx";
 import { useEffect } from "react";
 import { useMeLazyQuery } from "./generated/graphql-types";
 import { Roles } from "@/types/user";

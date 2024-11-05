@@ -8,7 +8,7 @@ export default function Dashboard({ element }: { element: string }) {
     const { id } = useParams();
 
     return (
-        <div className="pt-24">
+        <div>
             <div className="">
                 {element === "overview" && <Overview />}
                 {element === "urls" && <ListUrl />}

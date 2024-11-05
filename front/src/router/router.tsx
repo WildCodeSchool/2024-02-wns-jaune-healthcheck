@@ -42,10 +42,6 @@ const routes = [
                         path: "/dashboard/histories",
                         element: <Dashboard element="histories" />,
                     },
-                    {
-                        path: "/dashboard/subscribe",
-                        element: <Dashboard element="subscribe" />,
-                    },
                 ],
             },
         ],
