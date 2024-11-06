@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { Field, ObjectType } from "type-graphql";
 import { Url } from "./Url";
+import { Notification } from "./Notification";
 
 @ObjectType()
 @Entity()
@@ -29,4 +30,10 @@ export class User extends BaseEntity {
     @Field(() => [Url], { nullable: true })
     @OneToMany(() => Url, (Url) => Url.user)
     urls!: Url[];
+
+    @Field(() => [Notification])
+    @OneToMany(() => Notification, (notification) => notification.user, {
+        eager: true,
+    })
+    notifications: Notification[];
 }

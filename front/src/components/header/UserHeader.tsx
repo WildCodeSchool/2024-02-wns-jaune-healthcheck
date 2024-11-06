@@ -10,7 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOut, Crown } from "lucide-react";
+import { LogOut, Crown, Bell } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
@@ -93,7 +93,10 @@ export default function UserHeader() {
                                         {item.name}
                                     </button>
                                 </DialogTrigger>
-                                <FormUserUrl setOpenDialog={setOpenDialog} />
+                                <FormUserUrl
+                                    openDialog={openDialog}
+                                    setOpenDialog={setOpenDialog}
+                                />
                             </Dialog>
                         ),
                     )}
@@ -101,6 +104,22 @@ export default function UserHeader() {
             </section>
             <section className="flex items-center gap-4">
                 {/* Emplacement pour l'abonnement */}
+                {/* <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Bell className="cursor-pointer h-6 w-6 hover:text-primary transition-colors" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            onClick={() => setOpenPricing(true)}
+                            className="cursor-pointer"
+                        >
+                            <Crown className="mr-2 h-4 w-4" />
+                            <p>{loading ? "Chargement ..." : "Abonnements"}</p>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu> */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="cursor-pointer w-8 h-8 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center">

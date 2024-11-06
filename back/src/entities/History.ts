@@ -5,8 +5,11 @@ import {
     CreateDateColumn,
     ManyToOne,
     BaseEntity,
+    OneToOne,
+    JoinColumn,
 } from "typeorm";
 import { Url } from "./Url";
+import { Notification } from "./Notification";
 import { ObjectType, Field } from "type-graphql";
 
 @Entity()
@@ -31,4 +34,11 @@ export class History extends BaseEntity {
     @Field(() => Url)
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
+
+    @OneToOne(() => Notification, (notification) => notification.history, {
+        nullable: true,
+        cascade: true,
+    })
+    @JoinColumn()
+    notification?: Notification;
 }
