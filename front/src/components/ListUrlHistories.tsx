@@ -154,17 +154,17 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
     return (
         <>
             <div className="flex-grow">
-                <div className="flex items-start justify-between mb-10">
+                <div className="flex items-start justify-between mb-6">
                     <div
                       className="me-4"
                     >
                       <h1 
-                        className="text-2xl font-semibold leading-[15px]"
+                        className="text-lg font-semibold leading-[15px]"
                       >{urlData?.url.name}
                           
                       </h1>
                       <h4
-                        className="leading-[30px]"
+                        className="leading-[20px]"
                       >
                         {urlData?.url.path}
                       </h4>
