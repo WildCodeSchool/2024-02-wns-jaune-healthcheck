@@ -15,13 +15,8 @@ async function generateFixtures() {
             id: "737fbb42-1dd9-40c5-a29e-604407a7bc7b",
         });
 
-        const savedUrls = await Promise.all(
-            urlsData.map(async (urlData) => {
-                const url = Url.create({ ...urlData });
-                await url.save();
-                return url;
-            }),
-        );
+        const url1 = await Url.save({ ...urlsData[0] });
+        const url2 = await Url.save({ ...urlsData[1] });
 
         await User.save({
             id: "741fbb42-1dd9-40c5-a29e-604407a7bc8c",
@@ -37,9 +32,9 @@ async function generateFixtures() {
             private: true,
             user: { id: "741fbb42-1dd9-40c5-a29e-604407a7bc8c" },
         });
-
-        await History.save({ ...historiesData[0], url: savedUrls[0] });
-        await History.save({ ...historiesData[1], url: savedUrls[1] });
+        
+        await History.save({ ...historiesData[0], url: url1 });
+        await History.save({ ...historiesData[1], url: url2 });
         console.log("Fixtures generated successfully!");
     } catch (error) {
         console.error("Error while generating fixtures:", error);

@@ -22,7 +22,7 @@ const dataSource = new DataSource({
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     synchronize: process.env.APP_ENV === "test",
-    logging: process.env.APP_ENV === "dev",
+    logging: process.env.APP_ENV === "dev" || process.env.APP_ENV === "test",
     entities: [Url, History, User, CheckFrequency],
     subscribers: [UrlSubscriber, HistorySubscriber],
     migrations: [
