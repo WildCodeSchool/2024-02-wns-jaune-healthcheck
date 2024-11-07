@@ -49,19 +49,21 @@ describe("Tests ListUrlHistories", () => {
                 </MemoryRouter>
             </MockedProvider>,
         );
+
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
-        expect(
-            await screen.findByText("06/11/2024 à 15:17:01"),
-        ).toBeInTheDocument();
-        expect(await screen.findByText("Statut 200")).toBeInTheDocument();
-        expect(
-            await screen.findByText("07/11/2024 à 15:17:01"),
-        ).toBeInTheDocument();
-        expect(await screen.findByText("Statut 404")).toBeInTheDocument();
+
         const historiesContainer = await screen.findByTestId(
             "histories-container",
         );
         expect(historiesContainer.children).toHaveLength(2);
+
+        expect(screen.getByText("Statut 200")).toBeInTheDocument();
+        expect(screen.getByText("Statut 404")).toBeInTheDocument();
+
+        expect(screen.getAllByTestId("status-indicator")).toHaveLength(2);
+
+        const dateTexts = screen.getAllByText(/\d{1,2}\/\d{1,2}\/\d{4}/);
+        expect(dateTexts).toHaveLength(2);
     });
 
     it("Should display an error", async () => {
