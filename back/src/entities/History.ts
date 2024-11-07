@@ -36,6 +36,13 @@ export class History extends BaseEntity {
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
 
+    @OneToOne(() => Notification, (notification) => notification.history, {
+        nullable: true,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn()
+    notification?: Notification | null;
+
     static async deleteOldHistoriesByUrl(url: Url) {
         const query = `
             id NOT IN (
@@ -125,11 +132,4 @@ export class History extends BaseEntity {
             nextPage: currentPage + 1,
         };
     }
-
-    @OneToOne(() => Notification, (notification) => notification.history, {
-        nullable: true,
-        onDelete: "CASCADE",
-    })
-    @JoinColumn()
-    notification?: Notification | null;
 }
