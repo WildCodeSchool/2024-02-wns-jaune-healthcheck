@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
     AudioWaveform,
-    Bell,
     ChevronsUpDown,
     Command,
     GalleryVerticalEnd,
@@ -37,11 +36,8 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-    Dialog,
-    DialogTrigger
-} from "@radix-ui/react-dialog";
-import { useSidebar } from "@/components/ui/sidebar"
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
@@ -84,7 +80,7 @@ const data = {
             icon: History,
         },
     ],
-}
+};
 
 const UserSideBar: React.FC = () => {
     const user = useAuthStore((state) => state.user);
@@ -115,7 +111,7 @@ const UserSideBar: React.FC = () => {
     useEffect(() => {
         return () => {
             document.cookie = `sidebar:state=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        }
+        };
     }, []);
 
     return (
@@ -129,9 +125,7 @@ const UserSideBar: React.FC = () => {
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
-                                    <div 
-                                        className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground"
-                                    >
+                                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                                         <img
                                             src={Logo}
                                             alt="Logo"
@@ -167,7 +161,9 @@ const UserSideBar: React.FC = () => {
                                             <team.logo className="size-4 shrink-0" />
                                         </div>
                                         {team.name}
-                                        <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                                        <DropdownMenuShortcut>
+                                            ⌘{index + 1}
+                                        </DropdownMenuShortcut>
                                     </DropdownMenuItem>
                                 ))}
                             </DropdownMenuContent>
@@ -181,9 +177,7 @@ const UserSideBar: React.FC = () => {
                         <SidebarMenuItem>
                             <Dialog
                                 open={openDialog}
-                                onOpenChange={() =>
-                                    setOpenDialog(!openDialog)
-                                }
+                                onOpenChange={() => setOpenDialog(!openDialog)}
                             >
                                 <DialogTrigger asChild>
                                     <SidebarMenuButton
@@ -194,7 +188,9 @@ const UserSideBar: React.FC = () => {
                                     >
                                         <div>
                                             <CirclePlus />
-                                            <span className="mb-[0.5px]">Ajouter une url</span>
+                                            <span className="mb-[0.5px]">
+                                                Ajouter une url
+                                            </span>
                                         </div>
                                     </SidebarMenuButton>
                                 </DialogTrigger>
@@ -211,10 +207,7 @@ const UserSideBar: React.FC = () => {
                     <SidebarMenu>
                         {data.navigation.map((item) => (
                             <SidebarMenuItem key={item.name}>
-                                <SidebarMenuButton
-                                    asChild
-                                    tooltip={item.name}
-                                >
+                                <SidebarMenuButton asChild tooltip={item.name}>
                                     <Link to={item.url}>
                                         <item.icon />
                                         <span>{item.name}</span>
@@ -237,20 +230,23 @@ const UserSideBar: React.FC = () => {
                                     {isPremium && (
                                         <Crown
                                             strokeWidth={3}
+                                            fill="rgb(252 211 77)"
                                             className={clsx(
                                                 "h-4 w-4 text-amber-300",
-                                                "left-[-2px] top-[-5px]",
+                                                "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
-                                                open && "translate-x-2 translate-y-2",
-                                                "absolute"
+                                                open &&
+                                                    "translate-x-2 translate-y-2",
+                                                "absolute",
                                             )}
                                         />
                                     )}
-                                    <div className={clsx(
-                                        "aspect-square cursor-pointer",
-                                        "h-8 w-8 bg-primary hover:bg-primary/90",
-                                        "rounded-full flex justify-center items-center",
-                                    )}
+                                    <div
+                                        className={clsx(
+                                            "aspect-square cursor-pointer",
+                                            "h-8 w-8 bg-primary hover:bg-primary/90",
+                                            "rounded-full flex justify-center items-center",
+                                        )}
                                     >
                                         <p className="text-lg text-white">
                                             {user.username?.slice(0, 1)}
@@ -273,37 +269,8 @@ const UserSideBar: React.FC = () => {
                                 align="end"
                                 sideOffset={4}
                             >
-                                <DropdownMenuLabel className="p-0 font-normal">
-                                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                        <div className={clsx(
-                                            "relative",
-                                            "aspect-square cursor-pointer",
-                                            "h-8 w-8 bg-primary hover:bg-primary/90",
-                                            "rounded-full flex justify-center items-center",
-                                        )}
-                                        >
-                                            <Crown
-                                                strokeWidth={3}
-                                                className={clsx(
-                                                    "h-4 w-4 text-amber-300",
-                                                    "left-[-2px] top-[-5px]",
-                                                    "transition-transform duration-200 ease-in-out",
-                                                    "absolute"
-                                                )}
-                                            />
-                                            <p className="text-lg text-white">
-                                                {user.username?.slice(0, 1)}
-                                            </p>
-                                        </div>
-                                        <div className="grid flex-1 text-left text-sm leading-tight">
-                                            <span className="truncate font-semibold">
-                                                {user.username}
-                                            </span>
-                                            <span className="truncate text-xs">
-                                                {user.email}
-                                            </span>
-                                        </div>
-                                    </div>
+                                <DropdownMenuLabel>
+                                    <p>Profil</p>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
@@ -312,23 +279,25 @@ const UserSideBar: React.FC = () => {
                                         className="cursor-pointer"
                                     >
                                         <Crown className="mr-2 h-4 w-4" />
-                                        <p>{loading ? "Chargement ..." : "Abonnements"}</p>
+                                        <p>
+                                            {loading
+                                                ? "Chargement ..."
+                                                : "Abonnements"}
+                                        </p>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
 
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <Bell className="mr-2 h-4 w-4" />
-                                        Notifications
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onClick={handleLogout}
                                     className="cursor-pointer"
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    <p>{loading ? "Chargement..." : "Déconnexion"}</p>
+                                    <p>
+                                        {loading
+                                            ? "Chargement..."
+                                            : "Déconnexion"}
+                                    </p>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -342,6 +311,6 @@ const UserSideBar: React.FC = () => {
             />
         </Sidebar>
     );
-}
+};
 
 export default UserSideBar;

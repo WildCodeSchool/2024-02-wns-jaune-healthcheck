@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { Field, ObjectType } from "type-graphql";
 import { Url } from "./Url";
+import { Notification } from "./Notification";
 
 export enum Roles {
     ADMIN = "admin",
@@ -43,4 +44,10 @@ export class User extends BaseEntity {
         default: Roles.FREE,
     })
     role: Roles;
+
+    @Field(() => [Notification])
+    @OneToMany(() => Notification, (notification) => notification.user, {
+        eager: true,
+    })
+    notifications: Notification[];
 }

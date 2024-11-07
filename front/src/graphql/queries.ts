@@ -132,13 +132,24 @@ export const GET_CHECK_FREQUENCIES = gql`
     }
 `;
 
+export const GET_NOTIFICATIONS = gql`
+    query Notifications {
+        notifications {
+            id
+            is_read
+            created_at
+            content
+        }
+    }
+`;
+
 export const GET_HISTORY_WITH_RESPONSE = gql`
     query HistoryWithResponse($historyWithResponseUrlId: String!) {
-    historyWithResponse(urlId: $historyWithResponseUrlId) {
-        response
-        id
-        status_code
-    }
+        historyWithResponse(urlId: $historyWithResponseUrlId) {
+            response
+            id
+            status_code
+        }
     }
 `;
 
