@@ -69,7 +69,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                 currentPage: Number(searchParams?.get("currentPage")) || 1,
             });
         }
-    }, [urlData]);
+    }, [urlData, refetch, searchParams, urlId]);
 
     const { data: historyData, refetch: refetchHistoryResponse } =
         useHistoryWithResponseQuery({
