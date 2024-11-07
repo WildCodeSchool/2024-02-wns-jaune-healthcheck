@@ -7,15 +7,15 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { useSearchParams } from "react-router-dom";
-import FilterBar from "../custom/FilterBarPrivate";
+import FilterBar from "@/components/custom/FilterBarPrivate";
 import {
     PaginatesHistories,
     usePaginatesHistoriesQuery,
 } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
-import CustomPagination from "../custom/CustomPagination";
+import CustomPagination from "@/components/custom/CustomPagination";
 
-const HistoriesList: React.FC = () => {
+const ListUserHistories: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [visibility, setVisibility] = useState<"private" | "public" | "all">(
         "all",
@@ -170,6 +170,6 @@ const HistoriesList: React.FC = () => {
             />
         </div>
     );
-};
+}
 
-export default HistoriesList;
+export default ListUserHistories;

@@ -7,13 +7,13 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { useSearchParams, Link } from "react-router-dom";
-import FilterBar from "../custom/FilterBarPrivate";
+import FilterBar from "@/components/custom/FilterBarPrivate";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginateUrls } from "@/generated/graphql-types";
-import CustomPagination from "../custom/CustomPagination";
+import CustomPagination from "@/components/custom/CustomPagination";
 
-const URLList: React.FC = () => {
+const ListUserUrls: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [visibility, setVisibility] = useState<"private" | "public" | "all">(
         "all",
@@ -101,7 +101,7 @@ const URLList: React.FC = () => {
                               >
                                   <Link
                                       key={item.id}
-                                      to={`/dashboard/url/${item.id}`}
+                                      to={`/user-url/${item.id}`}
                                       rel="noopener noreferrer"
                                       className="w-full"
                                   >
@@ -142,13 +142,13 @@ const URLList: React.FC = () => {
                               </ListItem>
                           ))
                         : Array.from({ length: 16 }, (_, index) => {
-                              return (
-                                  <Skeleton
-                                      key={index}
-                                      className="h-[143px] rounded-lg"
-                                  />
-                              );
-                          })}
+                            return (
+                                <Skeleton
+                                    key={index}
+                                    className="h-[143px] rounded-lg"
+                                />
+                            );
+                        })}
                 </List>
             </div>
             <CustomPagination
@@ -160,6 +160,6 @@ const URLList: React.FC = () => {
             />
         </div>
     );
-};
+}
 
-export default URLList;
+export default ListUserUrls;

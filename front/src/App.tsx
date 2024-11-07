@@ -1,9 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
-import { useNavigate, useLocation } from "react-router-dom";
-import GuestLayout from "./layouts/GuestLayout";
 import useAuthStore from "./stores/authStore";
 import useSocketStore from "./stores/webSocketStore";
-import UserLayout from "./layouts/UserLayout";
 import { useEffect } from "react";
 import { useMeLazyQuery } from "./generated/graphql-types";
 import { Roles } from "@/types/user";
@@ -12,10 +9,8 @@ import { Button } from "./components/ui/button";
 import { Shield } from "lucide-react";
 import AdminPanel from "./components/admin/AdminPanel";
 
-function App() {
+function App({children}: {children: React.ReactNode }) {
     const isLogged = useAuthStore((state) => state.isLogged);
-    const navigate = useNavigate();
-    const location = useLocation();
 
     /* TODO : Voir pour ajouter un loader animé sur la première visite */
     const [meQuery] = useMeLazyQuery();
@@ -48,16 +43,6 @@ function App() {
         };
     }, [connectSocket, disconnectSocket, isLogged]);
 
-    useEffect(() => {
-        if (!isLogged) {
-            if (location.pathname.includes("/dashboard")) {
-                navigate("/");
-            }
-        } else {
-            if (location.pathname === "/") navigate("/dashboard");
-        }
-    }, [isLogged, navigate, location.pathname]);
-
     return (
         <div className="relative">
             {user.role === Roles.ADMIN && (
@@ -76,7 +61,7 @@ function App() {
                     </Dialog>
                 </>
             )}
-            {isLogged ? <UserLayout /> : <GuestLayout />}
+                { children }
             <Toaster />
         </div>
     );

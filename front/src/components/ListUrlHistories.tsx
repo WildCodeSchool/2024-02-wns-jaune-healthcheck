@@ -162,9 +162,9 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
     return (
         <>
             <div className="flex-grow">
-                <div className="flex items-start justify-between mb-10">
+                <div className="flex items-start justify-between mb-6">
                     <div className="me-4">
-                        <h1 className="text-2xl font-semibold leading-[15px]">
+                        <h1 className="text-lg font-semibold leading-[15px]">
                             {urlData?.url.name}
                             {historiesList.length === 0 && (
                                 <span className="text-sm text-muted-foreground ml-2">
@@ -172,7 +172,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                                 </span>
                             )}
                         </h1>
-                        <h4 className="leading-[30px]">{urlData?.url.path}</h4>
+                        <h4 className="leading-[20px]">{urlData?.url.path}</h4>
                     </div>
                     <div className="flex space-x-2">
                         <Dialog>

@@ -51,7 +51,6 @@ cron.schedule(
                 parentPort.postMessage("Tâche journalière exécutée");
             }
         } catch (error) {
-            console.error(error);
             if (parentPort) {
                 parentPort.postMessage(
                     `Erreur dans la tâche journalière: ${error.message}`,

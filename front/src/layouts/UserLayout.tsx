@@ -1,35 +1,44 @@
-import { Outlet } from "react-router-dom";
-import clsx from "clsx";
-import UserHeader from "@/components/header/UserHeader";
-import SideBar from "@/components/nav/SideBar";
+import { Outlet, useLocation, Navigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from "@/components/ui/sidebar";
+import UserSideBar from "@/components/nav/UserSideBar";
+import UserBreadcrumb from "@/components/nav/UserBreadcrumb";
+import useAuthStore from "@/stores/authStore";
+import NotificationDropdown from "@/components/header/NotificationDropdown";
 
-export default function UserLayout() {
+const UserLayout: React.FC = () => {
+    const location = useLocation();
+    const isLogged = useAuthStore((state) => state.isLogged);
+
+    if (!isLogged) return <Navigate to="/index" />;
+
     return (
-        <>
-            <UserHeader />
-            <div className="mx-1 sm:mx-2 lg:mx-6 xl:mx-40 2xl:mx-64">
-                <div
-                    className={clsx(
-                        "grid grid-cols-[repeat(16,_minmax(0,_1fr))]",
-                        "gap-0",
-                        "xl:gap-8",
-                    )}
-                >
-                    <div className="col-span-2 sm:col-span-1 xl:col-span-4">
-                        <SideBar />
+        <SidebarProvider>
+            <UserSideBar />
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    <div className="flex w-full justify-between items-center gap-2 px-4">
+                        <section className="flex items-center gap-2">
+                            <SidebarTrigger className="-ml-1" />
+                            <Separator
+                                orientation="vertical"
+                                className="mr-2 h-4"
+                            />
+                            <UserBreadcrumb path={location.pathname} />
+                        </section>
+                        <NotificationDropdown />
                     </div>
-                    <main
-                        className={clsx(
-                            "col-[3_/_span_16] sm:col-[2_/_span_16]",
-                            "xl:col-[5_/_span_16]",
-                            "ms-0 sm:ms-2 md:ms-0",
-                            "pb-10",
-                        )}
-                    >
-                        <Outlet />
-                    </main>
-                </div>
-            </div>
-        </>
+                </header>
+                <main className="flex-1 space-y-4 p-4 pt-2">
+                    <Outlet />
+                </main>
+            </SidebarInset>
+        </SidebarProvider>
     );
-}
+};
+
+export default UserLayout;

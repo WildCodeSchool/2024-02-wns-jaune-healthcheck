@@ -5,8 +5,11 @@ import {
     CreateDateColumn,
     ManyToOne,
     BaseEntity,
+    OneToOne,
+    JoinColumn,
 } from "typeorm";
 import { Url } from "./Url";
+import { Notification } from "./Notification";
 import { ObjectType, Field } from "type-graphql";
 import PaginatesHistories from "@/types/PaginatesHistories";
 
@@ -32,6 +35,13 @@ export class History extends BaseEntity {
     @Field(() => Url)
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
+
+    @OneToOne(() => Notification, (notification) => notification.history, {
+        nullable: true,
+        onDelete: "CASCADE",
+    })
+    @JoinColumn()
+    notification?: Notification | null;
 
     static async deleteOldHistoriesByUrl(url: Url) {
         const query = `
