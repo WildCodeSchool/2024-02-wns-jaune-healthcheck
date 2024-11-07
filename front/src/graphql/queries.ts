@@ -45,13 +45,17 @@ export const GET_ONE_URL = gql`
             id
             name
             path
+            private
+            user {
+                id
+            }
         }
     }
 `;
 
 export const GET_ALL_HISTORIES = gql`
     query PaginatesHistories(
-        $privateHistories: Boolean!
+        $privateHistories: Boolean
         $currentPage: Float!
         $searchText: String
         $sortField: String

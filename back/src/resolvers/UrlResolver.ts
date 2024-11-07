@@ -28,10 +28,10 @@ class UrlResolver {
     @Query(() => PaginateUrls)
     async urls(
         @Ctx() context: MyContext,
-        @Arg("privateUrls", { defaultValue: false }) privateUrls: boolean,
         @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
         @Arg("searchText") searchText?: string,
         @Arg("sortField") sortField?: string,
+        @Arg("privateUrls", { nullable: true }) privateUrls?: boolean,
     ): Promise<PaginateUrls> {
         try {
             if (context.payload) {

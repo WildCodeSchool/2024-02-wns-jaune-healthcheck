@@ -107,7 +107,7 @@ export default function FormUserUrl({
     return (
         <DialogContent className="sm:max-w-md space-y-2">
             <DialogHeader>
-                <DialogTitle className="text-2xl">Ajoutez une URL</DialogTitle>
+                <DialogTitle className="text-2xl">Ajouter une URL</DialogTitle>
                 <DialogDescription>
                     Vous pouvez être l'unique utilisateur y ayant accès en
                     l'ajoutant en privé.
