@@ -1,5 +1,6 @@
 import { IsNull } from "typeorm";
 import axios from "axios";
+import { User } from "../../entities/User";
 import { Url } from "../../entities/Url";
 import { History } from "../../entities/History";
 import { Notification } from "../../entities/Notification";
@@ -10,21 +11,32 @@ const semaphore = new Semaphore(1); // Only one task at a time to avoid conflict
 
 // Create or update a notification
 const createOrUpdateNotification = async (newHistory: History) => {
-    const existingNotification = await Notification.findOne({
-        relations: ["history", "user"],
+    const user: User | null = await User.findOne({
+        relations: [
+            "notifications",
+            "notifications.history",
+            "notifications.history.url",
+        ],
         where: {
-            history: {
-                url: {
-                    id: newHistory.url.id,
-                },
-                status_code: newHistory.status_code,
+            notifications: {
+                is_read: false,
             },
-            is_read: false,
         },
     });
 
-    if (existingNotification) {
-        await Notification.remove(existingNotification);
+    if (user && user.notifications) {
+        for (const notification of user.notifications) {
+            if (
+                notification.history.url.path === newHistory.url.path &&
+                notification.history.status_code === newHistory.status_code
+            ) {
+                notification.history.notification = null;
+
+                await History.save(notification.history);
+
+                await Notification.delete({ id: notification.id });
+            }
+        }
     }
 
     const notification = Notification.create({

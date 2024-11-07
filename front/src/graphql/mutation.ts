@@ -37,3 +37,21 @@ export const CHECK_URL = gql`
         }
     }
 `;
+
+export const READ_NOTIFICATION = gql`
+    mutation ReadNotification($notificationId: String!) {
+        readNotification(notificationId: $notificationId)
+    }
+`;
+
+export const DELETE_NOTIFICATION = gql`
+    mutation DeleteNotification($notificationId: String!) {
+        deleteNotification(notificationId: $notificationId)
+    }
+`;
+
+export const DELETE_ALL_NOTIFICATION = gql`
+    mutation DeleteAllNotifications {
+        deleteAllNotifications
+    }
+`;

@@ -1,5 +1,8 @@
 import Logo from "@/assets/logo.svg";
-import { useLogoutLazyQuery } from "@/generated/graphql-types";
+import {
+    useDeleteAllNotificationsMutation,
+    useLogoutLazyQuery,
+} from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
 import { useToast } from "../ui/use-toast";
 import {
@@ -10,12 +13,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOut, Crown, Bell } from "lucide-react";
+import { LogOut, Crown, Bell, Circle, Trash } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import FormUserUrl from "../FormUserUrl";
 import { useState } from "react";
 import { Pricing } from "@/components/subscription/Pricing";
+import Notification from "../custom/Notification";
+import { useNotificationsQuery } from "@/generated/graphql-types";
+import useSocketStore from "@/stores/webSocketStore";
+import { useEffect } from "react";
+import { Skeleton } from "../ui/skeleton";
+import { GET_NOTIFICATIONS } from "@/graphql/queries";
 
 type NavigationList = {
     id: number;
@@ -40,6 +49,7 @@ export default function UserHeader() {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [openPricing, setOpenPricing] = useState<boolean>(false);
 
+    // Logout
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
 
@@ -58,6 +68,30 @@ export default function UserHeader() {
                     description: "La déconnexion a échouée",
                 });
             },
+        });
+    };
+
+    // Notifications
+    const {
+        loading: loadingNotification,
+        data,
+        refetch,
+    } = useNotificationsQuery();
+    const messages = useSocketStore((state) => state.messages);
+
+    useEffect(() => {
+        refetch();
+    }, [messages, refetch]);
+
+    const [deleteNotification] = useDeleteAllNotificationsMutation();
+
+    const hDeleteAll = () => {
+        deleteNotification({
+            refetchQueries: [
+                {
+                    query: GET_NOTIFICATIONS,
+                },
+            ],
         });
     };
 
@@ -103,23 +137,52 @@ export default function UserHeader() {
                 </nav>
             </section>
             <section className="flex items-center gap-4">
-                {/* Emplacement pour l'abonnement */}
-                {/* <DropdownMenu>
+                <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Bell className="cursor-pointer h-6 w-6 hover:text-primary transition-colors" />
+                        <div className="cursor-pointer h-6 w-6 relative">
+                            <Bell className="hover:text-primary transition-colors" />
+                            {data && (
+                                <Circle
+                                    fill="rgb(239 68 68)"
+                                    className={`absolute -top-1 right-0 h-3 w-3 text-red-500 ${
+                                        data!.notifications.some(
+                                            (notification) =>
+                                                notification.is_read === false,
+                                        )
+                                            ? "block"
+                                            : "hidden"
+                                    }`}
+                                />
+                            )}
+                        </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                        <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                    <DropdownMenuContent className="w-64 lg:w-fit" align="end">
+                        <DropdownMenuLabel className="flex justify-between items-center">
+                            <p>Notifications</p>
+                            <button type="button" onClick={hDeleteAll}>
+                                <Trash className="h-5 w-5" />
+                            </button>
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            onClick={() => setOpenPricing(true)}
-                            className="cursor-pointer"
-                        >
-                            <Crown className="mr-2 h-4 w-4" />
-                            <p>{loading ? "Chargement ..." : "Abonnements"}</p>
+                        <DropdownMenuItem className="focus:bg-transparent">
+                            {loadingNotification ? (
+                                <Skeleton />
+                            ) : data && data.notifications.length > 0 ? (
+                                <ul className="flex flex-col">
+                                    {data.notifications.map((notification) => (
+                                        <Notification
+                                            key={notification.id}
+                                            data={notification}
+                                        />
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="w-56">Aucune notifications</p>
+                            )}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu> */}
+                </DropdownMenu>
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="cursor-pointer w-8 h-8 bg-primary hover:bg-primary/90 rounded-full flex justify-center items-center">
@@ -128,7 +191,7 @@ export default function UserHeader() {
                             </p>
                         </div>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
+                    <DropdownMenuContent className="w-56" align="end">
                         <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem

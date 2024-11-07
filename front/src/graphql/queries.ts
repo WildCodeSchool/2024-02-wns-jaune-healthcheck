@@ -99,3 +99,14 @@ export const GET_CHECK_FREQUENCIES = gql`
         }
     }
 `;
+
+export const GET_NOTIFICATIONS = gql`
+    query Notifications {
+        notifications {
+            id
+            is_read
+            created_at
+            content
+        }
+    }
+`;

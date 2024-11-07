@@ -37,8 +37,8 @@ export class History extends BaseEntity {
 
     @OneToOne(() => Notification, (notification) => notification.history, {
         nullable: true,
-        cascade: true,
+        onDelete: "CASCADE",
     })
     @JoinColumn()
-    notification?: Notification;
+    notification?: Notification | null;
 }
