@@ -10,6 +10,7 @@ import {
 import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import axios from "axios";
+import dataSource from "../database/dataSource";
 
 @EventSubscriber()
 export class UrlSubscriber implements EntitySubscriberInterface<Url> {
@@ -52,6 +53,10 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
                 validateStatus: () => true, // Do not throw on non-2xx status codes
             });
 
+            if (!dataSource.isInitialized) {
+                await dataSource.initialize();
+            }
+            
             const existingMessageHistory = await History.findOne({
                 where: {
                     url: {

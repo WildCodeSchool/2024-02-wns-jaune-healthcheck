@@ -1,7 +1,7 @@
 import UserLayout from "@/layouts/UserLayout";
 import GuestLayout from "@/layouts/GuestLayout";
 import Landing from "@/pages/Landing";
-import UrlHistory from "@/pages/UrlHistory";
+import UrlHistories from "@/pages/UrlHistories";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { UserUrls } from "@/pages/UserUrls";
@@ -22,7 +22,7 @@ const routes = [
             },
             {
                 path: "/url/:id",
-                element: <UrlHistory />,
+                element: <UrlHistories />,
             },
         ],
     },
@@ -48,7 +48,7 @@ const routes = [
             },
             {
                 path: "/user-url/:id",
-                element: <UrlHistory />,
+                element: <UrlHistories />,
             },
         ]
     }
