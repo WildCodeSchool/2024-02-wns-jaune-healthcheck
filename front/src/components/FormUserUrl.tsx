@@ -76,7 +76,7 @@ export default function FormUserUrl({
             onCompleted() {
                 toast({
                     variant: "default",
-                    description: `${values.name} à bien été ajouté`,
+                    description: `${values.name} a bien été ajouté`,
                 });
                 newUrlForm.reset();
                 setOpenDialog(false);
