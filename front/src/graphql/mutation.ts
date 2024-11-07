@@ -38,6 +38,12 @@ export const CHECK_URL = gql`
     }
 `;
 
+export const SUBSCRIBE = gql`
+    mutation Subscribe($role: String!) {
+        subscribe(role: $role)
+    }
+`;
+
 export const READ_NOTIFICATION = gql`
     mutation ReadNotification($notificationId: String!) {
         readNotification(notificationId: $notificationId)

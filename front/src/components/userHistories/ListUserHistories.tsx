@@ -7,38 +7,42 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { useSearchParams } from "react-router-dom";
-import FilterBar from "../custom/FilterBarPrivate";
-import { useGetAllURlsQuery } from "@/generated/graphql-types";
+import FilterBar from "@/components/custom/FilterBarPrivate";
+import {
+    PaginatesHistories,
+    usePaginatesHistoriesQuery,
+} from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PaginateUrls } from "@/generated/graphql-types";
-import CustomPagination from "../custom/CustomPagination";
+import CustomPagination from "@/components/custom/CustomPagination";
 
-const URLList: React.FC = () => {
+const ListUserHistories: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [isPrivate, setIsPrivate] = useState(true);
-    const { error, data } = useGetAllURlsQuery({
+    const { error, data } = usePaginatesHistoriesQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
             currentPage: Number(searchParams?.get("currentPage")) || 1,
-            privateUrls: isPrivate,
+            privateHistories: isPrivate,
         },
         fetchPolicy: "cache-and-network",
     });
 
-    const [PaginateUrls, setPaginateUrls] = useState<PaginateUrls>({
-        urls: [],
-        totalPages: 1,
-        currentPage: 1,
-        previousPage: 1,
-        nextPage: 2,
-    });
+    const [PaginateHistories, setPaginateHistories] =
+        useState<PaginatesHistories>({
+            histories: [],
+            totalPages: 1,
+            currentPage: 1,
+            previousPage: 1,
+            nextPage: 2,
+        });
 
-    const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
+    const { totalPages, currentPage, previousPage, nextPage } =
+        PaginateHistories;
 
     useEffect(() => {
         if (!data) return;
-        setPaginateUrls(data.urls as PaginateUrls);
+        setPaginateHistories(data.paginatesHistories as PaginatesHistories);
     }, [data]);
 
     const handlePageChange = (page: number) => {
@@ -86,7 +90,7 @@ const URLList: React.FC = () => {
             <div className="w-full flex-grow">
                 <List className="w-full">
                     {data
-                        ? data.urls.urls.map((item) => (
+                        ? data.paginatesHistories.histories.map((item) => (
                               <ListItem
                                   key={item.id}
                                   className="flex justify-center items-start w-full"
@@ -101,24 +105,29 @@ const URLList: React.FC = () => {
                                               <div className="flex">
                                                   <CardStatus
                                                       statusCode={
-                                                          item.histories[0]
-                                                              ? item
-                                                                    .histories[0]
-                                                                    .status_code
-                                                              : null
+                                                          item.status_code
                                                       }
                                                   />
-                                                  <p>{item.name}</p>
+                                                  <p>{item.url.name}</p>
                                               </div>
                                               <p className="font-extralight text-sm">
-                                                  Url : {item.path}
+                                                  Url : {item.url.path}
                                               </p>
                                               <p>
                                                   Créé le :{" "}
-                                                  {new Date(
-                                                      item.createdAt,
-                                                  ).toLocaleDateString()}
+                                                  <span>
+                                                      {new Date(
+                                                          item.created_at,
+                                                      ).toLocaleDateString()}
+                                                  </span>
+                                                  <span>
+                                                      {" "}
+                                                      {new Date(
+                                                          item.created_at,
+                                                      ).toLocaleTimeString()}
+                                                  </span>
                                               </p>
+
                                               {/* Modifier quand la requête sera faite (type d'affichage : il y a 5heures / il y a 5minutes) */}
                                               {/* <p>
                                                   Mis à jour le :{" "}
@@ -149,6 +158,6 @@ const URLList: React.FC = () => {
             />
         </div>
     );
-};
+}
 
-export default URLList;
+export default ListUserHistories;

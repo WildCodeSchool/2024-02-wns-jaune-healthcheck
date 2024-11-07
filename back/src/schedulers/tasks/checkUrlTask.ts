@@ -1,4 +1,4 @@
-import { IsNull } from "typeorm";
+import { IsNull, Not } from "typeorm";
 import axios from "axios";
 import { User } from "../../entities/User";
 import { Url } from "../../entities/Url";
@@ -70,9 +70,31 @@ const checkUrl = async (interval?: string) => {
 
         for (const url of urls) {
             try {
+                // Update lastCheckDate without triggering the subscriber
+                await dataSource
+                    .createQueryBuilder()
+                    .update(Url)
+                    .set({ lastCheckDate: new Date() })
+                    .where("id = :id", { id: url.id })
+                    .execute();
+
                 const response = await axios.get(url.path, {
                     validateStatus: () => true,
                 });
+
+                const existingMessageHistory = await History.findOne({
+                    where: {
+                        url: {
+                            id: url.id,
+                        },
+                        response: Not(""),
+                    },
+                });
+
+                if (existingMessageHistory) {
+                    existingMessageHistory.response = "";
+                    existingMessageHistory.save();
+                }
 
                 const history = History.create({
                     url: url,

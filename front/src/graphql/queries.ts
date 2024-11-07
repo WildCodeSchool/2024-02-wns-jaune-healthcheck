@@ -49,6 +49,38 @@ export const GET_ONE_URL = gql`
     }
 `;
 
+export const GET_ALL_HISTORIES = gql`
+    query PaginatesHistories(
+        $privateHistories: Boolean!
+        $currentPage: Float!
+        $searchText: String
+        $sortField: String
+        $urlId: String
+    ) {
+        paginatesHistories(
+            privateHistories: $privateHistories
+            currentPage: $currentPage
+            searchText: $searchText
+            sortField: $sortField
+            urlId: $urlId
+        ) {
+            currentPage
+            nextPage
+            previousPage
+            totalPages
+            histories {
+                id
+                created_at
+                status_code
+                url {
+                    name
+                    path
+                }
+            }
+        }
+    }
+`;
+
 export const GET_RECENT_PRIVATE_URLS = gql`
     query RecentPrivateUrls {
         recentPrivateUrls {
@@ -108,5 +140,21 @@ export const GET_NOTIFICATIONS = gql`
             created_at
             content
         }
+    }
+`;
+
+export const GET_HISTORY_WITH_RESPONSE = gql`
+    query HistoryWithResponse($historyWithResponseUrlId: String!) {
+        historyWithResponse(urlId: $historyWithResponseUrlId) {
+            response
+            id
+            status_code
+        }
+    }
+`;
+
+export const GET_ALL_USERS = gql`
+    query GetAllUsers {
+        getAllUsers
     }
 `;

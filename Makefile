@@ -25,6 +25,9 @@ build-prod:
 run-prod:
 	docker compose -f docker-compose.yaml up
 
+run-codegen:
+	docker exec -it frontend npm run codegen
+
 # Après la commande, ajouter name=(NomDeLaMigration)
 generate-migration:
 	docker exec -it backend npm run migration:generate -- src/database/migrations/$(name)
