@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useUrlQuery } from "@/generated/graphql-types";
-import { Check, Code } from "lucide-react";
+import { Check } from "lucide-react";
 import {
     Card,
     CardHeader,
@@ -11,12 +11,6 @@ import {
     CardStatus,
     CardContent,
 } from "@/components/ui/card";
-import { 
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-    DialogTitle, 
-    DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import useSocketStore from "@/stores/webSocketStore";
@@ -24,10 +18,11 @@ import {
     usePaginatesHistoriesQuery,
     useCheckUrlMutation,
     useHistoryWithResponseQuery } from "@/generated/graphql-types";
-import FilterBar from "./custom/FilterBar";
+import FilterBar from "../custom/FilterBar";
 import { PaginatesHistories } from "@/generated/graphql-types";
-import CustomPagination from "./custom/CustomPagination";
-
+import CustomPagination from "../custom/CustomPagination";
+import HistoryResponseModal from "./HistoryResponseModal";
+import ButtonLoader from "../custom/ButtonLoader";
 
 type ListUrlHistoriesProps = {
     urlId: string;
@@ -58,7 +53,6 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
             historyWithResponseUrlId: urlId!,
         }
     });
-
 
     const [PaginateHistories, setPaginateHistories] =
         useState<PaginatesHistories>({
@@ -170,37 +164,25 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
                       </h4>
                     </div>
                     <div className="flex space-x-2">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button 
-                                    variant="ghost"
-                                >
-                                    <Code size={20} className="me-2"/>
-                                    Aperçu réponse
-                                </Button> 
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[50%]">
-                                <DialogTitle>
-                                    {historyData?.historyWithResponse.status_code}
-                                </DialogTitle>
-                                <DialogDescription>
-                                    {urlData?.url.path}
-                                </DialogDescription>
-                                <div 
-                                    className="overflow-y-auto max-h-[80vh] whitespace-pre-line"
-                                >
-                                    {historyData?.historyWithResponse.response || ""}
-                                </div>
-                            </DialogContent>
-                        </Dialog>
-                        <Button 
-                            variant="ghost"
-                            onClick={handleCheckUrl} 
-                            disabled={checkUrlLoading}
+                        <HistoryResponseModal
+                            statusCode={String(historyData?.historyWithResponse.status_code) || ""}
+                            path={urlData?.url.path || ""}
+                            response={historyData?.historyWithResponse.response || ""}
                         >
+                        </HistoryResponseModal>
+                        {
+                            !checkUrlLoading ?
+                            <Button 
+                                variant="ghost"
+                                onClick={handleCheckUrl} 
+                            >
                             <Check size={20} className="me-2"/>
-                            {checkUrlLoading ? "Analyse..." : "Lancer une analyse"}
-                        </Button>
+                                Lancer une analyse
+                            </Button> :
+                            <ButtonLoader 
+                                variant="ghost"
+                            />
+                        }
                     </div>
                 </div>
                 <FilterBar 

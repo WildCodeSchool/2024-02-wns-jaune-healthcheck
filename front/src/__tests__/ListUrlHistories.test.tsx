@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import ListUrlHistories from "@/components/ListUrlHistories";
+import ListUrlHistories from "@/components/urlHistories/ListUrlHistories";
 import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -191,7 +191,7 @@ describe("Tests ListUrlHistories", () => {
         });
     });
 
-    it("Should disable button while checking URL", async () => {
+    it("Should show loading button while checking URL", async () => {
 
         render(
             <MockedProvider 
@@ -217,8 +217,8 @@ describe("Tests ListUrlHistories", () => {
         fireEvent.click(screen.getByText("Lancer une analyse"));
 
         await waitFor(() => {
-            expect(screen.getByText("Analyse...")).toBeInTheDocument();
-            expect(screen.getByText("Analyse...")).toBeDisabled();
+            expect(screen.getByText("Chargement...")).toBeInTheDocument();
+            expect(screen.getByText("Chargement...")).toBeDisabled();
         });
     });
 });
