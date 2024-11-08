@@ -94,19 +94,18 @@ const checkUrl = async (interval?: string) => {
                 if (existingMessageHistory) {
                     existingMessageHistory.response = "";
                     existingMessageHistory.save();
-                } else {
-                    const history = History.create({
-                        url: url,
-                        response: response.data,
-                        status_code: response.status,
-                    });
-
-                    const newHistory = await history.save();
-
-                    if (response.status > 300 && newHistory.url.user) {
-                        await createOrUpdateNotification(newHistory);
-                    }
                 }
+
+                const newHistory = await History.save({
+                    url: url,
+                    response: response.data,
+                    status_code: response.status,
+                });
+
+                if (response.status > 300 && newHistory.url.user) {
+                    await createOrUpdateNotification(newHistory);
+                }
+
             } catch (error) {
                 console.error("Failed to log URL response", error);
             }
