@@ -17,7 +17,6 @@ export const checkUrlMock = {
               lastCheckDate: new Date().toISOString(),
           },
       },
-      loading: true,
   },
 };
 
