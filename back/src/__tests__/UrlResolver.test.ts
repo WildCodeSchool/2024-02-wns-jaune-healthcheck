@@ -11,6 +11,7 @@ const mockUrl: PartialUrl = {
     name: "Test URL",
     path: "https://example.com",
 };
+
 const mockUrls: PartialUrl[] = [mockUrl];
 const mockPaginateUrls: PaginateUrls = {
     urls: mockUrls as Url[],
@@ -33,11 +34,11 @@ const mockContext: MyContext = {
 describe("Unit Test Url Resolver", () => {
     let urlResolver: UrlResolver;
 
-    beforeAll(async () => {
+    beforeAll(() => {
         urlResolver = new UrlResolver();
     });
 
-    afterAll(async () => {
+    afterAll(() => {
         jest.restoreAllMocks();
     });
 
@@ -46,7 +47,7 @@ describe("Unit Test Url Resolver", () => {
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
 
-        const result = await urlResolver.urls(mockContext, false, 1, "", "");
+        const result = await urlResolver.urls(mockContext, 1, "", "");
         expect(result).toEqual(mockPaginateUrls);
     });
 
@@ -55,7 +56,7 @@ describe("Unit Test Url Resolver", () => {
             new Error("Internal server error"),
         );
         await expect(
-            urlResolver.urls(mockContext, false, 1, "", ""),
+            urlResolver.urls(mockContext, 1, "", ""),
         ).rejects.toThrow("Internal server error");
     });
 
@@ -64,13 +65,7 @@ describe("Unit Test Url Resolver", () => {
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
 
-        const result = await urlResolver.urls(
-            {} as MyContext,
-            false,
-            1,
-            "",
-            "",
-        );
+        const result = await urlResolver.urls({} as MyContext, 1, "", "");
         expect(result).toEqual(mockPaginateUrls);
     });
 
@@ -79,7 +74,7 @@ describe("Unit Test Url Resolver", () => {
             new Error("Internal server error"),
         );
         await expect(
-            urlResolver.urls({} as MyContext, false, 1, "", ""),
+            urlResolver.urls({} as MyContext, 1, "", ""),
         ).rejects.toThrow("Internal server error");
     });
 
