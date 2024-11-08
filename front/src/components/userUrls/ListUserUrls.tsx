@@ -15,13 +15,20 @@ import CustomPagination from "@/components/custom/CustomPagination";
 
 const ListUserUrls: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [isPrivate, setIsPrivate] = useState(true);
+    const [visibility, setVisibility] = useState<"private" | "public" | "all">(
+        "all",
+    );
+    const getPrivateUrlsValue = (visibility: string): boolean | undefined => {
+        if (visibility === "all") return undefined;
+        return visibility === "private";
+    };
+
     const { error, data } = useGetAllURlsQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
             currentPage: Number(searchParams?.get("currentPage")) || 1,
-            privateUrls: isPrivate,
+            privateUrls: getPrivateUrlsValue(visibility),
         },
         fetchPolicy: "cache-and-network",
     });
@@ -33,7 +40,6 @@ const ListUserUrls: React.FC = () => {
         previousPage: 1,
         nextPage: 2,
     });
-
     const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
 
     useEffect(() => {
@@ -76,61 +82,65 @@ const ListUserUrls: React.FC = () => {
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
-                searchQuery={searchParams?.get("searchUrl") || ""}
-                sortKey={searchParams?.get("sortField") || ""}
-                isPrivate={isPrivate}
                 onSearch={handleSearch}
                 onSortChange={handleSortChange}
-                onIsPrivateChange={setIsPrivate}
+                searchQuery={searchParams.get("searchUrl") || ""}
+                sortKey={searchParams.get("sortField") || ""}
+                onVisibilityChange={(value) =>
+                    setVisibility(value as "private" | "public" | "all")
+                }
+                visibilityFilter={visibility}
             />
             <div className="w-full flex-grow">
                 <List className="w-full">
                     {data
                         ? data.urls.urls.map((item) => (
-                            <ListItem
-                                key={item.id}
-                                className="flex justify-center items-start w-full"
-                            >
-                                <Link
-                                    key={item.id}
-                                    to={`/user-url/${item.id}`}
-                                    rel="noopener noreferrer"
-                                    className="w-full"
-                                >
-                                    <Card className="hover:border hover:border-primary">
-                                        <CardContent className="h-full py-3 flex flex-row justify-between items-center">
-                                            <div className="flex">
-                                                <CardStatus
-                                                    statusCode={
-                                                        item.histories[0]
-                                                            ? item
-                                                                .histories[0]
-                                                                .status_code
-                                                            : null
-                                                    }
-                                                />
-                                                <p>{item.name}</p>
-                                            </div>
-                                            <p className="font-extralight text-sm">
-                                                Url : {item.path}
-                                            </p>
-                                            <p>
-                                                Créé le :{" "}
-                                                {new Date(
-                                                    item.createdAt,
-                                                ).toLocaleDateString()}
-                                            </p>
-                                            {/* Modifier quand la requête sera faite (type d'affichage : il y a 5heures / il y a 5minutes) */}
-                                            {/* <p>
-                                                  Mis à jour le :{" "}
-                                                  {item.lastCheckDate || "null"}
-                                              </p> */}
-                                            <button>:</button>
-                                        </CardContent>
-                                    </Card>
-                                </Link>
-                            </ListItem>
-                        ))
+                              <ListItem
+                                  key={item.id}
+                                  className="flex justify-center items-start w-full"
+                              >
+                                  <Link
+                                      key={item.id}
+                                      to={`/user-url/${item.id}`}
+                                      rel="noopener noreferrer"
+                                      className="w-full"
+                                  >
+                                      <Card className="hover:border hover:border-primary">
+                                          <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+                                              <div className="flex w-40">
+                                                  <CardStatus
+                                                      statusCode={
+                                                          item.histories[0]
+                                                              ? item
+                                                                    .histories[0]
+                                                                    .status_code
+                                                              : null
+                                                      }
+                                                  />
+                                                  <p className="truncate">
+                                                      {item.name}
+                                                  </p>
+                                              </div>
+                                              <div className="flex items-center">
+                                                  <span className="font-extralight text-sm whitespace-nowrap">
+                                                      Url :{" "}
+                                                  </span>
+                                                  <span className="font-extralight text-sm ml-1">
+                                                      {item.path}
+                                                  </span>
+                                              </div>
+                                              <p>
+                                                  Créé le :{" "}
+                                                  {new Date(
+                                                      item.createdAt,
+                                                  ).toLocaleDateString()}
+                                              </p>
+                                              <button>:</button>
+                                          </CardContent>
+                                      </Card>
+                                  </Link>
+                              </ListItem>
+                          ))
                         : Array.from({ length: 16 }, (_, index) => {
                             return (
                                 <Skeleton

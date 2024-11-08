@@ -17,13 +17,23 @@ import CustomPagination from "@/components/custom/CustomPagination";
 
 const ListUserHistories: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [isPrivate, setIsPrivate] = useState(true);
+    const [visibility, setVisibility] = useState<"private" | "public" | "all">(
+        "all",
+    );
+
+    const getPrivateHistoriesValue = (
+        visibility: string,
+    ): boolean | undefined => {
+        if (visibility === "all") return undefined;
+        return visibility === "private";
+    };
+
     const { error, data } = usePaginatesHistoriesQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
             currentPage: Number(searchParams?.get("currentPage")) || 1,
-            privateHistories: isPrivate,
+            privateHistories: getPrivateHistoriesValue(visibility),
         },
         fetchPolicy: "cache-and-network",
     });
@@ -80,12 +90,14 @@ const ListUserHistories: React.FC = () => {
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
-                searchQuery={searchParams?.get("searchUrl") || ""}
-                sortKey={searchParams?.get("sortField") || ""}
-                isPrivate={isPrivate}
                 onSearch={handleSearch}
                 onSortChange={handleSortChange}
-                onIsPrivateChange={setIsPrivate}
+                searchQuery={searchParams.get("searchUrl") || ""}
+                sortKey={searchParams.get("sortField") || ""}
+                onVisibilityChange={(value) =>
+                    setVisibility(value as "private" | "public" | "all")
+                }
+                visibilityFilter={visibility}
             />
             <div className="w-full flex-grow">
                 <List className="w-full">
@@ -101,7 +113,7 @@ const ListUserHistories: React.FC = () => {
                                       className="w-full"
                                   >
                                       <Card className="hover:border hover:border-primary">
-                                          <CardContent className="h-full py-3 flex flex-row justify-between items-center">
+                                          <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
                                               <div className="flex">
                                                   <CardStatus
                                                       statusCode={

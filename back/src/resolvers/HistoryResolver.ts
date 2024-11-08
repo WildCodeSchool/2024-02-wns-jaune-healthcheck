@@ -53,9 +53,8 @@ class HistoryResolver {
     @Query(() => PaginatesHistories)
     async paginatesHistories(
         @Ctx() context: MyContext,
-        @Arg("privateHistories", { defaultValue: false })
-        privateHistories: boolean,
         @Arg("currentPage", { defaultValue: 1 }) currentPage: number,
+        @Arg("privateHistories", { nullable: true }) privateHistories?: boolean,
         @Arg("searchText", { nullable: true }) searchText?: string,
         @Arg("sortField", { nullable: true }) sortField?: string,
         @Arg("urlId", { nullable: true }) urlId?: string,
@@ -75,7 +74,7 @@ class HistoryResolver {
                 currentPage,
                 searchText,
                 sortField,
-                privateHistories,
+                false,
                 undefined,
                 urlId,
             );

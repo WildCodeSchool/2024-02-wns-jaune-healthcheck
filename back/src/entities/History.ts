@@ -86,27 +86,30 @@ export class History extends BaseEntity {
         const queryBuilder = this.createQueryBuilder("history")
             .innerJoinAndSelect("history.url", "url")
             .leftJoinAndSelect("url.user", "user");
-
+    
         const whereConditions: string[] = ["1 = 1"];
-        if (privateHistories && authenticatedUserId) {
+    
+        if (privateHistories === undefined && authenticatedUserId) {
+            whereConditions.push("(user.id = :authenticatedUserId OR user.id IS NULL)");
+        } else if (privateHistories && authenticatedUserId) {
             whereConditions.push("user.id = :authenticatedUserId");
         } else {
             whereConditions.push("user.id IS NULL");
         }
+    
         if (searchText) {
             whereConditions.push("url.name ILIKE :searchText");
         }
         if (urlId) {
             whereConditions.push("url.id = :urlId");
         }
-
+    
         queryBuilder.where(whereConditions.join(" AND "), {
             searchText: `%${searchText}%`,
             authenticatedUserId: authenticatedUserId,
-            privateUrls: privateHistories,
             urlId: urlId,
         });
-
+    
         if (sortField) {
             if (sortField === "status") {
                 queryBuilder.orderBy("history.status_code", "ASC");
@@ -118,18 +121,18 @@ export class History extends BaseEntity {
         } else {
             queryBuilder.orderBy("history.created_at", "DESC");
         }
-
+    
         const [histories, total] = await queryBuilder
             .skip(skip)
             .take(16)
             .getManyAndCount();
-
+    
         return {
             histories: histories,
             totalPages: Math.ceil(total / 16),
             currentPage: currentPage,
-            previousPage: currentPage - 1,
-            nextPage: currentPage + 1,
+            previousPage: Math.max(currentPage - 1, 1),
+            nextPage: Math.min(currentPage + 1, Math.ceil(total / 16)),
         };
     }
 }

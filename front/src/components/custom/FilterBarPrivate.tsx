@@ -2,24 +2,23 @@ import * as React from "react";
 import { Input } from "../ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
-import { Switch } from "../ui/switch";
 
 interface FilterBarProps {
     onSearch: (query: string) => void;
     onSortChange: (key: string) => void;
-    onIsPrivateChange: (value: boolean) => void;
+    onVisibilityChange: (visibility: string) => void;
     searchQuery: string;
     sortKey: string;
-    isPrivate: boolean;
+    visibilityFilter: "private" | "public" | "all";
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
     onSearch,
     onSortChange,
-    onIsPrivateChange,
+    onVisibilityChange,
     searchQuery,
     sortKey,
-    isPrivate,
+    visibilityFilter,
 }) => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onSearch(event.target.value);
@@ -38,13 +37,16 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 onChange={handleInputChange}
                 className="w-full max-w-lg"
             />
-            <div className="flex gap-x-2">
-                <Switch
-                    checked={isPrivate}
-                    onCheckedChange={(e) => onIsPrivateChange(e.valueOf())}
-                />
-                <label>{isPrivate ? "Privé" : "Public"}</label>
-            </div>
+            <Select value={visibilityFilter} onValueChange={onVisibilityChange}>
+                <SelectTrigger className="w-full max-w-[200px]">
+                    <SelectValue placeholder="Visibilité" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">Tout voir</SelectItem>
+                    <SelectItem value="private">Privé</SelectItem>
+                    <SelectItem value="public">Public</SelectItem>
+                </SelectContent>
+            </Select>
             <Select value={sortKey} onValueChange={handleSortChange}>
                 <SelectTrigger className="w-full max-w-lg md:w-1/4">
                     <SelectValue placeholder="Choisir un tri" />

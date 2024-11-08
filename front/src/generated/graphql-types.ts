@@ -144,7 +144,7 @@ export type QueryHistoryWithResponseArgs = {
 
 export type QueryPaginatesHistoriesArgs = {
   currentPage?: Scalars['Float']['input'];
-  privateHistories?: Scalars['Boolean']['input'];
+  privateHistories?: InputMaybe<Scalars['Boolean']['input']>;
   searchText?: InputMaybe<Scalars['String']['input']>;
   sortField?: InputMaybe<Scalars['String']['input']>;
   urlId?: InputMaybe<Scalars['String']['input']>;
@@ -158,7 +158,7 @@ export type QueryUrlArgs = {
 
 export type QueryUrlsArgs = {
   currentPage?: Scalars['Float']['input'];
-  privateUrls?: Scalars['Boolean']['input'];
+  privateUrls?: InputMaybe<Scalars['Boolean']['input']>;
   searchText: Scalars['String']['input'];
   sortField: Scalars['String']['input'];
 };
@@ -265,10 +265,10 @@ export type UrlQueryVariables = Exact<{
 }>;
 
 
-export type UrlQuery = { __typename?: 'Query', url: { __typename?: 'Url', id: string, name: string, path: string, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }> } };
+export type UrlQuery = { __typename?: 'Query', url: { __typename?: 'Url', id: string, name: string, path: string, private: boolean, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }>, user?: { __typename?: 'User', id: string } | null } };
 
 export type PaginatesHistoriesQueryVariables = Exact<{
-  privateHistories: Scalars['Boolean']['input'];
+  privateHistories?: InputMaybe<Scalars['Boolean']['input']>;
   currentPage: Scalars['Float']['input'];
   searchText?: InputMaybe<Scalars['String']['input']>;
   sortField?: InputMaybe<Scalars['String']['input']>;
@@ -658,6 +658,10 @@ export const UrlDocument = gql`
     id
     name
     path
+    private
+    user {
+      id
+    }
   }
 }
     `;
@@ -695,7 +699,7 @@ export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
 export const PaginatesHistoriesDocument = gql`
-    query PaginatesHistories($privateHistories: Boolean!, $currentPage: Float!, $searchText: String, $sortField: String, $urlId: String) {
+    query PaginatesHistories($privateHistories: Boolean, $currentPage: Float!, $searchText: String, $sortField: String, $urlId: String) {
   paginatesHistories(
     privateHistories: $privateHistories
     currentPage: $currentPage
