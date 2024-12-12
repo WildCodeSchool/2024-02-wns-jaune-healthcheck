@@ -3,7 +3,8 @@ import PaginateUrls from "@/types/PaginatesUrls";
 import UrlResolver from "../resolvers/UrlResolver";
 import MyContext from "../types/MyContext";
 import JwtPayload from "../types/JwtPayload";
-import dataSource from "@/database/dataSource";
+import dataSource from "../database/dataSource";
+import { SelectQueryBuilder } from "typeorm";
 
 type PartialUrl = Partial<Url>;
 
@@ -86,7 +87,7 @@ describe("Unit Test Url Resolver", () => {
             leftJoinAndSelect: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
             getOne: jest.fn().mockResolvedValue(mockUrl as Url),
-        } as any);
+        } as unknown as SelectQueryBuilder<Url>);
 
         const result = await urlResolver.url(
             mockContext,
@@ -104,7 +105,7 @@ describe("Unit Test Url Resolver", () => {
                 .mockRejectedValue(
                     new Error("URL non trouvée ou accès non autorisé"),
                 ),
-        } as any);
+        } as unknown as SelectQueryBuilder<Url>);
 
         await expect(
             urlResolver.url(
