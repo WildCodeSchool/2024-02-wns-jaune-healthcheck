@@ -1,7 +1,6 @@
 import { GET_ALL_HISTORIES } from "@/graphql/queries";
 import { GraphQLError } from "graphql";
 
-
 export const paginatesHistoriesMock = {
     request: {
         query: GET_ALL_HISTORIES,
@@ -9,7 +8,7 @@ export const paginatesHistoriesMock = {
             searchText: "",
             sortField: "",
             currentPage: 1,
-            privateHistories: false,
+            privateHistories: true,
             urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
         },
     },
@@ -86,7 +85,7 @@ export const paginatesHistoriesEmptyMock = {
             searchText: "",
             sortField: "",
             currentPage: 1,
-            privateHistories: false,
+            privateHistories: true,
             urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
         },
     },
@@ -121,7 +120,7 @@ export const paginatesHistoriesErrorMock = {
             searchText: "",
             sortField: "",
             currentPage: 1,
-            privateHistories: false,
+            privateHistories: true,
             urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
         },
     },
@@ -140,7 +139,7 @@ export const refetchHistoriesMock = {
             searchText: "",
             sortField: "",
             currentPage: 1,
-            privateHistories: false,
+            privateHistories: true,
             urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
         },
     },

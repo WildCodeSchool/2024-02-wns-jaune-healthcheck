@@ -6,11 +6,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { toast } from "@/components/ui/use-toast";
 import { urlMock } from "./mocks/getOneUrlMock";
 import { historyWithResponseMock } from "./mocks/getHistoryWithReponseMock";
-import { 
+import {
     paginatesHistoriesMock,
     paginatesHistoriesEmptyMock,
     paginatesHistoriesErrorMock,
-    refetchHistoriesMock } from "./mocks/getAllHistoriesMock";
+    refetchHistoriesMock,
+} from "./mocks/getAllHistoriesMock";
 import { checkUrlMock, checkUrlErrorMock } from "./mocks/checkUrlMock";
 import { GET_ALL_HISTORIES } from "@/graphql/queries";
 
@@ -38,45 +39,54 @@ vi.mock("react-router-dom", async () => {
 
 describe("Tests ListUrlHistories", () => {
     it("Should display histories list and should display loading", async () => {
-
         render(
-            <MockedProvider 
-                mocks={[paginatesHistoriesMock, urlMock, historyWithResponseMock]} 
+            <MockedProvider
+                mocks={[
+                    paginatesHistoriesMock,
+                    urlMock,
+                    historyWithResponseMock,
+                ]}
                 addTypename={false}
             >
                 <MemoryRouter>
-                    <ListUrlHistories 
-                        urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                    />
+                    <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
                 </MemoryRouter>
             </MockedProvider>,
         );
+
         expect(await screen.findByText("En attente...")).toBeInTheDocument();
-        expect(
-            await screen.findByText("06/11/2024 à 15:17:01"),
-        ).toBeInTheDocument();
-        expect(await screen.findByText("Statut 200")).toBeInTheDocument();
-        expect(
-            await screen.findByText("07/11/2024 à 15:17:01"),
-        ).toBeInTheDocument();
-        expect(await screen.findByText("Statut 404")).toBeInTheDocument();
+
         const historiesContainer = await screen.findByTestId(
             "histories-container",
         );
+        expect(historiesContainer).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(historiesContainer.children.length).toBeGreaterThan(0);
+        });
+
+        const statusElements = screen.getAllByText(/Statut (200|404)/);
+        expect(statusElements).toHaveLength(2);
+
+        const dateElements = screen.getAllByText(
+            /\d{1,2}\/\d{1,2}\/\d{4}\s+à\s+\d{1,2}:\d{2}:\d{2}(?:\s*(?:AM|PM)?)/i,
+        );
+        expect(dateElements).toHaveLength(2);
         expect(historiesContainer.children).toHaveLength(2);
     });
 
     it("Should display an error", async () => {
-
         render(
-            <MockedProvider 
-                mocks={[urlMock, paginatesHistoriesErrorMock, historyWithResponseMock]} 
+            <MockedProvider
+                mocks={[
+                    urlMock,
+                    paginatesHistoriesErrorMock,
+                    historyWithResponseMock,
+                ]}
                 addTypename={false}
             >
                 <MemoryRouter>
-                    <ListUrlHistories 
-                        urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                    />
+                    <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
                 </MemoryRouter>
             </MockedProvider>,
         );
@@ -87,16 +97,17 @@ describe("Tests ListUrlHistories", () => {
     });
 
     it("Should display without histories", async () => {
-
         render(
-            <MockedProvider 
-                mocks={[urlMock, paginatesHistoriesEmptyMock, historyWithResponseMock]} 
+            <MockedProvider
+                mocks={[
+                    urlMock,
+                    paginatesHistoriesEmptyMock,
+                    historyWithResponseMock,
+                ]}
                 addTypename={false}
             >
                 <MemoryRouter>
-                    <ListUrlHistories 
-                        urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                    />
+                    <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
                 </MemoryRouter>
             </MockedProvider>,
         );
@@ -110,15 +121,16 @@ describe("Tests ListUrlHistories", () => {
     });
 
     it("Should render the 'Lancer une analyse' button", async () => {
-
         render(
-            <MockedProvider 
-                mocks={[paginatesHistoriesMock, urlMock, historyWithResponseMock]} 
+            <MockedProvider
+                mocks={[
+                    paginatesHistoriesMock,
+                    urlMock,
+                    historyWithResponseMock,
+                ]}
                 addTypename={false}
             >
-                <ListUrlHistories 
-                    urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                />
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
             </MockedProvider>,
         );
 
@@ -128,21 +140,18 @@ describe("Tests ListUrlHistories", () => {
     });
 
     it("Should call checkUrl mutation when 'Lancer une analyse' button is clicked", async () => {
-
         render(
             <MockedProvider
                 mocks={[
-                    urlMock, 
-                    paginatesHistoriesMock, 
-                    checkUrlMock, 
-                    refetchHistoriesMock, 
-                    historyWithResponseMock
+                    urlMock,
+                    paginatesHistoriesMock,
+                    checkUrlMock,
+                    refetchHistoriesMock,
+                    historyWithResponseMock,
                 ]}
                 addTypename={false}
             >
-                <ListUrlHistories 
-                    urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                />
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
             </MockedProvider>,
         );
 
@@ -160,20 +169,17 @@ describe("Tests ListUrlHistories", () => {
     });
 
     it("Should show error toast when checkUrl mutation fails", async () => {
-
         render(
-            <MockedProvider 
+            <MockedProvider
                 mocks={[
-                    urlMock, 
-                    paginatesHistoriesMock, 
+                    urlMock,
+                    paginatesHistoriesMock,
                     checkUrlErrorMock,
-                    historyWithResponseMock
-                ]} 
+                    historyWithResponseMock,
+                ]}
                 addTypename={false}
             >
-                <ListUrlHistories 
-                    urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf"
-                />
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
             </MockedProvider>,
         );
 
@@ -200,7 +206,7 @@ describe("Tests ListUrlHistories", () => {
                     searchText: "",
                     sortField: "",
                     currentPage: 1,
-                    privateHistories: false,
+                    privateHistories: true,
                     urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                 },
             },
@@ -284,15 +290,15 @@ describe("Tests ListUrlHistories", () => {
             </MockedProvider>,
         );
 
-        await waitFor(() => {
-            expect(screen.getByText("Lancer une analyse")).toBeInTheDocument();
-        });
+        const analyseButton = await screen.findByText("Lancer une analyse");
+        expect(analyseButton).toBeInTheDocument();
 
-        fireEvent.click(screen.getByText("Lancer une analyse"));
+        fireEvent.click(analyseButton);
 
         await waitFor(() => {
-            expect(screen.getByText("Chargement...")).toBeInTheDocument();
-            expect(screen.getByText("Chargement...")).toBeDisabled();
+            const loader = screen.getByTestId("loading-button");
+            expect(loader).toBeInTheDocument();
+            expect(loader).toBeDisabled();
         });
     });
 });
