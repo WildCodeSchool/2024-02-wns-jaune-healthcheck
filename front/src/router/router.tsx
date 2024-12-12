@@ -47,11 +47,15 @@ const routes = [
                 element: <UserHistories />,
             },
             {
+                path: "/history-url/:id",
+                element: <UrlHistories />,
+            },
+            {
                 path: "/user-url/:id",
                 element: <UrlHistories />,
             },
-        ]
-    }
+        ],
+    },
 ];
 
 const router = createBrowserRouter(routes);

@@ -56,7 +56,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             if (!dataSource.isInitialized) {
                 await dataSource.initialize();
             }
-            
+
             const existingMessageHistory = await History.findOne({
                 where: {
                     url: {

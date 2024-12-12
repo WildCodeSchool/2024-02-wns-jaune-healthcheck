@@ -79,28 +79,30 @@ export class Url extends BaseEntity {
         const queryBuilder = this.createQueryBuilder("url")
             .innerJoinAndSelect("url.histories", "history")
             .leftJoinAndSelect("url.user", "user");
-        
+
         const whereConditions: string[] = ["1 = 1"];
-        
+
         if (privateUrls === undefined && authenticatedUserId) {
-            whereConditions.push("(user.id = :authenticatedUserId OR user.id IS NULL)");
+            whereConditions.push(
+                "(user.id = :authenticatedUserId OR user.id IS NULL)",
+            );
         } else if (privateUrls && authenticatedUserId) {
             whereConditions.push("user.id = :authenticatedUserId");
         } else {
             whereConditions.push("user.id IS NULL");
         }
-    
+
         if (searchText) {
             whereConditions.push(
                 "(url.name ILIKE :searchText OR url.path ILIKE :searchText)",
             );
         }
-    
+
         queryBuilder.where(whereConditions.join(" AND "), {
             searchText: `%${searchText}%`,
             authenticatedUserId: authenticatedUserId,
         });
-    
+
         if (sortField) {
             if (sortField === "status") {
                 queryBuilder
@@ -121,11 +123,11 @@ export class Url extends BaseEntity {
         } else {
             queryBuilder.orderBy("url.createdAt", "DESC");
         }
-    
+
         queryBuilder.skip(skip).take(16);
         const [urls, countUrls] = await queryBuilder.getManyAndCount();
         const totalPages: number = Math.ceil(countUrls / 16);
-        
+
         return {
             urls: urls,
             totalPages: totalPages,
