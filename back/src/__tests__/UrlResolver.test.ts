@@ -88,6 +88,7 @@ describe("Unit Test Url Resolver", () => {
             where: jest.fn().mockReturnThis(),
             andWhere: jest.fn().mockReturnThis(),
             getOne: jest.fn().mockResolvedValue(mockUrl as Url),
+            getOneOrFail: jest.fn().mockResolvedValue(mockUrl as Url),
         } as unknown as SelectQueryBuilder<Url>);
 
         const result = await urlResolver.url(
@@ -103,6 +104,11 @@ describe("Unit Test Url Resolver", () => {
             where: jest.fn().mockReturnThis(),
             andWhere: jest.fn().mockReturnThis(),
             getOne: jest
+                .fn()
+                .mockRejectedValue(
+                    new Error("URL non trouvée ou accès non autorisé"),
+                ),
+            getOneOrFail: jest
                 .fn()
                 .mockRejectedValue(
                     new Error("URL non trouvée ou accès non autorisé"),
