@@ -3,6 +3,7 @@ import PaginateUrls from "@/types/PaginatesUrls";
 import UrlResolver from "../resolvers/UrlResolver";
 import MyContext from "../types/MyContext";
 import JwtPayload from "../types/JwtPayload";
+import dataSource from "@/database/dataSource";
 
 type PartialUrl = Partial<Url>;
 
@@ -34,11 +35,13 @@ const mockContext: MyContext = {
 describe("Unit Test Url Resolver", () => {
     let urlResolver: UrlResolver;
 
-    beforeAll(() => {
+    beforeAll(async () => {
+        await dataSource.initialize();
         urlResolver = new UrlResolver();
     });
 
-    afterAll(() => {
+    afterAll(async () => {
+        await dataSource.destroy();
         jest.restoreAllMocks();
     });
 
@@ -79,9 +82,12 @@ describe("Unit Test Url Resolver", () => {
     });
 
     it("Query url should return an Url", async () => {
-        jest.spyOn(Url, "findOneByOrFail").mockImplementation(() =>
-            Promise.resolve(mockUrl as Url),
-        );
+        jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
+            leftJoinAndSelect: jest.fn().mockReturnThis(),
+            where: jest.fn().mockReturnThis(),
+            getOne: jest.fn().mockResolvedValue(mockUrl as Url),
+        } as any);
+
         const result = await urlResolver.url(
             mockContext,
             "123e4567-e89b-12d3-a456-426614174001",
@@ -90,14 +96,21 @@ describe("Unit Test Url Resolver", () => {
     });
 
     it("Query url should throw an error when fetching url fails", async () => {
-        jest.spyOn(Url, "findOneByOrFail").mockRejectedValue(
-            new Error("Internal server error"),
-        );
+        jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
+            leftJoinAndSelect: jest.fn().mockReturnThis(),
+            where: jest.fn().mockReturnThis(),
+            getOne: jest
+                .fn()
+                .mockRejectedValue(
+                    new Error("URL non trouvée ou accès non autorisé"),
+                ),
+        } as any);
+
         await expect(
             urlResolver.url(
                 mockContext,
                 "123e4567-e89b-12d3-a456-426614174001",
             ),
-        ).rejects.toThrow("Internal server error");
+        ).rejects.toThrow("URL non trouvée ou accès non autorisé");
     });
 });
