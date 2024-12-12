@@ -105,7 +105,6 @@ const checkUrl = async (interval?: string) => {
                 if (response.status > 300 && newHistory.url.user) {
                     await createOrUpdateNotification(newHistory);
                 }
-
             } catch (error) {
                 console.error("Failed to log URL response", error);
             }

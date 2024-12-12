@@ -49,8 +49,8 @@ export default function GuestHeader() {
                                         Connexion
                                     </Button>
                                 </DialogTrigger>
-                                <FormLogin 
-                                    setOpenDialog={setOpenDialog} 
+                                <FormLogin
+                                    setOpenDialog={setOpenDialog}
                                     openDialog={openDialog}
                                 />
                             </Dialog>

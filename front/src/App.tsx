@@ -9,7 +9,7 @@ import { Button } from "./components/ui/button";
 import { Shield } from "lucide-react";
 import AdminPanel from "./components/admin/AdminPanel";
 
-function App({children}: {children: React.ReactNode }) {
+function App({ children }: { children: React.ReactNode }) {
     const isLogged = useAuthStore((state) => state.isLogged);
 
     /* TODO : Voir pour ajouter un loader animé sur la première visite */
@@ -61,7 +61,7 @@ function App({children}: {children: React.ReactNode }) {
                     </Dialog>
                 </>
             )}
-                { children }
+            {children}
             <Toaster />
         </div>
     );

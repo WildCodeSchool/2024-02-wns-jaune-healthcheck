@@ -77,6 +77,7 @@ export const GET_ALL_HISTORIES = gql`
                 created_at
                 status_code
                 url {
+                    id
                     name
                     path
                 }

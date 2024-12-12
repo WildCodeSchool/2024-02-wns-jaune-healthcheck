@@ -32,7 +32,7 @@ async function generateFixtures() {
             private: true,
             user: { id: "741fbb42-1dd9-40c5-a29e-604407a7bc8c" },
         });
-        
+
         await History.save({ ...historiesData[0], url: url1 });
         await History.save({ ...historiesData[1], url: url2 });
         console.log("Fixtures generated successfully!");
