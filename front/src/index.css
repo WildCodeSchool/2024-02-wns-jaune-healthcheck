@@ -87,3 +87,22 @@
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
 }
+
+
+.custom-scrollbar:-webkit-scrollbar-track {
+    background-color: hsl(242 100% 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    background-color: hsl(242 100% 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: hsla(0, 0%, 0%, 0.25);
+}
+
+.custom-scrollbar::-webkit-scrollbar:horizontal {
+    height: 7px;
+    background-color: hsl(242 100% 100%);
+}

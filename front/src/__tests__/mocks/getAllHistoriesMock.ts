@@ -1,6 +1,7 @@
 import { GET_ALL_HISTORIES } from "@/graphql/queries";
 import { GraphQLError } from "graphql";
 
+
 export const paginatesHistoriesMock = {
     request: {
         query: GET_ALL_HISTORIES,
