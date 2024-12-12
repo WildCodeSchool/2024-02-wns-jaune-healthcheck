@@ -86,6 +86,7 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
             leftJoinAndSelect: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
+            andWhere: jest.fn().mockReturnThis(),
             getOne: jest.fn().mockResolvedValue(mockUrl as Url),
         } as unknown as SelectQueryBuilder<Url>);
 
@@ -100,6 +101,7 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
             leftJoinAndSelect: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
+            andWhere: jest.fn().mockReturnThis(),
             getOne: jest
                 .fn()
                 .mockRejectedValue(
