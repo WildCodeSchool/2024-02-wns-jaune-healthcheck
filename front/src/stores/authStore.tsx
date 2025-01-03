@@ -1,10 +1,5 @@
 import { create } from "zustand";
-
-type UserData = {
-    id: string;
-    username: string;
-    email: string;
-};
+import { UserData } from "../types/user";
 
 interface AuthState {
     isLogged: boolean;
@@ -28,7 +23,7 @@ const useAuthStore = create<AuthState>((set) => ({
         set({ isLogged: false });
     },
     me: (userData: string) => {
-        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("user", userData);
         set({ user: JSON.parse(userData) });
         set({ isLogged: true });
     },

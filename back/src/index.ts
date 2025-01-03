@@ -9,13 +9,20 @@ import UserResolver from "./resolvers/UserResolver";
 import CheckFrequencyResolver from "./resolvers/CheckFrequencyResolver";
 import startServer from "./startServer";
 import WorkerThread from "./thread/Worker";
+import NotificationResolver from "./resolvers/NotificationResolver";
 
 const app = express();
 const port = process.env.BACKEND_PORT;
 
 const start = async () => {
     const { httpServer, wsServer } = await startServer(
-        [UrlResolver, HistoryResolver, UserResolver, CheckFrequencyResolver],
+        [
+            UrlResolver,
+            HistoryResolver,
+            UserResolver,
+            CheckFrequencyResolver,
+            NotificationResolver,
+        ],
         app,
     );
 

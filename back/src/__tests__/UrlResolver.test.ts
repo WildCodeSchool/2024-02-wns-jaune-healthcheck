@@ -3,6 +3,8 @@ import PaginateUrls from "@/types/PaginatesUrls";
 import UrlResolver from "../resolvers/UrlResolver";
 import MyContext from "../types/MyContext";
 import JwtPayload from "../types/JwtPayload";
+import dataSource from "../database/dataSource";
+import { SelectQueryBuilder } from "typeorm";
 
 type PartialUrl = Partial<Url>;
 
@@ -11,6 +13,7 @@ const mockUrl: PartialUrl = {
     name: "Test URL",
     path: "https://example.com",
 };
+
 const mockUrls: PartialUrl[] = [mockUrl];
 const mockPaginateUrls: PaginateUrls = {
     urls: mockUrls as Url[],
@@ -34,10 +37,12 @@ describe("Unit Test Url Resolver", () => {
     let urlResolver: UrlResolver;
 
     beforeAll(async () => {
+        await dataSource.initialize();
         urlResolver = new UrlResolver();
     });
 
     afterAll(async () => {
+        await dataSource.destroy();
         jest.restoreAllMocks();
     });
 
@@ -46,7 +51,7 @@ describe("Unit Test Url Resolver", () => {
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
 
-        const result = await urlResolver.urls(mockContext, false, 1, "", "");
+        const result = await urlResolver.urls(mockContext, 1, "", "");
         expect(result).toEqual(mockPaginateUrls);
     });
 
@@ -54,9 +59,9 @@ describe("Unit Test Url Resolver", () => {
         jest.spyOn(Url, "getPaginateUrls").mockRejectedValue(
             new Error("Internal server error"),
         );
-        await expect(
-            urlResolver.urls(mockContext, false, 1, "", ""),
-        ).rejects.toThrow("Internal server error");
+        await expect(urlResolver.urls(mockContext, 1, "", "")).rejects.toThrow(
+            "Internal server error",
+        );
     });
 
     it("Query urls whithout context should return a pagination of urls", async () => {
@@ -64,13 +69,7 @@ describe("Unit Test Url Resolver", () => {
             Promise.resolve(mockPaginateUrls as PaginateUrls),
         );
 
-        const result = await urlResolver.urls(
-            {} as MyContext,
-            false,
-            1,
-            "",
-            "",
-        );
+        const result = await urlResolver.urls({} as MyContext, 1, "", "");
         expect(result).toEqual(mockPaginateUrls);
     });
 
@@ -79,26 +78,48 @@ describe("Unit Test Url Resolver", () => {
             new Error("Internal server error"),
         );
         await expect(
-            urlResolver.urls({} as MyContext, false, 1, "", ""),
+            urlResolver.urls({} as MyContext, 1, "", ""),
         ).rejects.toThrow("Internal server error");
     });
 
     it("Query url should return an Url", async () => {
-        jest.spyOn(Url, "findOneByOrFail").mockImplementation(() =>
-            Promise.resolve(mockUrl as Url),
-        );
+        jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
+            leftJoinAndSelect: jest.fn().mockReturnThis(),
+            where: jest.fn().mockReturnThis(),
+            andWhere: jest.fn().mockReturnThis(),
+            getOne: jest.fn().mockResolvedValue(mockUrl as Url),
+            getOneOrFail: jest.fn().mockResolvedValue(mockUrl as Url),
+        } as unknown as SelectQueryBuilder<Url>);
+
         const result = await urlResolver.url(
+            mockContext,
             "123e4567-e89b-12d3-a456-426614174001",
         );
         expect(result).toEqual(mockUrl);
     });
 
     it("Query url should throw an error when fetching url fails", async () => {
-        jest.spyOn(Url, "findOneByOrFail").mockRejectedValue(
-            new Error("Internal server error"),
-        );
+        jest.spyOn(Url, "createQueryBuilder").mockReturnValue({
+            leftJoinAndSelect: jest.fn().mockReturnThis(),
+            where: jest.fn().mockReturnThis(),
+            andWhere: jest.fn().mockReturnThis(),
+            getOne: jest
+                .fn()
+                .mockRejectedValue(
+                    new Error("URL non trouvée ou accès non autorisé"),
+                ),
+            getOneOrFail: jest
+                .fn()
+                .mockRejectedValue(
+                    new Error("URL non trouvée ou accès non autorisé"),
+                ),
+        } as unknown as SelectQueryBuilder<Url>);
+
         await expect(
-            urlResolver.url("123e4567-e89b-12d3-a456-426614174001"),
-        ).rejects.toThrow("Internal server error");
+            urlResolver.url(
+                mockContext,
+                "123e4567-e89b-12d3-a456-426614174001",
+            ),
+        ).rejects.toThrow("URL non trouvée ou accès non autorisé");
     });
 });

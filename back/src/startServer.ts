@@ -38,7 +38,9 @@ const startServer = async (
             context: async ({ req, res }): Promise<MyContext> => {
                 if (!process.env.JWT_SECRET_KEY) return { res };
 
-                const token = req.headers.cookie?.split("token=")[1];
+                const token = req.headers.cookie
+                    ?.split("token=")[1]
+                    .split(";")[0];
                 if (token) {
                     const payload = jwt.verify(
                         token,

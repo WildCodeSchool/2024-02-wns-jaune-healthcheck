@@ -55,7 +55,11 @@ export type Mutation = {
     addUrl: Url;
     checkUrl: Url;
     createUser: Scalars["String"]["output"];
+    deleteAllNotifications: Scalars["String"]["output"];
+    deleteNotification: Scalars["String"]["output"];
     login: Scalars["String"]["output"];
+    readNotification: Scalars["String"]["output"];
+    subscribe: Scalars["String"]["output"];
 };
 
 export type MutationAddUrlArgs = {
@@ -74,9 +78,30 @@ export type MutationCreateUserArgs = {
     username: Scalars["String"]["input"];
 };
 
+export type MutationDeleteNotificationArgs = {
+    notificationId: Scalars["String"]["input"];
+};
+
 export type MutationLoginArgs = {
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
+};
+
+export type MutationReadNotificationArgs = {
+    notificationId: Scalars["String"]["input"];
+};
+
+export type MutationSubscribeArgs = {
+    role: Scalars["String"]["input"];
+};
+
+export type Notification = {
+    __typename?: "Notification";
+    content: Scalars["String"]["output"];
+    created_at: Scalars["DateTimeISO"]["output"];
+    id: Scalars["String"]["output"];
+    is_read: Scalars["Boolean"]["output"];
+    user: User;
 };
 
 export type PaginateUrls = {
@@ -88,13 +113,26 @@ export type PaginateUrls = {
     urls: Array<Url>;
 };
 
+export type PaginatesHistories = {
+    __typename?: "PaginatesHistories";
+    currentPage: Scalars["Float"]["output"];
+    histories: Array<History>;
+    nextPage: Scalars["Float"]["output"];
+    previousPage: Scalars["Float"]["output"];
+    totalPages: Scalars["Float"]["output"];
+};
+
 export type Query = {
     __typename?: "Query";
     checkFrequencies: Array<CheckFrequency>;
+    getAllUsers: Scalars["String"]["output"];
     histories: Array<History>;
     history: History;
+    historyWithResponse: History;
     logout: Scalars["String"]["output"];
     me: Scalars["String"]["output"];
+    notifications: Array<Notification>;
+    paginatesHistories: PaginatesHistories;
     recentPrivateHistories: Array<History>;
     recentPrivateUrls: Array<Url>;
     url: Url;
@@ -105,13 +143,25 @@ export type QueryHistoryArgs = {
     id: Scalars["String"]["input"];
 };
 
+export type QueryHistoryWithResponseArgs = {
+    urlId: Scalars["String"]["input"];
+};
+
+export type QueryPaginatesHistoriesArgs = {
+    currentPage?: Scalars["Float"]["input"];
+    privateHistories?: InputMaybe<Scalars["Boolean"]["input"]>;
+    searchText?: InputMaybe<Scalars["String"]["input"]>;
+    sortField?: InputMaybe<Scalars["String"]["input"]>;
+    urlId?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type QueryUrlArgs = {
     id: Scalars["String"]["input"];
 };
 
 export type QueryUrlsArgs = {
     currentPage?: Scalars["Float"]["input"];
-    privateUrls?: Scalars["Boolean"]["input"];
+    privateUrls?: InputMaybe<Scalars["Boolean"]["input"]>;
     searchText: Scalars["String"]["input"];
     sortField: Scalars["String"]["input"];
 };
@@ -138,6 +188,8 @@ export type User = {
     __typename?: "User";
     email: Scalars["String"]["output"];
     id: Scalars["String"]["output"];
+    notifications: Array<Notification>;
+    role: Scalars["String"]["output"];
     urls?: Maybe<Array<Url>>;
     username: Scalars["String"]["output"];
 };
@@ -175,6 +227,39 @@ export type CheckUrlMutationVariables = Exact<{
 export type CheckUrlMutation = {
     __typename?: "Mutation";
     checkUrl: { __typename?: "Url"; name: string; path: string };
+};
+
+export type SubscribeMutationVariables = Exact<{
+    role: Scalars["String"]["input"];
+}>;
+
+export type SubscribeMutation = { __typename?: "Mutation"; subscribe: string };
+
+export type ReadNotificationMutationVariables = Exact<{
+    notificationId: Scalars["String"]["input"];
+}>;
+
+export type ReadNotificationMutation = {
+    __typename?: "Mutation";
+    readNotification: string;
+};
+
+export type DeleteNotificationMutationVariables = Exact<{
+    notificationId: Scalars["String"]["input"];
+}>;
+
+export type DeleteNotificationMutation = {
+    __typename?: "Mutation";
+    deleteNotification: string;
+};
+
+export type DeleteAllNotificationsMutationVariables = Exact<{
+    [key: string]: never;
+}>;
+
+export type DeleteAllNotificationsMutation = {
+    __typename?: "Mutation";
+    deleteAllNotifications: string;
 };
 
 export type GetAllURlsQueryVariables = Exact<{
@@ -220,12 +305,40 @@ export type UrlQuery = {
         id: string;
         name: string;
         path: string;
+        private: boolean;
         histories: Array<{
             __typename?: "History";
             id: string;
             response: string;
             status_code: number;
             created_at: any;
+        }>;
+        user?: { __typename?: "User"; id: string } | null;
+    };
+};
+
+export type PaginatesHistoriesQueryVariables = Exact<{
+    privateHistories?: InputMaybe<Scalars["Boolean"]["input"]>;
+    currentPage: Scalars["Float"]["input"];
+    searchText?: InputMaybe<Scalars["String"]["input"]>;
+    sortField?: InputMaybe<Scalars["String"]["input"]>;
+    urlId?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type PaginatesHistoriesQuery = {
+    __typename?: "Query";
+    paginatesHistories: {
+        __typename?: "PaginatesHistories";
+        currentPage: number;
+        nextPage: number;
+        previousPage: number;
+        totalPages: number;
+        histories: Array<{
+            __typename?: "History";
+            id: string;
+            created_at: any;
+            status_code: number;
+            url: { __typename?: "Url"; id: string; name: string; path: string };
         }>;
     };
 };
@@ -282,6 +395,37 @@ export type CheckFrequenciesQuery = {
         interval: string;
     }>;
 };
+
+export type NotificationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type NotificationsQuery = {
+    __typename?: "Query";
+    notifications: Array<{
+        __typename?: "Notification";
+        id: string;
+        is_read: boolean;
+        created_at: any;
+        content: string;
+    }>;
+};
+
+export type HistoryWithResponseQueryVariables = Exact<{
+    historyWithResponseUrlId: Scalars["String"]["input"];
+}>;
+
+export type HistoryWithResponseQuery = {
+    __typename?: "Query";
+    historyWithResponse: {
+        __typename?: "History";
+        response: string;
+        id: string;
+        status_code: number;
+    };
+};
+
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllUsersQuery = { __typename?: "Query"; getAllUsers: string };
 
 export const AddUrlDocument = gql`
     mutation AddUrl(
@@ -482,6 +626,196 @@ export type CheckUrlMutationOptions = Apollo.BaseMutationOptions<
     CheckUrlMutation,
     CheckUrlMutationVariables
 >;
+export const SubscribeDocument = gql`
+    mutation Subscribe($role: String!) {
+        subscribe(role: $role)
+    }
+`;
+export type SubscribeMutationFn = Apollo.MutationFunction<
+    SubscribeMutation,
+    SubscribeMutationVariables
+>;
+
+/**
+ * __useSubscribeMutation__
+ *
+ * To run a mutation, you first call `useSubscribeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subscribeMutation, { data, loading, error }] = useSubscribeMutation({
+ *   variables: {
+ *      role: // value for 'role'
+ *   },
+ * });
+ */
+export function useSubscribeMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        SubscribeMutation,
+        SubscribeMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<SubscribeMutation, SubscribeMutationVariables>(
+        SubscribeDocument,
+        options,
+    );
+}
+export type SubscribeMutationHookResult = ReturnType<
+    typeof useSubscribeMutation
+>;
+export type SubscribeMutationResult = Apollo.MutationResult<SubscribeMutation>;
+export type SubscribeMutationOptions = Apollo.BaseMutationOptions<
+    SubscribeMutation,
+    SubscribeMutationVariables
+>;
+export const ReadNotificationDocument = gql`
+    mutation ReadNotification($notificationId: String!) {
+        readNotification(notificationId: $notificationId)
+    }
+`;
+export type ReadNotificationMutationFn = Apollo.MutationFunction<
+    ReadNotificationMutation,
+    ReadNotificationMutationVariables
+>;
+
+/**
+ * __useReadNotificationMutation__
+ *
+ * To run a mutation, you first call `useReadNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReadNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [readNotificationMutation, { data, loading, error }] = useReadNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useReadNotificationMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        ReadNotificationMutation,
+        ReadNotificationMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<
+        ReadNotificationMutation,
+        ReadNotificationMutationVariables
+    >(ReadNotificationDocument, options);
+}
+export type ReadNotificationMutationHookResult = ReturnType<
+    typeof useReadNotificationMutation
+>;
+export type ReadNotificationMutationResult =
+    Apollo.MutationResult<ReadNotificationMutation>;
+export type ReadNotificationMutationOptions = Apollo.BaseMutationOptions<
+    ReadNotificationMutation,
+    ReadNotificationMutationVariables
+>;
+export const DeleteNotificationDocument = gql`
+    mutation DeleteNotification($notificationId: String!) {
+        deleteNotification(notificationId: $notificationId)
+    }
+`;
+export type DeleteNotificationMutationFn = Apollo.MutationFunction<
+    DeleteNotificationMutation,
+    DeleteNotificationMutationVariables
+>;
+
+/**
+ * __useDeleteNotificationMutation__
+ *
+ * To run a mutation, you first call `useDeleteNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNotificationMutation, { data, loading, error }] = useDeleteNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useDeleteNotificationMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        DeleteNotificationMutation,
+        DeleteNotificationMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<
+        DeleteNotificationMutation,
+        DeleteNotificationMutationVariables
+    >(DeleteNotificationDocument, options);
+}
+export type DeleteNotificationMutationHookResult = ReturnType<
+    typeof useDeleteNotificationMutation
+>;
+export type DeleteNotificationMutationResult =
+    Apollo.MutationResult<DeleteNotificationMutation>;
+export type DeleteNotificationMutationOptions = Apollo.BaseMutationOptions<
+    DeleteNotificationMutation,
+    DeleteNotificationMutationVariables
+>;
+export const DeleteAllNotificationsDocument = gql`
+    mutation DeleteAllNotifications {
+        deleteAllNotifications
+    }
+`;
+export type DeleteAllNotificationsMutationFn = Apollo.MutationFunction<
+    DeleteAllNotificationsMutation,
+    DeleteAllNotificationsMutationVariables
+>;
+
+/**
+ * __useDeleteAllNotificationsMutation__
+ *
+ * To run a mutation, you first call `useDeleteAllNotificationsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAllNotificationsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAllNotificationsMutation, { data, loading, error }] = useDeleteAllNotificationsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteAllNotificationsMutation(
+    baseOptions?: Apollo.MutationHookOptions<
+        DeleteAllNotificationsMutation,
+        DeleteAllNotificationsMutationVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<
+        DeleteAllNotificationsMutation,
+        DeleteAllNotificationsMutationVariables
+    >(DeleteAllNotificationsDocument, options);
+}
+export type DeleteAllNotificationsMutationHookResult = ReturnType<
+    typeof useDeleteAllNotificationsMutation
+>;
+export type DeleteAllNotificationsMutationResult =
+    Apollo.MutationResult<DeleteAllNotificationsMutation>;
+export type DeleteAllNotificationsMutationOptions = Apollo.BaseMutationOptions<
+    DeleteAllNotificationsMutation,
+    DeleteAllNotificationsMutationVariables
+>;
 export const GetAllURlsDocument = gql`
     query GetAllURls(
         $currentPage: Float!
@@ -597,6 +931,10 @@ export const UrlDocument = gql`
             id
             name
             path
+            private
+            user {
+                id
+            }
         }
     }
 `;
@@ -646,6 +984,112 @@ export type UrlQueryHookResult = ReturnType<typeof useUrlQuery>;
 export type UrlLazyQueryHookResult = ReturnType<typeof useUrlLazyQuery>;
 export type UrlSuspenseQueryHookResult = ReturnType<typeof useUrlSuspenseQuery>;
 export type UrlQueryResult = Apollo.QueryResult<UrlQuery, UrlQueryVariables>;
+export const PaginatesHistoriesDocument = gql`
+    query PaginatesHistories(
+        $privateHistories: Boolean
+        $currentPage: Float!
+        $searchText: String
+        $sortField: String
+        $urlId: String
+    ) {
+        paginatesHistories(
+            privateHistories: $privateHistories
+            currentPage: $currentPage
+            searchText: $searchText
+            sortField: $sortField
+            urlId: $urlId
+        ) {
+            currentPage
+            nextPage
+            previousPage
+            totalPages
+            histories {
+                id
+                created_at
+                status_code
+                url {
+                    id
+                    name
+                    path
+                }
+            }
+        }
+    }
+`;
+
+/**
+ * __usePaginatesHistoriesQuery__
+ *
+ * To run a query within a React component, call `usePaginatesHistoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginatesHistoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginatesHistoriesQuery({
+ *   variables: {
+ *      privateHistories: // value for 'privateHistories'
+ *      currentPage: // value for 'currentPage'
+ *      searchText: // value for 'searchText'
+ *      sortField: // value for 'sortField'
+ *      urlId: // value for 'urlId'
+ *   },
+ * });
+ */
+export function usePaginatesHistoriesQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    > &
+        (
+            | { variables: PaginatesHistoriesQueryVariables; skip?: boolean }
+            | { skip: boolean }
+        ),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export function usePaginatesHistoriesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export function usePaginatesHistoriesSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<
+        PaginatesHistoriesQuery,
+        PaginatesHistoriesQueryVariables
+    >(PaginatesHistoriesDocument, options);
+}
+export type PaginatesHistoriesQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesQuery
+>;
+export type PaginatesHistoriesLazyQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesLazyQuery
+>;
+export type PaginatesHistoriesSuspenseQueryHookResult = ReturnType<
+    typeof usePaginatesHistoriesSuspenseQuery
+>;
+export type PaginatesHistoriesQueryResult = Apollo.QueryResult<
+    PaginatesHistoriesQuery,
+    PaginatesHistoriesQueryVariables
+>;
 export const RecentPrivateUrlsDocument = gql`
     query RecentPrivateUrls {
         recentPrivateUrls {
@@ -985,4 +1429,226 @@ export type CheckFrequenciesSuspenseQueryHookResult = ReturnType<
 export type CheckFrequenciesQueryResult = Apollo.QueryResult<
     CheckFrequenciesQuery,
     CheckFrequenciesQueryVariables
+>;
+export const NotificationsDocument = gql`
+    query Notifications {
+        notifications {
+            id
+            is_read
+            created_at
+            content
+        }
+    }
+`;
+
+/**
+ * __useNotificationsQuery__
+ *
+ * To run a query within a React component, call `useNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationsQuery(
+    baseOptions?: Apollo.QueryHookOptions<
+        NotificationsQuery,
+        NotificationsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<NotificationsQuery, NotificationsQueryVariables>(
+        NotificationsDocument,
+        options,
+    );
+}
+export function useNotificationsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        NotificationsQuery,
+        NotificationsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<NotificationsQuery, NotificationsQueryVariables>(
+        NotificationsDocument,
+        options,
+    );
+}
+export function useNotificationsSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        NotificationsQuery,
+        NotificationsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<
+        NotificationsQuery,
+        NotificationsQueryVariables
+    >(NotificationsDocument, options);
+}
+export type NotificationsQueryHookResult = ReturnType<
+    typeof useNotificationsQuery
+>;
+export type NotificationsLazyQueryHookResult = ReturnType<
+    typeof useNotificationsLazyQuery
+>;
+export type NotificationsSuspenseQueryHookResult = ReturnType<
+    typeof useNotificationsSuspenseQuery
+>;
+export type NotificationsQueryResult = Apollo.QueryResult<
+    NotificationsQuery,
+    NotificationsQueryVariables
+>;
+export const HistoryWithResponseDocument = gql`
+    query HistoryWithResponse($historyWithResponseUrlId: String!) {
+        historyWithResponse(urlId: $historyWithResponseUrlId) {
+            response
+            id
+            status_code
+        }
+    }
+`;
+
+/**
+ * __useHistoryWithResponseQuery__
+ *
+ * To run a query within a React component, call `useHistoryWithResponseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryWithResponseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryWithResponseQuery({
+ *   variables: {
+ *      historyWithResponseUrlId: // value for 'historyWithResponseUrlId'
+ *   },
+ * });
+ */
+export function useHistoryWithResponseQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    > &
+        (
+            | { variables: HistoryWithResponseQueryVariables; skip?: boolean }
+            | { skip: boolean }
+        ),
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    >(HistoryWithResponseDocument, options);
+}
+export function useHistoryWithResponseLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    >(HistoryWithResponseDocument, options);
+}
+export function useHistoryWithResponseSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<
+        HistoryWithResponseQuery,
+        HistoryWithResponseQueryVariables
+    >(HistoryWithResponseDocument, options);
+}
+export type HistoryWithResponseQueryHookResult = ReturnType<
+    typeof useHistoryWithResponseQuery
+>;
+export type HistoryWithResponseLazyQueryHookResult = ReturnType<
+    typeof useHistoryWithResponseLazyQuery
+>;
+export type HistoryWithResponseSuspenseQueryHookResult = ReturnType<
+    typeof useHistoryWithResponseSuspenseQuery
+>;
+export type HistoryWithResponseQueryResult = Apollo.QueryResult<
+    HistoryWithResponseQuery,
+    HistoryWithResponseQueryVariables
+>;
+export const GetAllUsersDocument = gql`
+    query GetAllUsers {
+        getAllUsers
+    }
+`;
+
+/**
+ * __useGetAllUsersQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllUsersQuery(
+    baseOptions?: Apollo.QueryHookOptions<
+        GetAllUsersQuery,
+        GetAllUsersQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(
+        GetAllUsersDocument,
+        options,
+    );
+}
+export function useGetAllUsersLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetAllUsersQuery,
+        GetAllUsersQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(
+        GetAllUsersDocument,
+        options,
+    );
+}
+export function useGetAllUsersSuspenseQuery(
+    baseOptions?: Apollo.SuspenseQueryHookOptions<
+        GetAllUsersQuery,
+        GetAllUsersQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useSuspenseQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(
+        GetAllUsersDocument,
+        options,
+    );
+}
+export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
+export type GetAllUsersLazyQueryHookResult = ReturnType<
+    typeof useGetAllUsersLazyQuery
+>;
+export type GetAllUsersSuspenseQueryHookResult = ReturnType<
+    typeof useGetAllUsersSuspenseQuery
+>;
+export type GetAllUsersQueryResult = Apollo.QueryResult<
+    GetAllUsersQuery,
+    GetAllUsersQueryVariables
 >;

@@ -82,7 +82,11 @@ export class Url extends BaseEntity {
 
         const whereConditions: string[] = ["1 = 1"];
 
-        if (privateUrls && authenticatedUserId) {
+        if (privateUrls === undefined && authenticatedUserId) {
+            whereConditions.push(
+                "(user.id = :authenticatedUserId OR user.id IS NULL)",
+            );
+        } else if (privateUrls && authenticatedUserId) {
             whereConditions.push("user.id = :authenticatedUserId");
         } else {
             whereConditions.push("user.id IS NULL");
@@ -121,7 +125,6 @@ export class Url extends BaseEntity {
         }
 
         queryBuilder.skip(skip).take(16);
-
         const [urls, countUrls] = await queryBuilder.getManyAndCount();
         const totalPages: number = Math.ceil(countUrls / 16);
 

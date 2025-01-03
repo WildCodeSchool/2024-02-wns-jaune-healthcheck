@@ -3,6 +3,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 import MyContext from "../types/MyContext";
+import { Roles } from "../entities/User";
 
 function setCookie(context: MyContext, token: string) {
     const expireCookieUTC = new Date();
@@ -23,6 +24,7 @@ function getUserBasicInfo(user: User) {
         id: user.id,
         email: user.email,
         username: user.username,
+        role: user.role,
     };
 }
 
@@ -90,6 +92,27 @@ class UserResolver {
         }
     }
 
+    @Mutation(() => String)
+    async subscribe(@Arg("role") role: string, @Ctx() context: MyContext) {
+        try {
+            if (role in Roles) {
+                throw new Error("Bad request");
+            }
+            if (context.payload) {
+                const userFromDB = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+                userFromDB.role =
+                    Roles[role.toLocaleUpperCase() as keyof typeof Roles];
+                await User.save(userFromDB);
+                return JSON.stringify(getUserBasicInfo(userFromDB));
+            } else throw new Error();
+        } catch (error) {
+            console.log(error);
+            throw new Error("Bad request");
+        }
+    }
+
     @Query(() => String)
     async logout(@Ctx() context: MyContext) {
         context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
@@ -104,6 +127,27 @@ class UserResolver {
                     id: context.payload.id,
                 });
                 return JSON.stringify(getUserBasicInfo(userFromDB));
+            } else throw new Error();
+        } catch (error) {
+            console.log(error);
+            throw new Error("Bad request");
+        }
+    }
+
+    @Query(() => String)
+    async getAllUsers(@Ctx() context: MyContext) {
+        try {
+            if (context.payload) {
+                const requestingUser = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+
+                if (requestingUser.role !== Roles.ADMIN) {
+                    throw new Error("Unauthorized");
+                }
+
+                const users = await User.find();
+                return JSON.stringify(users.map(getUserBasicInfo));
             } else throw new Error();
         } catch (error) {
             console.log(error);

@@ -14,7 +14,7 @@ const mocks = [
                     name: "Google",
                     path: "https://www.google.com/",
                 },
-                private: false,
+                isPrivate: false,
             },
         },
         result: {

@@ -20,10 +20,13 @@ run-test:
 	docker compose -f docker-compose.test.yaml up
 
 build-prod:
-	docker compose -f docker-compose.yaml up --build
+	docker compose -f docker-compose.yaml up --build --detach
 
 run-prod:
 	docker compose -f docker-compose.yaml up
+
+run-codegen:
+	docker exec -it frontend npm run codegen
 
 # Après la commande, ajouter name=(NomDeLaMigration)
 generate-migration:
