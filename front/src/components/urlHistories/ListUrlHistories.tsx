@@ -168,8 +168,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({
                             statusCode={String(historyData?.historyWithResponse.status_code) || ""}
                             path={urlData?.url.path || ""}
                             response={historyData?.historyWithResponse.response || ""}
-                        >
-                        </HistoryResponseModal>
+                        />
                         {
                             !checkUrlLoading ?
                             <Button 
