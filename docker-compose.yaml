@@ -1,7 +1,7 @@
 name: "health-checker-prod"
 services:
   backend:
-    build: skullyfox/backend:latest
+    image: skullyfox/backend:latest
     command: sh -c "npm run migration:up && npm run build && npm run prod"
     env_file: .env
     restart: always
@@ -18,7 +18,7 @@ services:
 
   frontend:
     container_name: frontend
-    build: skullyfox/backend:latest
+    image: skullyfox/frontend:latest
     command: npm run build
     env_file: .env
     volumes:

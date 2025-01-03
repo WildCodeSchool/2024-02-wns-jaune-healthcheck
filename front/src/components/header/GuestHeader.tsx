@@ -51,7 +51,6 @@ export default function GuestHeader() {
                                 </DialogTrigger>
                                 <FormLogin
                                     setOpenDialog={setOpenDialog}
-                                    openDialog={openDialog}
                                 />
                             </Dialog>
                         </NavigationMenuLink>
