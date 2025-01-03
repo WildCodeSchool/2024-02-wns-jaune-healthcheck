@@ -8,7 +8,6 @@ import {
 import RecentHistories from "@/components/dashboard/RecentHistories";
 import RecentUrls from "@/components/dashboard/RecentUrls";
 
-
 export default function Dashboard() {
     return (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -54,5 +53,3 @@ export default function Dashboard() {
         </div>
     );
 }
-
-

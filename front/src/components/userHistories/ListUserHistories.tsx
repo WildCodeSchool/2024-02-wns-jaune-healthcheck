@@ -108,7 +108,7 @@ const ListUserHistories: React.FC = () => {
                                   className="flex justify-center items-start w-full"
                               >
                                   <a
-                                      href={`/url/${item.id}`}
+                                      href={`/history-url/${item.url.id}`}
                                       rel="noopener noreferrer"
                                       className="w-full"
                                   >
@@ -170,6 +170,6 @@ const ListUserHistories: React.FC = () => {
             />
         </div>
     );
-}
+};
 
 export default ListUserHistories;

@@ -142,13 +142,13 @@ const ListUserUrls: React.FC = () => {
                               </ListItem>
                           ))
                         : Array.from({ length: 16 }, (_, index) => {
-                            return (
-                                <Skeleton
-                                    key={index}
-                                    className="h-[143px] rounded-lg"
-                                />
-                            );
-                        })}
+                              return (
+                                  <Skeleton
+                                      key={index}
+                                      className="h-[143px] rounded-lg"
+                                  />
+                              );
+                          })}
                 </List>
             </div>
             <CustomPagination
@@ -160,6 +160,6 @@ const ListUserUrls: React.FC = () => {
             />
         </div>
     );
-}
+};
 
 export default ListUserUrls;

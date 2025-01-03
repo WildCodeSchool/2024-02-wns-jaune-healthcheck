@@ -19,5 +19,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <RouterProvider router={router} />
             </App>
         </ApolloProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
 );

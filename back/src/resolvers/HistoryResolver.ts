@@ -87,9 +87,9 @@ class HistoryResolver {
     async historyWithResponse(@Arg("urlId") urlId: string): Promise<History> {
         try {
             const history = await History.findOneOrFail({
-                where: { 
+                where: {
                     url: { id: urlId },
-                    response: Not('')
+                    response: Not(""),
                 },
             });
             return history;

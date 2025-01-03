@@ -54,14 +54,27 @@ class UrlResolver {
     }
 
     @Query(() => Url)
-    async url(@Arg("id") id: string): Promise<Url> {
+    async url(@Ctx() context: MyContext, @Arg("id") id: string): Promise<Url> {
         try {
-            const url = await Url.findOneByOrFail({
-                id: id,
-            });
+            const queryBuilder = Url.createQueryBuilder("url")
+                .leftJoinAndSelect("url.user", "user")
+                .leftJoinAndSelect("url.histories", "histories")
+                .where("url.id = :id", { id });
+
+            if (context.payload) {
+                queryBuilder.andWhere(
+                    "(user.id = :userId OR user.id IS NULL)",
+                    { userId: context.payload.id },
+                );
+            } else {
+                queryBuilder.andWhere("user.id IS NULL");
+            }
+
+            const url = await queryBuilder.getOneOrFail();
             return url;
-        } catch (_error) {
-            throw new Error("Internal server error");
+        } catch (error) {
+            console.error("Erreur lors de la récupération de l'URL:", error);
+            throw new Error("URL non trouvée ou accès non autorisé");
         }
     }
 
