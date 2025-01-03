@@ -18,7 +18,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: skullyfox/backend:latest
+    image: skullyfox/frontend:latest
     command: npm run build
     env_file: .env
     volumes:
