@@ -83,7 +83,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             history.url = url;
             history.response = data;
             history.status_code = response.status;
-            history.content_type = contentType;
+            history.content_type = contentType || "unknown";
 
             await transactionalEntityManager.save(history);
         } catch (error) {

@@ -107,7 +107,7 @@ const checkUrl = async (interval?: string) => {
                     url: url,
                     response: data,
                     status_code: response.status,
-                    content_type: contentType,
+                    content_type: contentType|| "unknown",
                 });
 
                 if (response.status > 300 && newHistory.url.user) {
