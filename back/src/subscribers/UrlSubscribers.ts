@@ -54,7 +54,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             });
 
             let data = response.data;
-            const contentType = response.headers["content-type"];
+            const contentType = response.headers["content-type"] || "unknown";
 
             if (contentType.includes("application/json")) {
                 data = JSON.stringify(data);
@@ -83,7 +83,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             history.url = url;
             history.response = data;
             history.status_code = response.status;
-            history.content_type = contentType || "unknown";
+            history.content_type = contentType;
 
             await transactionalEntityManager.save(history);
         } catch (error) {

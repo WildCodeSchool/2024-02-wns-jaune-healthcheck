@@ -83,7 +83,7 @@ const checkUrl = async (interval?: string) => {
                 });
 
                 let data = response.data;
-                const contentType = response.headers["content-type"];
+                const contentType = response.headers["content-type"] || "unknown";
 
                 if (contentType.includes("application/json")) {
                     data = JSON.stringify(data);
@@ -107,7 +107,7 @@ const checkUrl = async (interval?: string) => {
                     url: url,
                     response: data,
                     status_code: response.status,
-                    content_type: contentType|| "unknown",
+                    content_type: contentType,
                 });
 
                 if (response.status > 300 && newHistory.url.user) {
