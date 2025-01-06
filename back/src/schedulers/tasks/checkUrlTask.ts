@@ -82,6 +82,13 @@ const checkUrl = async (interval?: string) => {
                     validateStatus: () => true,
                 });
 
+                let data = response.data;
+                const contentType = response.headers?.["content-type"] || "unknown";
+
+                if (contentType.includes("application/json")) {
+                    data = JSON.stringify(data);
+                }
+
                 const existingMessageHistory = await History.findOne({
                     where: {
                         url: {
@@ -98,8 +105,9 @@ const checkUrl = async (interval?: string) => {
 
                 const newHistory = await History.save({
                     url: url,
-                    response: response.data,
+                    response: data,
                     status_code: response.status,
+                    content_type: contentType,
                 });
 
                 if (response.status > 300 && newHistory.url.user) {

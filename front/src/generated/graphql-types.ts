@@ -28,6 +28,7 @@ export type CheckFrequency = {
 
 export type History = {
   __typename?: 'History';
+  content_type: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
   id: Scalars['String']['output'];
   response: Scalars['String']['output'];
@@ -313,7 +314,7 @@ export type HistoryWithResponseQueryVariables = Exact<{
 }>;
 
 
-export type HistoryWithResponseQuery = { __typename?: 'Query', historyWithResponse: { __typename?: 'History', response: string, id: string, status_code: number } };
+export type HistoryWithResponseQuery = { __typename?: 'Query', historyWithResponse: { __typename?: 'History', response: string, id: string, status_code: number, content_type: string } };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1015,6 +1016,7 @@ export const HistoryWithResponseDocument = gql`
     response
     id
     status_code
+    content_type
   }
 }
     `;
