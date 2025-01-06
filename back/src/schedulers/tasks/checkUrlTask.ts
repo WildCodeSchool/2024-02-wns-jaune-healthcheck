@@ -83,7 +83,7 @@ const checkUrl = async (interval?: string) => {
                 });
 
                 let data = response.data;
-                const contentType = response.headers["content-type"] || "unknown";
+                const contentType = response.headers?.["content-type"] || "unknown";
 
                 if (contentType.includes("application/json")) {
                     data = JSON.stringify(data);

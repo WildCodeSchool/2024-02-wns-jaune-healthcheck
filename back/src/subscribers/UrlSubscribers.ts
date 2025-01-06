@@ -54,7 +54,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             });
 
             let data = response.data;
-            const contentType = response.headers["content-type"] || "unknown";
+            const contentType = response.headers?.["content-type"] || "unknown";
 
             if (contentType.includes("application/json")) {
                 data = JSON.stringify(data);
