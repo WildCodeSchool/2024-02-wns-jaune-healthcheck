@@ -126,7 +126,7 @@ const ListUserHistories: React.FC = () => {
                                                   Url : {item.url.path}
                                               </p>
                                               <p>
-                                                  Créé le :{" "}
+                                                  Ajouté le :{" "}
                                                   <span>
                                                       {new Date(
                                                           item.created_at,
