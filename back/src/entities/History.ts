@@ -32,6 +32,10 @@ export class History extends BaseEntity {
     @Column("text")
     response: string;
 
+    @Field()
+    @Column({ length: 255 })
+    content_type: string;
+
     @Field(() => Url)
     @ManyToOne(() => Url, (url) => url.histories)
     url: Url;
@@ -128,7 +132,7 @@ export class History extends BaseEntity {
             .skip(skip)
             .take(16)
             .getManyAndCount();
-
+        
         return {
             histories: histories,
             totalPages: Math.ceil(total / 16),

@@ -17,7 +17,7 @@ import useSocketStore from "@/stores/webSocketStore";
 import {
     usePaginatesHistoriesQuery,
     useCheckUrlMutation,
-    useHistoryWithResponseQuery,
+    useHistoryWithResponseQuery
 } from "@/generated/graphql-types";
 import FilterBar from "../custom/FilterBar";
 import { PaginatesHistories } from "@/generated/graphql-types";
@@ -31,7 +31,7 @@ type ListUrlHistoriesProps = {
 
 const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { error, data, refetch } = usePaginatesHistoriesQuery({
+    const { error, refetch } = usePaginatesHistoriesQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
@@ -40,6 +40,9 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
             urlId: urlId,
         },
         fetchPolicy: "cache-and-network",
+        onCompleted: (data) => {
+            setPaginateHistories(data.paginatesHistories as PaginatesHistories)
+        }
     });
 
     const { data: historyData, refetch: refectchHistoryResponse } =
@@ -60,11 +63,6 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
 
     const { totalPages, currentPage, previousPage, nextPage } =
         PaginateHistories;
-
-    useEffect(() => {
-        if (!data) return;
-        setPaginateHistories(data.paginatesHistories as PaginatesHistories);
-    }, [data]);
 
     const handlePageChange = (page: number) => {
         const newSearchParams = new URLSearchParams(searchParams);
@@ -157,7 +155,12 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                                 ) || ""
                             }
                             path={urlData?.url.path || ""}
-                            response={historyData?.historyWithResponse.response || ""}
+                            response={
+                                historyData?.historyWithResponse.response || ""
+                            }
+                            contentType={
+                                historyData?.historyWithResponse.content_type || ""
+                            }
                         />
                         {
                             !checkUrlLoading ? (

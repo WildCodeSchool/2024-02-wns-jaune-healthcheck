@@ -154,6 +154,7 @@ export const GET_HISTORY_WITH_RESPONSE = gql`
             response
             id
             status_code
+            content_type
         }
     }
 `;
