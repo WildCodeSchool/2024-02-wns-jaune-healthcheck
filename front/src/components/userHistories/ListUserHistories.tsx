@@ -159,15 +159,24 @@ const ListUserHistories: React.FC = () => {
                                   />
                               );
                           })}
+                    {!data?.paginatesHistories.histories.length && (
+                        <p className="text-center text-muted-foreground">
+                            Aucun historique
+                        </p>
+                    )}
                 </List>
             </div>
-            <CustomPagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                onPageChange={handlePageChange}
-            />
+            {data &&
+                data.paginatesHistories.totalPages > 1 &&
+                data.paginatesHistories.totalPages !== 0 && (
+                    <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        onPageChange={handlePageChange}
+                    />
+                )}
         </div>
     );
 };

@@ -45,6 +45,15 @@ export default function RecentHistories() {
                     </li>
                 ))
             )}
+            {!data.recentPrivateHistories.length && (
+                <li className="flex items-center text-sm">
+                    <div className="ml-4 space-y-1">
+                        <p className="font-medium leading-none">
+                            Aucun historique
+                        </p>
+                    </div>
+                </li>
+            )}
         </ul>
     );
 }

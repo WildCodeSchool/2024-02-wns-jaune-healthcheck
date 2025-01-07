@@ -218,16 +218,25 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                                 </Card>
                             </ListItem>
                         ))}
+                    {!data?.paginatesHistories.histories.length && (
+                        <p className="text-muted-foreground">
+                            Aucun historique
+                        </p>
+                    )}
                 </List>
-                <div className="mt-8">
-                    <CustomPagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        onPageChange={handlePageChange}
-                    />
-                </div>
+                {data &&
+                    data.paginatesHistories.totalPages > 1 &&
+                    data.paginatesHistories.totalPages !== 0 && (
+                        <div className="mt-8">
+                            <CustomPagination
+                                totalPages={totalPages}
+                                currentPage={currentPage}
+                                previousPage={previousPage}
+                                nextPage={nextPage}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
+                    )}
             </div>
         </>
     );

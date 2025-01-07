@@ -301,4 +301,100 @@ describe("Tests ListUrlHistories", () => {
             expect(loader).toBeDisabled();
         });
     });
+
+    it("should data is empty", async () => {
+        const paginatesHistoriesRepeatedMock = {
+            request: {
+                query: GET_ALL_HISTORIES,
+                variables: {
+                    searchText: "",
+                    sortField: "",
+                    currentPage: 1,
+                    privateHistories: true,
+                    urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
+                },
+            },
+            result: {
+                data: {
+                    paginatesHistories: {
+                        currentPage: 1,
+                        nextPage: null,
+                        previousPage: null,
+                        totalPages: 1,
+                        histories: [],
+                    },
+                },
+            },
+        };
+        render(
+            <MockedProvider
+                mocks={[
+                    urlMock,
+                    paginatesHistoriesRepeatedMock,
+                    checkUrlMock,
+                    historyWithResponseMock,
+                ]}
+                addTypename={false}
+            >
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
+            </MockedProvider>,
+        );
+        await waitFor(() => {
+            expect(screen.getByText("Aucun historique")).toBeInTheDocument();
+        });
+    });
+
+    it("should data with pagination", async () => {
+        const paginatesHistoriesRepeatedMock = {
+            request: {
+                query: GET_ALL_HISTORIES,
+                variables: {
+                    searchText: "",
+                    sortField: "",
+                    currentPage: 1,
+                    privateHistories: true,
+                    urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
+                },
+            },
+            result: {
+                data: {
+                    paginatesHistories: {
+                        currentPage: 2,
+                        nextPage: null,
+                        previousPage: 1,
+                        totalPages: 2,
+                        histories: [
+                            {
+                                id: "98cd3ea2-e9c0-449a-bedb-d45b0b013961",
+                                created_at: "2024-11-06T14:17:01.648Z",
+                                status_code: 200,
+                                url: {
+                                    id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
+                                    name: "Test",
+                                    path: "https://google.fr",
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+        render(
+            <MockedProvider
+                mocks={[
+                    urlMock,
+                    paginatesHistoriesRepeatedMock,
+                    checkUrlMock,
+                    historyWithResponseMock,
+                ]}
+                addTypename={false}
+            >
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
+            </MockedProvider>,
+        );
+        await waitFor(() => {
+            expect(screen.getByText("Précédent")).toBeInTheDocument();
+            expect(screen.getByText("Suivant")).toBeInTheDocument();
+        });
+    });
 });
