@@ -13,6 +13,7 @@ import { History } from "./History";
 import { User } from "./User";
 import { CheckFrequency } from "./CheckFrequency";
 import PaginateUrls from "../types/PaginatesUrls";
+import GroupByStatusUrl from "@/types/GroupByStatusUrl";
 
 @Entity()
 @ObjectType()
@@ -135,5 +136,106 @@ export class Url extends BaseEntity {
             previousPage: Math.max(currentPage - 1, 0),
             nextPage: Math.min(currentPage + 1, totalPages),
         };
+    }
+
+    static async getPrivatesUrlsByStatusHourly(
+        authenticatedUserId: string,
+    ): Promise<GroupByStatusUrl[]> {
+        const rawResults = await this.createQueryBuilder("url")
+            .select(
+                `TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')`,
+                "dateTime"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
+                "onLine"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
+                "offLine"
+            )
+            .innerJoin("url.histories", "history")
+            .innerJoin("url.user", "user")
+            .where("user.id = :authenticatedUserId", {
+                authenticatedUserId: authenticatedUserId,
+            })
+            .andWhere("DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW()) OR DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW() - INTERVAL '1 hour')")
+            .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')")
+            .getRawMany();
+
+        return rawResults.map((result) => ({
+            dateTime: result.dateTime,
+            onLine: parseInt(result.onLine, 0),
+            offLine: parseInt(result.offLine, 0),
+        }));
+    }
+
+    static async getPrivatesUrlsByStatusDaily(
+        authenticatedUserId: string,
+    ): Promise<GroupByStatusUrl[]> {
+        const rawResults = await this.createQueryBuilder("url")
+            .select(
+                `TO_CHAR(history.created_at, 'YYYY-MM-DD HH24')`,
+                "dateTime"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
+                "onLine"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
+                "offLine"
+            )
+            .innerJoin("url.histories", "history")
+            .innerJoin("url.user", "user")
+            .where("user.id = :authenticatedUserId", {
+                authenticatedUserId: authenticatedUserId,
+            })
+            .andWhere("DATE_TRUNC('day', history.created_at) = DATE_TRUNC('day', NOW())")
+            .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24')")
+            .getRawMany();
+
+        return rawResults.map((result) => {
+            let formattedDate = result.dateTime.split(" ");
+            formattedDate = `${formattedDate[0]}T${formattedDate[1]}:00:00`;
+            formattedDate = new Date(formattedDate).toISOString();
+            return {
+                dateTime: formattedDate,
+                onLine: parseInt(result.onLine, 0),
+                offLine: parseInt(result.offLine, 0),
+            }
+        });
+    }
+
+    static async getPrivatesUrlsByStatusWeekly(
+        authenticatedUserId: string,
+    ): Promise<GroupByStatusUrl[]> {
+        const rawResults = await this.createQueryBuilder("url")
+            .select(
+                `TO_CHAR(history.created_at, 'YYYY-MM-DD')`,
+                "dateTime"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
+                "onLine"
+            )
+            .addSelect(
+                `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
+                "offLine"
+            )
+            .innerJoin("url.histories", "history")
+            .innerJoin("url.user", "user")
+            .where("user.id = :authenticatedUserId", {
+                authenticatedUserId: authenticatedUserId,
+            })
+            .andWhere("DATE_TRUNC('week', history.created_at) = DATE_TRUNC('week', NOW())")
+            .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD')")
+            .getRawMany();
+
+        return rawResults.map((result) => ({
+            dateTime: result.dateTime,
+            onLine: parseInt(result.onLine, 0),
+            offLine: parseInt(result.offLine, 0),
+        }));
     }
 }

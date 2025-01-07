@@ -1,3 +1,9 @@
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip";
 import { formatLocalDate } from "@/constants/globalFunction";
 import { useRecentPrivateUrlsQuery } from "@/generated/graphql-types";
 import { CardStatus } from "../ui/card";
@@ -24,7 +30,18 @@ export default function RecentUrls() {
                             <p className="font-medium leading-none">
                                 {url.name}
                             </p>
-                            <p className="text-muted-foreground">{url.path}</p>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger
+                                        className="text-muted-foreground max-w-72 truncate"
+                                    >
+                                        {url.path}
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{url.path}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         <div className="ml-auto">
                             <p className="font-light italic text-muted-foreground">

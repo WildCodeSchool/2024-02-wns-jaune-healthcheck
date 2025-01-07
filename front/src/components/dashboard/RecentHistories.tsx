@@ -1,4 +1,10 @@
 import { useEffect } from "react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip";
 import { formatLocalDate } from "@/constants/globalFunction";
 import { useRecentPrivateHistoriesQuery } from "@/generated/graphql-types";
 import useSocketStore from "@/stores/webSocketStore";
@@ -30,9 +36,18 @@ export default function RecentHistories() {
                             <p className="font-medium leading-none">
                                 {history.url.name}
                             </p>
-                            <p className="text-muted-foreground">
-                                {history.url.path}
-                            </p>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger
+                                        className="text-muted-foreground max-w-72 truncate"
+                                    >
+                                        {history.url.path}
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{history.url.path}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         <div className="ml-auto">
                             <p className="font-light italic text-muted-foreground">

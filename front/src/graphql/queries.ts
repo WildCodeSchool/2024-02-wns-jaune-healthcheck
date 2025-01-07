@@ -164,3 +164,23 @@ export const GET_ALL_USERS = gql`
         getAllUsers
     }
 `;
+
+export const GET_PRIVATE_HISTORIES_BY_STATUS = gql`
+    query PrivateHistoriesByStatus {
+        privateHistoriesByStatus {
+            statusCode
+            countHtml
+            countJson
+        }
+    }
+`;
+
+export const GET_PRIVATE_URLS_BY_STATUS = gql`
+    query PrivatesUrlsByStatus($timeFrame: String!) {
+        privatesUrlsByStatus(timeFrame: $timeFrame) {
+            dateTime
+            offLine
+            onLine
+        }
+    }
+`;
