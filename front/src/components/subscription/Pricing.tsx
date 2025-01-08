@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -5,9 +6,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
-
 import {
     Card,
     CardContent,
@@ -16,13 +15,11 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-
 import { Check, X } from "lucide-react";
-
-import { useSubscribeMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
-import { useNavigate } from "react-router-dom";
 import { Roles } from "@/types/user";
+import { Separator } from "../ui/separator";
+import StripeProvider from "./StripeProvider";
 
 interface PricingProps {
     openPricing: boolean;
@@ -31,74 +28,96 @@ interface PricingProps {
 
 export function Pricing(props: PricingProps) {
     const { openPricing, setOpenPricing } = props;
-    const [subscribe] = useSubscribeMutation();
-    const me = useAuthStore((state) => state.me);
-    const user = useAuthStore((state) => state.user);
-    const navigate = useNavigate();
-    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
+    const [openCheckout, setOpenCheckout] = useState<boolean>(false);
+    const [openCancel, setOpenCancel] = useState<boolean>(false);
 
-    const subscribeHandler = () => {
-        subscribe({
-            variables: {
-                role: Roles.PREMIUM,
-            },
-            onCompleted: (data) => {
-                me(data.subscribe);
-                navigate("/dashboard/subscribe");
-                setOpenPricing(false);
-                console.log(data);
-            },
-            onError: (error) => {
-                console.log(error);
-            },
-        });
-    };
+    const user = useAuthStore((state) => state.user);
+    const isPremium = user.role === Roles.PREMIUM;
+
+    /* TODO: Tout reset si close modal */
 
     return (
         <Dialog open={openPricing} onOpenChange={setOpenPricing}>
-            <DialogContent className="min-w-max">
+            <DialogContent className="w-screen h-screen sm:h-fit md:w-2/3 lg:min-w-max">
                 <DialogHeader>
-                    <DialogTitle className="text-center">
-                        Abonnements
-                    </DialogTitle>
-                    <DialogDescription className="flex flex-col md:flex-row justify-center items-center py-5 gap-3">
-                        <Card className="w-[250px] h-[300px]">
+                    <DialogTitle className="text-left">Abonnements</DialogTitle>
+                    <DialogDescription className="flex flex-col sm:flex-row justify-center items-center py-4 gap-3">
+                        <Card
+                            className={
+                                "w-full sm:w-1/2 sm:h-full lg:w-1/2 lg:h-full flex flex-col " +
+                                (openCheckout || openCancel
+                                    ? " hidden"
+                                    : "block")
+                            }
+                        >
                             <CardHeader>
-                                <CardTitle>Gratuit</CardTitle>
+                                <CardTitle>Basique</CardTitle>
                                 <CardDescription>
-                                    Profitez gratuitement d'Health Checker
+                                    Accédez aux fonctionnalitées de base.
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="grid gap-4">
+                            <CardContent>
+                                <p className="font-bold text-2xl md:text-4xl mb-2">
+                                    0€{" "}
+                                    <span className="text-sm font-medium text-gray-600">
+                                        / mois
+                                    </span>
+                                </p>
+                                <Separator className="my-6" />
                                 <ul className="flex flex-col gap-2 py-2">
                                     <li className="flex items-center gap-2">
                                         <Check className="w-4 h-4 text-green-500" />
-                                        <p>Ajoutez jusqu'à 5 URL Privées</p>
+                                        <p className="text-left">
+                                            Ajoutez jusqu'à 5 URL Privées
+                                        </p>
                                     </li>
                                     <li className="flex items-center gap-2">
                                         <X className="w-4 h-4 text-red-500" />
-                                        <p>Changer l'interval de check d'URL</p>
+                                        <p className="text-left">
+                                            Changer l'interval de vérification
+                                            des URL
+                                        </p>
                                     </li>
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full" disabled>
-                                    Par défaut
+                                <Button
+                                    className="w-full"
+                                    disabled={!isPremium}
+                                    onClick={() => setOpenCancel(true)}
+                                >
+                                    {isPremium
+                                        ? "Annuler votre abonnement"
+                                        : "Actif"}
                                 </Button>
                             </CardFooter>
                         </Card>
-                        <Card className="w-[250px] h-[300px]">
+                        <Card
+                            className={
+                                "w-full sm:w-1/2 sm:h-full lg:w-1/2 lg:h-full flex flex-col " +
+                                (openCheckout || openCancel
+                                    ? " hidden"
+                                    : "block")
+                            }
+                        >
                             <CardHeader>
-                                <CardTitle>Premium - 10€</CardTitle>
+                                <CardTitle>Premium</CardTitle>
                                 <CardDescription>
-                                    Levez les limitations de la version gratuite
+                                    Utilisez nos services en illimité.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
+                                <p className="font-bold text-2xl md:text-4xl mb-2">
+                                    10€{" "}
+                                    <span className="text-sm font-medium text-gray-600">
+                                        / mois
+                                    </span>
+                                </p>
+                                <Separator className="my-6" />
                                 <ul className="flex flex-col gap-2 py-2">
                                     <li className="flex items-center gap-2">
                                         <Check className="w-4 h-4 text-green-500" />
-                                        <p>
+                                        <p className="text-left">
                                             Nombre d'URL Privées{" "}
                                             <span className="font-bold">
                                                 Illimité
@@ -107,7 +126,10 @@ export function Pricing(props: PricingProps) {
                                     </li>
                                     <li className="flex items-center gap-2">
                                         <Check className="w-4 h-4 text-green-500" />
-                                        <p>Changer l'interval de check d'URL</p>
+                                        <p className="text-left">
+                                            Changer l'interval de vérification
+                                            des URL
+                                        </p>
                                     </li>
                                 </ul>
                             </CardContent>
@@ -115,7 +137,7 @@ export function Pricing(props: PricingProps) {
                                 <Button
                                     className="w-full"
                                     disabled={isPremium}
-                                    onClick={() => subscribeHandler()}
+                                    onClick={() => setOpenCheckout(true)}
                                 >
                                     {isPremium
                                         ? "Vous êtes abonné"
@@ -123,6 +145,16 @@ export function Pricing(props: PricingProps) {
                                 </Button>
                             </CardFooter>
                         </Card>
+                        {(openCheckout || openCancel) && (
+                            <section className="w-full min-h-40">
+                                <StripeProvider
+                                    showCheckout={openCheckout}
+                                    setShowCheckout={setOpenCheckout}
+                                    showCancel={openCancel}
+                                    setShowCancel={setOpenCancel}
+                                />
+                            </section>
+                        )}
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>

@@ -61,3 +61,9 @@ export const DELETE_ALL_NOTIFICATION = gql`
         deleteAllNotifications
     }
 `;
+
+export const CREATE_SUBSCRIPTION = gql`
+    mutation CreateSubscription {
+        createSubscription
+    }
+`;

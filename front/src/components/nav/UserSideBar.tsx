@@ -88,7 +88,7 @@ const UserSideBar: React.FC = () => {
     const logout = useAuthStore((state) => state.logout);
     const [openPricing, setOpenPricing] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState(false);
-    const [logoutQuery, { loading }] = useLogoutLazyQuery();
+    const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
 
     const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
@@ -270,7 +270,7 @@ const UserSideBar: React.FC = () => {
                                 sideOffset={4}
                             >
                                 <DropdownMenuLabel>
-                                    <p>Profil</p>
+                                    <h1>Profil</h1>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
@@ -279,11 +279,7 @@ const UserSideBar: React.FC = () => {
                                         className="cursor-pointer"
                                     >
                                         <Crown className="mr-2 h-4 w-4" />
-                                        <p>
-                                            {loading
-                                                ? "Chargement ..."
-                                                : "Abonnements"}
-                                        </p>
+                                        <span>Abonnements</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
 
@@ -293,11 +289,7 @@ const UserSideBar: React.FC = () => {
                                     className="cursor-pointer"
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    <p>
-                                        {loading
-                                            ? "Chargement..."
-                                            : "Déconnexion"}
-                                    </p>
+                                    <span>Déconnexion</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
