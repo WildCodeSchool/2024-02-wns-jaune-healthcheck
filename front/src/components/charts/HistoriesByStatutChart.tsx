@@ -48,11 +48,10 @@ const HistoriesByStatusChart: React.FC = () => {
     const messages = useSocketStore((state) => state.messages);
 
     useEffect(() => {
-        console.log(messages);
         refetch();
     }, [messages, refetch]);
 
-    if (loading) {
+    if (loading && !chartData) {
         return (
             <Skeleton className="w-full h-[400px] p-5" />
         );
@@ -71,7 +70,7 @@ const HistoriesByStatusChart: React.FC = () => {
             <CardHeader className="items-center pb-4">
                 <CardTitle>Statuts de vos services</CardTitle>
                 <CardDescription>
-                    Présentation des statuts de vos services par type de contenu
+                    Historique des statuts de vos services par type de contenu
                 </CardDescription>
             </CardHeader>
             <CardContent>

@@ -60,7 +60,7 @@ const UrlsByStatusChart: React.FC = () => {
       refetch();
   }, [messages, refetch]);
 
-  if (loading) {
+  if (loading && !chartData) {
       return (
           <Skeleton className="w-full h-[400px] p-5" />
       );
@@ -72,7 +72,7 @@ const UrlsByStatusChart: React.FC = () => {
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Etat de santé de vos service</CardTitle>
+          <CardTitle>Etat de santé de vos services</CardTitle>
           <CardDescription>
             Présentation périodique de l'état de santé de vos services
           </CardDescription>
@@ -139,6 +139,7 @@ const UrlsByStatusChart: React.FC = () => {
               tickFormatter={(value) => {
                 switch (timeRange) {
                   case "weekly":
+                    console.log(value);
                     return new Date(value).toLocaleDateString("fr-FR", {
                       month: "short",
                       day: "2-digit",
@@ -155,7 +156,6 @@ const UrlsByStatusChart: React.FC = () => {
                   default:
                     return value;
                 }
-
             }}
             />
             <ChartTooltip

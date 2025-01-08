@@ -142,11 +142,12 @@ class UrlResolver {
                 }
                 url = Url.create({
                     ...urlData,
+                    path: encodeURI(urlData.path),
                     user: { id: context.payload.id },
                     checkFrequency: { id: checkFrequencyId },
                 });
             } else {
-                url = Url.create({ ...urlData });
+                url = Url.create({ ...urlData, path: encodeURI(urlData.path) });
             }
 
             const dataValidationError = await validate(url);

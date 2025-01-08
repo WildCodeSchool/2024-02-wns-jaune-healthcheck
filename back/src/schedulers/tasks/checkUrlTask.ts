@@ -80,6 +80,7 @@ const checkUrl = async (interval?: string) => {
 
                 const response = await axios.get(url.path, {
                     validateStatus: () => true,
+                    timeout: 5000,
                 });
 
                 let data = response.data;
@@ -103,12 +104,14 @@ const checkUrl = async (interval?: string) => {
                     existingMessageHistory.save();
                 }
 
-                const newHistory = await History.save({
+                const newHistory = History.create({
                     url: url,
                     response: data,
                     status_code: response.status,
                     content_type: contentType,
                 });
+
+                await newHistory.save();
 
                 if (response.status > 300 && newHistory.url.user) {
                     await createOrUpdateNotification(newHistory);

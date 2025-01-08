@@ -14,6 +14,8 @@ import { User } from "./User";
 import { CheckFrequency } from "./CheckFrequency";
 import PaginateUrls from "../types/PaginatesUrls";
 import GroupByStatusUrl from "@/types/GroupByStatusUrl";
+import DateFormat from "../utilities/DateFormat";
+
 
 @Entity()
 @ObjectType()
@@ -163,11 +165,14 @@ export class Url extends BaseEntity {
             .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')")
             .getRawMany();
 
-        return rawResults.map((result) => ({
-            dateTime: result.dateTime,
-            onLine: parseInt(result.onLine, 0),
-            offLine: parseInt(result.offLine, 0),
-        }));
+
+        return rawResults.map((result) => {
+            return {
+                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "dateTimeHourMinute"),
+                onLine: parseInt(result.onLine, 0),
+                offLine: parseInt(result.offLine, 0),
+            }
+        });
     }
 
     static async getPrivatesUrlsByStatusDaily(
@@ -196,11 +201,8 @@ export class Url extends BaseEntity {
             .getRawMany();
 
         return rawResults.map((result) => {
-            let formattedDate = result.dateTime.split(" ");
-            formattedDate = `${formattedDate[0]}T${formattedDate[1]}:00:00`;
-            formattedDate = new Date(formattedDate).toISOString();
             return {
-                dateTime: formattedDate,
+                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "dateTimeHour"),
                 onLine: parseInt(result.onLine, 0),
                 offLine: parseInt(result.offLine, 0),
             }
@@ -232,10 +234,12 @@ export class Url extends BaseEntity {
             .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD')")
             .getRawMany();
 
-        return rawResults.map((result) => ({
-            dateTime: result.dateTime,
-            onLine: parseInt(result.onLine, 0),
-            offLine: parseInt(result.offLine, 0),
-        }));
+        return rawResults.map((result) => {
+            return {
+                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "date"),
+                onLine: parseInt(result.onLine, 0),
+                offLine: parseInt(result.offLine, 0),
+            }
+        });
     }
 }
