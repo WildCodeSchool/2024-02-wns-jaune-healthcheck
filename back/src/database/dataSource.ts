@@ -15,6 +15,8 @@ import { Migrations1728463402298 } from "./migrations/1728463402298-migrations";
 import { UserRoles1728546932904 } from "./migrations/1728546932904-UserRoles";
 import { RolesEnum1728550416099 } from "./migrations/1728550416099-RolesEnum";
 import { Notification1728629185397 } from "./migrations/1728629185397-notification";
+import { 
+    AddFieldContentTypeHistoryTable1736153283751 } from "./migrations/1736153283751-Add-field-content-type-history-table";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -37,6 +39,7 @@ const dataSource = new DataSource({
         UserRoles1728546932904,
         RolesEnum1728550416099,
         Notification1728629185397,
+        AddFieldContentTypeHistoryTable1736153283751,
     ],
 });
 

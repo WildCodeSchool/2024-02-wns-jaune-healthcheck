@@ -26,8 +26,23 @@ export type CheckFrequency = {
   urls: Array<Url>;
 };
 
+export type GroupByStatusHistory = {
+  __typename?: 'GroupByStatusHistory';
+  countHtml: Scalars['Float']['output'];
+  countJson: Scalars['Float']['output'];
+  statusCode: Scalars['Float']['output'];
+};
+
+export type GroupByStatusUrl = {
+  __typename?: 'GroupByStatusUrl';
+  dateTime: Scalars['String']['output'];
+  offLine: Scalars['Float']['output'];
+  onLine: Scalars['Float']['output'];
+};
+
 export type History = {
   __typename?: 'History';
+  content_type: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
   id: Scalars['String']['output'];
   response: Scalars['String']['output'];
@@ -125,6 +140,8 @@ export type Query = {
   me: Scalars['String']['output'];
   notifications: Array<Notification>;
   paginatesHistories: PaginatesHistories;
+  privateHistoriesByStatus: Array<GroupByStatusHistory>;
+  privatesUrlsByStatus: Array<GroupByStatusUrl>;
   recentPrivateHistories: Array<History>;
   recentPrivateUrls: Array<Url>;
   url: Url;
@@ -148,6 +165,11 @@ export type QueryPaginatesHistoriesArgs = {
   searchText?: InputMaybe<Scalars['String']['input']>;
   sortField?: InputMaybe<Scalars['String']['input']>;
   urlId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryPrivatesUrlsByStatusArgs = {
+  timeFrame: Scalars['String']['input'];
 };
 
 
@@ -313,12 +335,24 @@ export type HistoryWithResponseQueryVariables = Exact<{
 }>;
 
 
-export type HistoryWithResponseQuery = { __typename?: 'Query', historyWithResponse: { __typename?: 'History', response: string, id: string, status_code: number } };
+export type HistoryWithResponseQuery = { __typename?: 'Query', historyWithResponse: { __typename?: 'History', response: string, id: string, status_code: number, content_type: string } };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: string };
+
+export type PrivateHistoriesByStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PrivateHistoriesByStatusQuery = { __typename?: 'Query', privateHistoriesByStatus: Array<{ __typename?: 'GroupByStatusHistory', statusCode: number, countHtml: number, countJson: number }> };
+
+export type PrivatesUrlsByStatusQueryVariables = Exact<{
+  timeFrame: Scalars['String']['input'];
+}>;
+
+
+export type PrivatesUrlsByStatusQuery = { __typename?: 'Query', privatesUrlsByStatus: Array<{ __typename?: 'GroupByStatusUrl', dateTime: string, offLine: number, onLine: number }> };
 
 
 export const AddUrlDocument = gql`
@@ -1015,6 +1049,7 @@ export const HistoryWithResponseDocument = gql`
     response
     id
     status_code
+    content_type
   }
 }
     `;
@@ -1088,3 +1123,86 @@ export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersSuspenseQueryHookResult = ReturnType<typeof useGetAllUsersSuspenseQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const PrivateHistoriesByStatusDocument = gql`
+    query PrivateHistoriesByStatus {
+  privateHistoriesByStatus {
+    statusCode
+    countHtml
+    countJson
+  }
+}
+    `;
+
+/**
+ * __usePrivateHistoriesByStatusQuery__
+ *
+ * To run a query within a React component, call `usePrivateHistoriesByStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivateHistoriesByStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivateHistoriesByStatusQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePrivateHistoriesByStatusQuery(baseOptions?: Apollo.QueryHookOptions<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>(PrivateHistoriesByStatusDocument, options);
+      }
+export function usePrivateHistoriesByStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>(PrivateHistoriesByStatusDocument, options);
+        }
+export function usePrivateHistoriesByStatusSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>(PrivateHistoriesByStatusDocument, options);
+        }
+export type PrivateHistoriesByStatusQueryHookResult = ReturnType<typeof usePrivateHistoriesByStatusQuery>;
+export type PrivateHistoriesByStatusLazyQueryHookResult = ReturnType<typeof usePrivateHistoriesByStatusLazyQuery>;
+export type PrivateHistoriesByStatusSuspenseQueryHookResult = ReturnType<typeof usePrivateHistoriesByStatusSuspenseQuery>;
+export type PrivateHistoriesByStatusQueryResult = Apollo.QueryResult<PrivateHistoriesByStatusQuery, PrivateHistoriesByStatusQueryVariables>;
+export const PrivatesUrlsByStatusDocument = gql`
+    query PrivatesUrlsByStatus($timeFrame: String!) {
+  privatesUrlsByStatus(timeFrame: $timeFrame) {
+    dateTime
+    offLine
+    onLine
+  }
+}
+    `;
+
+/**
+ * __usePrivatesUrlsByStatusQuery__
+ *
+ * To run a query within a React component, call `usePrivatesUrlsByStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivatesUrlsByStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivatesUrlsByStatusQuery({
+ *   variables: {
+ *      timeFrame: // value for 'timeFrame'
+ *   },
+ * });
+ */
+export function usePrivatesUrlsByStatusQuery(baseOptions: Apollo.QueryHookOptions<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables> & ({ variables: PrivatesUrlsByStatusQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>(PrivatesUrlsByStatusDocument, options);
+      }
+export function usePrivatesUrlsByStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>(PrivatesUrlsByStatusDocument, options);
+        }
+export function usePrivatesUrlsByStatusSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>(PrivatesUrlsByStatusDocument, options);
+        }
+export type PrivatesUrlsByStatusQueryHookResult = ReturnType<typeof usePrivatesUrlsByStatusQuery>;
+export type PrivatesUrlsByStatusLazyQueryHookResult = ReturnType<typeof usePrivatesUrlsByStatusLazyQuery>;
+export type PrivatesUrlsByStatusSuspenseQueryHookResult = ReturnType<typeof usePrivatesUrlsByStatusSuspenseQuery>;
+export type PrivatesUrlsByStatusQueryResult = Apollo.QueryResult<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>;

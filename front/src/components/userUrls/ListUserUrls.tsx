@@ -130,7 +130,7 @@ const ListUserUrls: React.FC = () => {
                                                   </span>
                                               </div>
                                               <p>
-                                                  Créé le :{" "}
+                                                  Ajouté le :{" "}
                                                   {new Date(
                                                       item.createdAt,
                                                   ).toLocaleDateString()}
