@@ -2,6 +2,7 @@ import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { Not } from "typeorm";
 import { History } from "../entities/History";
 import PaginatesHistories from "../types/PaginatesHistories";
+import GroupByStatusHistory from "../types/GroupByStatusHistory";
 import MyContext from "../types/MyContext";
 
 @Resolver()
@@ -94,6 +95,28 @@ class HistoryResolver {
             });
             return history;
         } catch (error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => [GroupByStatusHistory])
+    async privateHistoriesByStatus(@Ctx() context: MyContext) {
+        try {
+            if (context.payload) {
+                const data = await History.getGroupByStatusPrivateHistories(context.payload.id);
+                const statusCodes = [200, 401, 403, 301, 302, 304, 404, 408, 500, 502, 503, 504, 520];
+                return statusCodes.map((statusCode) => {
+                    return {
+                        statusCode,
+                        countJson: data.find((value) => value.statusCode === statusCode)?.countJson || 0,
+                        countHtml: data.find((value) => value.statusCode === statusCode)?.countHtml || 0,
+                    };
+                });
+               
+            } else {
+                throw new Error();
+            }
+        } catch (_error) {
             throw new Error("Internal server error");
         }
     }

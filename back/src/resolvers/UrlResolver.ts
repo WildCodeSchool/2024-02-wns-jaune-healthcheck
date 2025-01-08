@@ -13,6 +13,7 @@ import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
 import MyContext from "../types/MyContext";
 import PaginateUrls from "../types/PaginatesUrls";
+import GroupByStatusUrl from "../types/GroupByStatusUrl";
 
 @InputType()
 export class UrlInput implements Partial<Url> {
@@ -48,6 +49,28 @@ class UrlResolver {
                 searchText,
                 sortField,
             );
+        } catch (_error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => [GroupByStatusUrl])
+    async privatesUrlsByStatus(
+        @Ctx() context: MyContext,
+        @Arg("timeFrame") timeFrame: "daily" | "hourly" | "weekly",
+    ) {
+        try {
+            if (context.payload) {
+                switch (timeFrame) {
+                    case "daily":
+                        return await Url.getPrivatesUrlsByStatusDaily(context.payload.id);
+                    case "hourly":
+                        return await Url.getPrivatesUrlsByStatusHourly(context.payload.id);
+                    case "weekly":
+                        return await Url.getPrivatesUrlsByStatusWeekly(context.payload.id);
+                }
+            }
+            throw new Error();
         } catch (_error) {
             throw new Error("Internal server error");
         }
@@ -119,11 +142,12 @@ class UrlResolver {
                 }
                 url = Url.create({
                     ...urlData,
+                    path: encodeURI(urlData.path),
                     user: { id: context.payload.id },
                     checkFrequency: { id: checkFrequencyId },
                 });
             } else {
-                url = Url.create({ ...urlData });
+                url = Url.create({ ...urlData, path: encodeURI(urlData.path) });
             }
 
             const dataValidationError = await validate(url);
@@ -134,7 +158,6 @@ class UrlResolver {
             await url.save();
             return url;
         } catch (error) {
-            console.log(error);
             if (error instanceof QueryFailedError) {
                 throw new Error(
                     "Erreur lors de l'ajout de l'url dans la base de données",

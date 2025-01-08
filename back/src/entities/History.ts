@@ -12,6 +12,7 @@ import { Url } from "./Url";
 import { Notification } from "./Notification";
 import { ObjectType, Field } from "type-graphql";
 import PaginatesHistories from "@/types/PaginatesHistories";
+import GroupByStatusHistory from "@/types/GroupByStatusHistory";
 
 @Entity()
 @ObjectType()
@@ -141,4 +142,31 @@ export class History extends BaseEntity {
             nextPage: Math.min(currentPage + 1, Math.ceil(total / 16)),
         };
     }
+
+    static async getGroupByStatusPrivateHistories(
+        authenticatedUserId: string
+    ): Promise<GroupByStatusHistory[]> {
+
+        const rawResults = await this.createQueryBuilder("history")
+            .select("history.status_code", "statusCode")
+            .addSelect(
+                `SUM(CASE WHEN history.content_type LIKE 'application/json%' THEN 1 ELSE 0 END)`,
+                "countJson"
+            )
+            .addSelect(
+                `SUM(CASE WHEN history.content_type LIKE 'text/html%' THEN 1 ELSE 0 END)`,
+                "countHtml"
+            )
+            .innerJoin("history.url", "url")
+            .where("url.userId = :userId", { userId: authenticatedUserId })
+            .groupBy("history.status_code")
+            .getRawMany();
+
+        return rawResults.map((result) => ({
+            statusCode: parseInt(result.statusCode, 0),
+            countJson: parseInt(result.countJson, 0),
+            countHtml: parseInt(result.countHtml, 0),
+        }));
+    }
+
 }

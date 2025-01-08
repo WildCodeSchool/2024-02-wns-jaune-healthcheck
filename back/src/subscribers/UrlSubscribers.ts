@@ -51,6 +51,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
         try {
             const response = await axios.get(url.path, {
                 validateStatus: () => true, // Do not throw on non-2xx status codes
+                timeout: 5000,
             });
 
             let data = response.data;
