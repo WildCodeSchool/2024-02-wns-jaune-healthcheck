@@ -62,8 +62,20 @@ export const DELETE_ALL_NOTIFICATION = gql`
     }
 `;
 
+export const CREATE_STRIPE_SETUP_INTENT = gql`
+    mutation CreateStripeSetupIntent {
+        createStripeSetupIntent
+    }
+`;
+
 export const CREATE_SUBSCRIPTION = gql`
-    mutation CreateSubscription {
-        createSubscription
+    mutation CreateSubscription($paymentMethodId: String!) {
+        createSubscription(paymentMethodId: $paymentMethodId)
+    }
+`;
+
+export const CANCEL_SUBSCRIPTION = gql`
+    mutation CancelSubscription {
+        cancelSubscription
     }
 `;

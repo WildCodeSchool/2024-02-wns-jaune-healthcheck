@@ -13,5 +13,4 @@ export type CheckoutProviderProps = {
 export type CancelProviderProps = {
     showCancel: boolean;
     setShowCancel: (value: boolean) => void;
-    clientSecret: string;
 };

@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Ctx } from "type-graphql";
+import { Resolver, Mutation, Ctx, Arg } from "type-graphql";
 import Stripe from "stripe";
 import MyContext from "../types/MyContext";
 import { Roles, User } from "../entities/User";
@@ -18,65 +18,158 @@ class StripeResolver {
         }
     }
 
+    private async getOrCreateCustomer(
+        email: string,
+        userId: string,
+    ): Promise<Stripe.Customer> {
+        const customers = await this.stripe.customers.list({
+            email: email,
+            limit: 1,
+        });
+
+        if (customers.data.length > 0) {
+            return customers.data[0];
+        }
+
+        return await this.stripe.customers.create({
+            email: email,
+            metadata: { userId: userId },
+        });
+    }
+
     @Mutation(() => String)
-    async createSubscription(@Ctx() context: MyContext): Promise<string> {
+    async createStripeSetupIntent(@Ctx() context: MyContext): Promise<string> {
+        if (!context.payload) {
+            throw new Error("User is not authenticated");
+        }
+
+        try {
+            const setupIntent = await this.stripe.setupIntents.create({
+                usage: "off_session",
+                metadata: { userId: context.payload.id },
+                payment_method_types: ["card"],
+            });
+
+            return setupIntent.client_secret!;
+        } catch (error) {
+            console.error("Stripe setup intent error:", error);
+            throw new Error("Failed to create setup intent");
+        }
+    }
+
+    @Mutation(() => String)
+    async createSubscription(
+        @Ctx() context: MyContext,
+        @Arg("paymentMethodId") paymentMethodId: string,
+    ): Promise<string> {
         if (!context.payload) {
             throw new Error("User is not authenticated");
         }
 
         const userEmail = context.payload.email;
-
         if (!userEmail) {
             throw new Error("User email is required to create a subscription");
         }
 
         try {
-            const customers = await this.stripe.customers.list({
-                email: userEmail,
-                limit: 1,
+            // Récupérer ou créer le customer
+            let customer = await this.getOrCreateCustomer(
+                userEmail,
+                context.payload.id,
+            );
+
+            // Attacher le payment method au customer
+            await this.stripe.paymentMethods.attach(paymentMethodId, {
+                customer: customer.id,
             });
-            let customer = customers.data[0];
 
-            if (!customer) {
-                customer = await this.stripe.customers.create({
-                    email: userEmail,
-                    metadata: { userId: context.payload.id },
-                });
-            }
+            // Définir comme méthode de paiement par défaut
+            await this.stripe.customers.update(customer.id, {
+                invoice_settings: {
+                    default_payment_method: paymentMethodId,
+                },
+            });
 
-            const subscription = await this.stripe.subscriptions.create({
+            // Créer l'abonnement
+            await this.stripe.subscriptions.create({
                 customer: customer.id,
                 items: [{ price: this.priceId }],
-                payment_behavior: "default_incomplete",
+                payment_settings: {
+                    payment_method_types: ["card"],
+                    save_default_payment_method: "on_subscription",
+                },
                 expand: ["latest_invoice.payment_intent"],
             });
 
-            let clientSecret = "";
-
-            if (
-                subscription.latest_invoice &&
-                typeof subscription.latest_invoice !== "string" &&
-                "payment_intent" in subscription.latest_invoice &&
-                subscription.latest_invoice.payment_intent
-            ) {
-                const paymentIntent = subscription.latest_invoice
-                    .payment_intent as Stripe.PaymentIntent;
-                clientSecret = paymentIntent.client_secret || "";
-            }
-
+            // Mettre à jour le rôle de l'utilisateur
             const user = await User.findOneBy({ id: context.payload.id });
             if (!user) {
                 throw new Error("User not found");
             }
-
             user.role = Roles.PREMIUM;
             await user.save();
 
-            return clientSecret;
+            return JSON.stringify({
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                role: user.role,
+            });
         } catch (error) {
             console.error("Stripe subscription error:", error);
             throw new Error("Failed to create subscription");
         }
     }
+
+    @Mutation(() => String)
+    async cancelSubscription(@Ctx() context: MyContext): Promise<String> {
+        if (!context.payload) {
+            throw new Error("User is not authenticated");
+        }
+
+        try {
+            const customer = await this.getOrCreateCustomer(
+                context.payload.email,
+                context.payload.id,
+            );
+
+            const subscriptions = await this.stripe.subscriptions.list({
+                customer: customer.id,
+                status: "active",
+                limit: 1,
+            });
+
+            if (subscriptions.data.length > 0) {
+                await this.stripe.subscriptions.cancel(
+                    subscriptions.data[0].id,
+                );
+
+                const user = await User.findOneBy({ id: context.payload.id });
+                if (user) {
+                    user.role = Roles.FREE;
+                    await user.save();
+
+                    return JSON.stringify({
+                        id: user.id,
+                        email: user.email,
+                        username: user.username,
+                        role: user.role,
+                    });
+                }
+            }
+
+            const user = await User.findOneBy({ id: context.payload.id });
+            return JSON.stringify({
+                id: user?.id,
+                email: user?.email,
+                username: user?.username,
+                role: user?.role,
+            });
+        } catch (error) {
+            console.error("Failed to cancel subscription:", error);
+            throw new Error("Failed to cancel subscription");
+        }
+    }
 }
+
 export default StripeResolver;

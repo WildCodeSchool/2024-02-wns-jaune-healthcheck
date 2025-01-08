@@ -38,7 +38,9 @@ export type History = {
 export type Mutation = {
   __typename?: 'Mutation';
   addUrl: Url;
+  cancelSubscription: Scalars['String']['output'];
   checkUrl: Url;
+  createStripeSetupIntent: Scalars['String']['output'];
   createSubscription: Scalars['String']['output'];
   createUser: Scalars['String']['output'];
   deleteAllNotifications: Scalars['String']['output'];
@@ -58,6 +60,11 @@ export type MutationAddUrlArgs = {
 
 export type MutationCheckUrlArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationCreateSubscriptionArgs = {
+  paymentMethodId: Scalars['String']['input'];
 };
 
 
@@ -251,10 +258,22 @@ export type DeleteAllNotificationsMutationVariables = Exact<{ [key: string]: nev
 
 export type DeleteAllNotificationsMutation = { __typename?: 'Mutation', deleteAllNotifications: string };
 
-export type CreateSubscriptionMutationVariables = Exact<{ [key: string]: never; }>;
+export type CreateStripeSetupIntentMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateStripeSetupIntentMutation = { __typename?: 'Mutation', createStripeSetupIntent: string };
+
+export type CreateSubscriptionMutationVariables = Exact<{
+  paymentMethodId: Scalars['String']['input'];
+}>;
 
 
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription: string };
+
+export type CancelSubscriptionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription: string };
 
 export type GetAllURlsQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
@@ -589,9 +608,39 @@ export function useDeleteAllNotificationsMutation(baseOptions?: Apollo.MutationH
 export type DeleteAllNotificationsMutationHookResult = ReturnType<typeof useDeleteAllNotificationsMutation>;
 export type DeleteAllNotificationsMutationResult = Apollo.MutationResult<DeleteAllNotificationsMutation>;
 export type DeleteAllNotificationsMutationOptions = Apollo.BaseMutationOptions<DeleteAllNotificationsMutation, DeleteAllNotificationsMutationVariables>;
+export const CreateStripeSetupIntentDocument = gql`
+    mutation CreateStripeSetupIntent {
+  createStripeSetupIntent
+}
+    `;
+export type CreateStripeSetupIntentMutationFn = Apollo.MutationFunction<CreateStripeSetupIntentMutation, CreateStripeSetupIntentMutationVariables>;
+
+/**
+ * __useCreateStripeSetupIntentMutation__
+ *
+ * To run a mutation, you first call `useCreateStripeSetupIntentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStripeSetupIntentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStripeSetupIntentMutation, { data, loading, error }] = useCreateStripeSetupIntentMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateStripeSetupIntentMutation(baseOptions?: Apollo.MutationHookOptions<CreateStripeSetupIntentMutation, CreateStripeSetupIntentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStripeSetupIntentMutation, CreateStripeSetupIntentMutationVariables>(CreateStripeSetupIntentDocument, options);
+      }
+export type CreateStripeSetupIntentMutationHookResult = ReturnType<typeof useCreateStripeSetupIntentMutation>;
+export type CreateStripeSetupIntentMutationResult = Apollo.MutationResult<CreateStripeSetupIntentMutation>;
+export type CreateStripeSetupIntentMutationOptions = Apollo.BaseMutationOptions<CreateStripeSetupIntentMutation, CreateStripeSetupIntentMutationVariables>;
 export const CreateSubscriptionDocument = gql`
-    mutation CreateSubscription {
-  createSubscription
+    mutation CreateSubscription($paymentMethodId: String!) {
+  createSubscription(paymentMethodId: $paymentMethodId)
 }
     `;
 export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
@@ -609,6 +658,7 @@ export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscri
  * @example
  * const [createSubscriptionMutation, { data, loading, error }] = useCreateSubscriptionMutation({
  *   variables: {
+ *      paymentMethodId: // value for 'paymentMethodId'
  *   },
  * });
  */
@@ -619,6 +669,36 @@ export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const CancelSubscriptionDocument = gql`
+    mutation CancelSubscription {
+  cancelSubscription
+}
+    `;
+export type CancelSubscriptionMutationFn = Apollo.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+
+/**
+ * __useCancelSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCancelSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelSubscriptionMutation, { data, loading, error }] = useCancelSubscriptionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCancelSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, options);
+      }
+export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
+export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
+export type CancelSubscriptionMutationOptions = Apollo.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 export const GetAllURlsDocument = gql`
     query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!, $privateUrls: Boolean) {
   urls(

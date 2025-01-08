@@ -6,73 +6,48 @@ import {
     CardTitle,
     CardDescription,
     CardFooter,
+    CardContent,
 } from "../ui/card";
-import { useSubscribeMutation } from "@/generated/graphql-types";
+import { useCancelSubscriptionMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
-import { Roles } from "@/types/user";
 import { FormEvent, useState } from "react";
-import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { toast } from "../ui/use-toast";
+import { Check, X } from "lucide-react";
 
 export default function CancelForm({
     showCancel,
     setShowCancel,
-    clientSecret,
 }: CancelProviderProps) {
     const [loading, setLoading] = useState<boolean>(false);
+    const [isCancelationValid, setIsCancelationValid] =
+        useState<boolean>(false);
 
-    const [subscribe] = useSubscribeMutation();
+    const [unsubscribe] = useCancelSubscriptionMutation();
     const me = useAuthStore((state) => state.me);
-
-    const unsubscribeHandler = () => {
-        subscribe({
-            variables: {
-                role: Roles.FREE,
-            },
-            onCompleted: (data) => {
-                me(data.subscribe);
-                setShowCancel(false);
-            },
-            onError: () => {
-                toast({
-                    variant: "destructive",
-                    description:
-                        "Le désabonnement a échoué, veuillez réessayer.",
-                });
-            },
-        });
-    };
-
-    const stripe = useStripe();
-    const elements = useElements();
 
     const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
         event.preventDefault();
 
-        if (!stripe || !elements) {
-            return;
-        }
-
         try {
             setLoading(true);
+            setIsCancelationValid(true);
 
-            // TODO : Use clientSecret to refoke payment instance
-            // const result = await stripe.confirmPayment({
-            //     elements,
-            //     redirect: "if_required",
-            // });
-
-            // if (result.error) {
-            //     toast({
-            //         variant: "destructive",
-            //         description:
-            //             "Le désabonnement a échoué, veuillez réessayer.",
-            //     });
-            // } else {
-            //     unsubscribeHandler();
-            // }
-
-            unsubscribeHandler();
+            unsubscribe({
+                onCompleted: (data) => {
+                    me(data.cancelSubscription);
+                    setTimeout(() => {
+                        setIsCancelationValid(true);
+                        setShowCancel(false);
+                    }, 3500);
+                },
+                onError: () => {
+                    toast({
+                        variant: "destructive",
+                        description:
+                            "Le désabonnement a échoué, veuillez réessayer.",
+                    });
+                },
+            });
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -84,37 +59,72 @@ export default function CancelForm({
     };
 
     return (
-        <Card
-            className={
-                showCancel
-                    ? "flex flex-col justify-between align-middle w-full border-none shadow-none"
-                    : "hidden"
-            }
-        >
-            <CardHeader className="px-0 py-1">
-                <CardTitle>
-                    Êtes-vous sur de vouloir résilier votre abonnement ?
-                </CardTitle>
-                <CardDescription>
-                    Vos avantages seront supprimés immediatement.
-                </CardDescription>
-            </CardHeader>
-            <CardFooter className="px-0 pb-0 flex gap-2">
-                <Button
-                    variant="outline"
-                    className="w-1/2"
-                    onClick={() => setShowCancel(false)}
-                >
-                    Non
-                </Button>
-                <Button
-                    variant="destructive"
-                    className="w-1/2"
-                    onClick={(e) => handleSubmit(e)}
-                >
-                    Résilier
-                </Button>
-            </CardFooter>
-        </Card>
+        <>
+            <Card
+                className={
+                    showCancel && !isCancelationValid
+                        ? "flex flex-col justify-between align-middle w-full border-none shadow-none"
+                        : "hidden"
+                }
+            >
+                <CardHeader className="px-0 py-1">
+                    <CardTitle>
+                        Êtes-vous sur de vouloir résilier votre abonnement ?
+                    </CardTitle>
+                    <CardDescription>
+                        Vos avantages seront supprimés immediatement.
+                    </CardDescription>
+                </CardHeader>
+                <CardFooter className="px-0 pb-0 flex gap-2">
+                    <Button
+                        variant="outline"
+                        className="w-1/2"
+                        onClick={() => setShowCancel(false)}
+                    >
+                        Ne pas résilier
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        className="w-1/2"
+                        disabled={loading || isCancelationValid}
+                        onClick={(e) => handleSubmit(e)}
+                    >
+                        Résilier
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card
+                className={
+                    isCancelationValid
+                        ? "flex flex-col justify-between align-middle w-full border-none shadow-none"
+                        : "hidden"
+                }
+            >
+                <CardHeader className="px-0 py-1">
+                    <CardTitle>Votre résiliation a été validé</CardTitle>
+                    <CardDescription>
+                        Vos avantages sont entrain d'être retirés, veuillez
+                        patienter quelques secondes.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="px-0 pb-0">
+                    <ul className="flex flex-col gap-2 py-2 animate-pulse">
+                        <li className="flex items-center gap-2">
+                            <Check className="w-4 h-4 text-green-500" />
+                            <p className="text-left">
+                                Nombre d'URL Privées{" "}
+                                <span className="font-bold">Illimité</span>
+                            </p>
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <X className="w-4 h-4 text-red-500" />
+                            <p className="text-left">
+                                Changer l'interval de vérification des URL
+                            </p>
+                        </li>
+                    </ul>
+                </CardContent>
+            </Card>
+        </>
     );
 }

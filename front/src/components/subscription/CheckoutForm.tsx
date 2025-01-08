@@ -4,9 +4,8 @@ import {
     PaymentElement,
 } from "@stripe/react-stripe-js";
 import { Button } from "../ui/button";
-import { useSubscribeMutation } from "@/generated/graphql-types";
+import { useCreateSubscriptionMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
-import { Roles } from "@/types/user";
 import {
     Card,
     CardContent,
@@ -29,37 +28,11 @@ export default function CheckoutForm({
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [isPaymentValid, setIsPaymentValid] = useState<boolean>(false);
 
-    const handleFormChange = (event: StripePaymentElementChangeEvent) => {
-        setIsFormValid(event.complete);
-    };
-
-    const [subscribe] = useSubscribeMutation();
-    const me = useAuthStore((state) => state.me);
-
-    const subscribeHandler = () => {
-        subscribe({
-            variables: {
-                role: Roles.PREMIUM,
-            },
-            onCompleted: (data) => {
-                me(data.subscribe);
-                setTimeout(() => {
-                    setIsPaymentValid(false);
-                    setShowCheckout(false);
-                }, 5000);
-            },
-            onError: () => {
-                toast({
-                    variant: "destructive",
-                    description:
-                        "Erreur, veuillez contacter un administrateur.",
-                });
-            },
-        });
-    };
-
     const stripe = useStripe();
     const elements = useElements();
+
+    const [createSubscription] = useCreateSubscriptionMutation();
+    const me = useAuthStore((state) => state.me);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -71,30 +44,62 @@ export default function CheckoutForm({
         try {
             setLoading(true);
 
-            const { error, paymentIntent } = await stripe.confirmPayment({
-                elements,
-                redirect: "if_required",
-            });
+            const { error: submitError } = await elements.submit();
+            if (submitError) {
+                throw submitError;
+            }
 
-            if (error) {
+            const { paymentMethod, error: pmError } =
+                await stripe.createPaymentMethod({
+                    elements,
+                    params: {
+                        type: "card",
+                    },
+                });
+
+            if (pmError) {
+                throw new Error("Payment error");
+            }
+
+            setLoading(false);
+            setIsPaymentValid(true);
+
+            await createSubscription({
+                variables: {
+                    paymentMethodId: paymentMethod.id,
+                },
+                onCompleted: (data) => {
+                    me(data.createSubscription);
+                    setTimeout(() => {
+                        setIsPaymentValid(false);
+                        setShowCheckout(false);
+                    }, 3500);
+                },
+                onError: () => {
+                    toast({
+                        variant: "destructive",
+                        description:
+                            "Erreur, veuillez contacter un administrateur.",
+                    });
+                },
+            });
+        } catch (error) {
+            if (error === "Payment error") {
                 toast({
                     variant: "destructive",
                     description: "Le paiement a échoué, veuillez réessayer.",
                 });
-            } else if (paymentIntent.status === "succeeded") {
-                setIsPaymentValid(true);
-                subscribeHandler();
             } else {
-                throw new Error();
+                toast({
+                    variant: "destructive",
+                    description: "Erreur lors de la communication avec Stripe",
+                });
             }
-
-            setLoading(false);
-        } catch (error) {
-            toast({
-                variant: "destructive",
-                description: "Erreur lors de la communication avec Stripe",
-            });
         }
+    };
+
+    const handleFormChange = (event: StripePaymentElementChangeEvent) => {
+        setIsFormValid(event.complete);
     };
 
     return (
@@ -106,7 +111,7 @@ export default function CheckoutForm({
                         : "hidden"
                 }
             >
-                <CardHeader className="px-0 py-1">
+                <CardHeader className="px-0 pt-1 pb-6">
                     <CardTitle>Souscrire à la formule Premium ?</CardTitle>
                     <CardDescription>
                         Vos avantages seront actifs immediatement.

@@ -2,7 +2,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { SubscriptionProviderProps } from "@/types/subscription";
-import { useCreateSubscriptionMutation } from "@/generated/graphql-types";
+import { useCreateStripeSetupIntentMutation } from "@/generated/graphql-types";
 import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Loader2 } from "lucide-react";
@@ -16,18 +16,19 @@ export default function StripeProvider({
     showCancel,
     setShowCancel,
 }: SubscriptionProviderProps) {
-    const [createSubscriptionMutation] = useCreateSubscriptionMutation();
     const [loading, setLoading] = useState<boolean>(false);
-    const [clientSecret, setClientSecret] = useState<string>("");
+    const [setupIntentSecret, setSetupIntentSecret] = useState<string>("");
+
+    const [createStripeSetupIntent] = useCreateStripeSetupIntentMutation();
 
     useEffect(() => {
-        const fetchClientSecret = async () => {
+        const initializeStripeSetupIntent = async () => {
             try {
                 setLoading(true);
-                const { data } = await createSubscriptionMutation();
+                const { data } = await createStripeSetupIntent();
 
-                if (data && data.createSubscription) {
-                    setClientSecret(data.createSubscription);
+                if (data && data.createStripeSetupIntent) {
+                    setSetupIntentSecret(data.createStripeSetupIntent);
                 }
             } catch (error) {
                 toast({
@@ -39,10 +40,10 @@ export default function StripeProvider({
             }
         };
 
-        if (showCheckout || showCancel) {
-            fetchClientSecret();
+        if (showCheckout) {
+            initializeStripeSetupIntent();
         }
-    }, [showCheckout, showCancel, createSubscriptionMutation]);
+    }, [showCheckout, createStripeSetupIntent]);
 
     return (
         <div
@@ -57,22 +58,25 @@ export default function StripeProvider({
                     <Loader2 className="animate-spin text-primary" />
                 </div>
             )}
-            {!loading && clientSecret && showCheckout && (
-                <Elements stripe={stripePromise} options={{ clientSecret }}>
+            {!loading && setupIntentSecret && showCheckout && (
+                <Elements
+                    stripe={stripePromise}
+                    options={{
+                        clientSecret: setupIntentSecret,
+                        paymentMethodCreation: "manual",
+                    }}
+                >
                     <CheckoutForm
                         showCheckout={showCheckout}
                         setShowCheckout={setShowCheckout}
                     />
                 </Elements>
             )}
-            {!loading && clientSecret && showCancel && (
-                <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CancelForm
-                        showCancel={showCancel}
-                        setShowCancel={setShowCancel}
-                        clientSecret={clientSecret}
-                    />
-                </Elements>
+            {!loading && showCancel && (
+                <CancelForm
+                    showCancel={showCancel}
+                    setShowCancel={setShowCancel}
+                />
             )}
         </div>
     );
