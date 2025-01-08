@@ -32,8 +32,8 @@ import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "./custom/SelectCheckFrequency";
 
 export default function FormUserUrl({
-    openDialog,
     setOpenDialog,
+    openDialog,
 }: FormLoginProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
     const [isCheckFrequency, setIsCheckFrequency] = useState<boolean>(false);
