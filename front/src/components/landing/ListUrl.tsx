@@ -137,15 +137,24 @@ const URLList: React.FC = () => {
                                   />
                               );
                           })}
+                    {!data?.urls.urls.length && (
+                        <div>
+                            <p className="text-muted-foreground">
+                                Aucune URL trouvée
+                            </p>
+                        </div>
+                    )}
                 </List>
             </div>
-            <CustomPagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                onPageChange={handlePageChange}
-            />
+            {data && data.urls.totalPages > 1 && data.urls.totalPages !== 0 && (
+                <CustomPagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 };

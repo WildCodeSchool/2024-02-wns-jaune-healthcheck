@@ -185,3 +185,9 @@ export const GET_PRIVATE_URLS_BY_STATUS = gql`
         }
     }
 `;
+
+export const GET_PRIVATE_SUM_URLS = gql`
+    query PrivateSumUrls {
+        privateSumUrls
+    }
+`;

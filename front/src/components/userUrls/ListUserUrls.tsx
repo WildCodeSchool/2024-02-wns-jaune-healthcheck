@@ -23,7 +23,7 @@ const ListUserUrls: React.FC = () => {
         return visibility === "private";
     };
 
-    const { error, data } = useGetAllURlsQuery({
+    const { loading, error, data } = useGetAllURlsQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
@@ -78,7 +78,20 @@ const ListUserUrls: React.FC = () => {
         setSearchParams(newSearchParams);
     };
 
+    if (loading && !PaginateUrls.urls.length) {
+        return Array.from({ length: 10 }, (_, index) => {
+            return (
+                <div className="w-full mt-24" key={index}>
+                    <Skeleton
+                        className="h-[40px] rounded-lg"
+                    />
+                </div>
+            );
+        });
+    }
+
     if (error) return "Error";
+
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
@@ -93,8 +106,7 @@ const ListUserUrls: React.FC = () => {
             />
             <div className="w-full flex-grow">
                 <List className="w-full">
-                    {data
-                        ? data.urls.urls.map((item) => (
+                    {PaginateUrls.urls.map((item) => (
                               <ListItem
                                   key={item.id}
                                   className="flex justify-center items-start w-full"
@@ -141,23 +153,25 @@ const ListUserUrls: React.FC = () => {
                                   </Link>
                               </ListItem>
                           ))
-                        : Array.from({ length: 16 }, (_, index) => {
-                              return (
-                                  <Skeleton
-                                      key={index}
-                                      className="h-[143px] rounded-lg"
-                                  />
-                              );
-                          })}
+                        }
+                    {!loading && !PaginateUrls.urls.length && (
+                        <p className="text-center text-muted-foreground">
+                            Aucune URL
+                        </p>
+                    )}
                 </List>
             </div>
-            <CustomPagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                onPageChange={handlePageChange}
-            />
+            {PaginateUrls.urls.length && 
+                PaginateUrls.totalPages > 1 && 
+                PaginateUrls.totalPages !== 0 ? (
+                <CustomPagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    onPageChange={handlePageChange}
+                />
+            ): null}
         </div>
     );
 };

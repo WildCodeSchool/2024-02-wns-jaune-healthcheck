@@ -6,6 +6,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { UserUrls } from "@/pages/UserUrls";
 import { UserHistories } from "@/pages/UserHistories";
+import NotFound from "@/pages/NotFound";
 
 const routes = [
     {
@@ -54,7 +55,15 @@ const routes = [
                 path: "/user-url/:id",
                 element: <UrlHistories />,
             },
+            {
+                path: "*",
+                element: <NotFound />,
+            },
         ],
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ];
 
