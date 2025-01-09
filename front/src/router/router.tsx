@@ -15,10 +15,10 @@ const routes = [
         children: [
             {
                 path: "/",
-                element: <Navigate to="/index" />,
+                element: <Navigate to="/home" />,
             },
             {
-                path: "/index",
+                path: "/home",
                 element: <Landing />,
             },
             {

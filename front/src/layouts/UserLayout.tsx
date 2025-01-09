@@ -14,7 +14,7 @@ const UserLayout: React.FC = () => {
     const location = useLocation();
     const isLogged = useAuthStore((state) => state.isLogged);
 
-    if (!isLogged) return <Navigate to="/index" />;
+    if (!isLogged) return <Navigate to="/home" />;
 
     return (
         <SidebarProvider>

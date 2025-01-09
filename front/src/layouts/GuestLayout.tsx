@@ -7,7 +7,7 @@ export default function GuestLayout() {
     const [isLanding, setIsLanding] = useState(false);
 
     useEffect(() => {
-        setIsLanding(location.pathname === "/index");
+        setIsLanding(location.pathname === "/home");
     }, [location]);
     return (
         <>
