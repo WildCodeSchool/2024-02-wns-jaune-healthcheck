@@ -7,6 +7,8 @@
         "test": "jest",
         "lint": "npx eslint src",
         "dev": "ts-node-dev --poll src/index.ts",
+        "build": "tsc",
+        "prod": "node dist/index.js",
         "seed": "ts-node-dev src/database/seeder/fixtures.ts",
         "populate-db": "ts-node src/database/scripts/PopulateDB.ts",
         "migration:create": "typeorm-ts-node-commonjs migration:create",

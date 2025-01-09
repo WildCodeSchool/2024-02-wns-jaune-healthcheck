@@ -130,7 +130,7 @@ const ListUserUrls: React.FC = () => {
                                                   </span>
                                               </div>
                                               <p>
-                                                  Créé le :{" "}
+                                                  Ajoutée le :{" "}
                                                   {new Date(
                                                       item.createdAt,
                                                   ).toLocaleDateString()}
@@ -149,15 +149,22 @@ const ListUserUrls: React.FC = () => {
                                   />
                               );
                           })}
+                    {!data?.urls.urls.length && (
+                        <p className="text-center text-muted-foreground">
+                            Aucune URL
+                        </p>
+                    )}
                 </List>
             </div>
-            <CustomPagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                onPageChange={handlePageChange}
-            />
+            {data && data.urls.totalPages > 1 && data.urls.totalPages !== 0 && (
+                <CustomPagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 };

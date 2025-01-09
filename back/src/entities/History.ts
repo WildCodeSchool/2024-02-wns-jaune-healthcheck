@@ -12,6 +12,7 @@ import { Url } from "./Url";
 import { Notification } from "./Notification";
 import { ObjectType, Field } from "type-graphql";
 import PaginatesHistories from "@/types/PaginatesHistories";
+import GroupByStatusHistory from "@/types/GroupByStatusHistory";
 
 @Entity()
 @ObjectType()
@@ -31,6 +32,10 @@ export class History extends BaseEntity {
     @Field()
     @Column("text")
     response: string;
+
+    @Field()
+    @Column({ length: 255 })
+    content_type: string;
 
     @Field(() => Url)
     @ManyToOne(() => Url, (url) => url.histories)
@@ -128,7 +133,7 @@ export class History extends BaseEntity {
             .skip(skip)
             .take(16)
             .getManyAndCount();
-
+        
         return {
             histories: histories,
             totalPages: Math.ceil(total / 16),
@@ -137,4 +142,36 @@ export class History extends BaseEntity {
             nextPage: Math.min(currentPage + 1, Math.ceil(total / 16)),
         };
     }
+
+    static async getGroupByStatusPrivateHistories(
+        authenticatedUserId: string
+    ): Promise<GroupByStatusHistory[]> {
+
+        const rawResults = await this.createQueryBuilder("history")
+            .select("history.status_code", "statusCode")
+            .addSelect(
+                `SUM(CASE WHEN history.content_type LIKE 'application/json%' THEN 1 ELSE 0 END)`,
+                "countJson"
+            )
+            .addSelect(
+                `SUM(CASE WHEN history.content_type LIKE 'text/html%' THEN 1 ELSE 0 END)`,
+                "countHtml"
+            )
+            .addSelect(
+                `SUM(CASE WHEN history.content_type = 'unknown' THEN 1 ELSE 0 END)`,
+                "countUnknown"
+            )
+            .innerJoin("history.url", "url")
+            .where("url.userId = :userId", { userId: authenticatedUserId })
+            .groupBy("history.status_code")
+            .getRawMany();
+
+        return rawResults.map((result) => ({
+            statusCode: parseInt(result.statusCode, 0),
+            countJson: parseInt(result.countJson, 0),
+            countHtml: parseInt(result.countHtml, 0),
+            countUnknown: parseInt(result.countUnknown, 0),
+        }));
+    }
+
 }

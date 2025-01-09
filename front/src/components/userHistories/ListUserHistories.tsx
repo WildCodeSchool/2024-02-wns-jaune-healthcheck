@@ -114,7 +114,7 @@ const ListUserHistories: React.FC = () => {
                                   >
                                       <Card className="hover:border hover:border-primary">
                                           <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                              <div className="flex">
+                                              <div className="flex w-40">
                                                   <CardStatus
                                                       statusCode={
                                                           item.status_code
@@ -126,7 +126,7 @@ const ListUserHistories: React.FC = () => {
                                                   Url : {item.url.path}
                                               </p>
                                               <p>
-                                                  Créé le :{" "}
+                                                  Ajoutée le :{" "}
                                                   <span>
                                                       {new Date(
                                                           item.created_at,
@@ -159,15 +159,24 @@ const ListUserHistories: React.FC = () => {
                                   />
                               );
                           })}
+                    {!data?.paginatesHistories.histories.length && (
+                        <p className="text-center text-muted-foreground">
+                            Aucun historique
+                        </p>
+                    )}
                 </List>
             </div>
-            <CustomPagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                previousPage={previousPage}
-                nextPage={nextPage}
-                onPageChange={handlePageChange}
-            />
+            {data &&
+                data.paginatesHistories.totalPages > 1 &&
+                data.paginatesHistories.totalPages !== 0 && (
+                    <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        onPageChange={handlePageChange}
+                    />
+                )}
         </div>
     );
 };

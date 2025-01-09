@@ -154,6 +154,7 @@ export const GET_HISTORY_WITH_RESPONSE = gql`
             response
             id
             status_code
+            content_type
         }
     }
 `;
@@ -161,5 +162,26 @@ export const GET_HISTORY_WITH_RESPONSE = gql`
 export const GET_ALL_USERS = gql`
     query GetAllUsers {
         getAllUsers
+    }
+`;
+
+export const GET_PRIVATE_HISTORIES_BY_STATUS = gql`
+    query PrivateHistoriesByStatus {
+        privateHistoriesByStatus {
+            statusCode
+            countHtml
+            countJson
+            countUnknown
+        }
+    }
+`;
+
+export const GET_PRIVATE_URLS_BY_STATUS = gql`
+    query PrivatesUrlsByStatus($timeFrame: String!) {
+        privatesUrlsByStatus(timeFrame: $timeFrame) {
+            dateTime
+            offLine
+            onLine
+        }
     }
 `;

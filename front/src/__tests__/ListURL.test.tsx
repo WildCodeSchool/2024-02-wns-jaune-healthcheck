@@ -44,6 +44,41 @@ const mockUrls = {
     },
 };
 
+const mockEmptyUrls = {
+    urls: {
+        urls: [],
+        totalPages: 1,
+        currentPage: 1,
+        previousPage: null,
+        nextPage: null,
+    },
+};
+
+const mockWithPagination = {
+    urls: {
+        urls: [
+            {
+                id: "17",
+                name: "Test URL 17",
+                path: "/test17",
+                createdAt: new Date().toISOString(),
+                histories: [
+                    {
+                        id: "history17",
+                        response: "OK",
+                        status_code: 200,
+                        created_at: new Date().toISOString(),
+                    },
+                ],
+            },
+        ],
+        totalPages: 2,
+        currentPage: 2,
+        previousPage: 1,
+        nextPage: null,
+    },
+};
+
 const sortedUrls = {
     urls: {
         urls: [
@@ -326,6 +361,51 @@ describe("Unit tests URLList", () => {
         await waitFor(() => {
             expect(screen.getByText("Test URL 3")).toBeInTheDocument();
             expect(screen.getByText("Test URL 4")).toBeInTheDocument();
+        });
+    });
+
+    it("should data is empty", async () => {
+        const mock = {
+            request: {
+                query: GET_ALL_URLS,
+                variables: { searchText: "", sortField: "", currentPage: 1 },
+            },
+            result: { data: mockEmptyUrls },
+        };
+        render(
+            <MemoryRouter>
+                <MockedProvider mocks={[mock]} addTypename={false}>
+                    <Routes>
+                        <Route path="/" element={<URLList />} />
+                    </Routes>
+                </MockedProvider>
+            </MemoryRouter>,
+        );
+        await waitFor(() => {
+            expect(screen.getByText("Aucune URL trouvée")).toBeInTheDocument();
+        });
+    });
+
+    it("should data with pagination", async () => {
+        const mock = {
+            request: {
+                query: GET_ALL_URLS,
+                variables: { searchText: "", sortField: "", currentPage: 1 },
+            },
+            result: { data: mockWithPagination },
+        };
+        render(
+            <MemoryRouter>
+                <MockedProvider mocks={[mock]} addTypename={false}>
+                    <Routes>
+                        <Route path="/" element={<URLList />} />
+                    </Routes>
+                </MockedProvider>
+            </MemoryRouter>,
+        );
+        await waitFor(() => {
+            expect(screen.getByText("Précédent")).toBeInTheDocument();
+            expect(screen.getByText("Suivant")).toBeInTheDocument();
         });
     });
 });
