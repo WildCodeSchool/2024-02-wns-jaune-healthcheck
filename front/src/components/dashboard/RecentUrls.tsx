@@ -80,7 +80,7 @@ export default function RecentUrls() {
                         </li>
                     ))
                 )}
-                {!data.recentPrivateUrls.length && (
+                {!data?.recentPrivateUrls.length && (
                   <li className="flex items-center text-sm">
                       <div className="ml-4 space-y-1">
                           <p className="font-medium leading-none">Aucune URL</p>

@@ -15,6 +15,7 @@ import MyContext from "../types/MyContext";
 import PaginateUrls from "../types/PaginatesUrls";
 import GroupByStatusUrl from "../types/GroupByStatusUrl";
 
+
 @InputType()
 export class UrlInput implements Partial<Url> {
     @Field()
@@ -58,7 +59,7 @@ class UrlResolver {
     async privatesUrlsByStatus(
         @Ctx() context: MyContext,
         @Arg("timeFrame") timeFrame: "daily" | "hourly" | "weekly",
-    ) {
+    ): Promise<GroupByStatusUrl[]> {
         try {
             if (context.payload) {
                 switch (timeFrame) {
@@ -69,6 +70,22 @@ class UrlResolver {
                     case "weekly":
                         return await Url.getPrivatesUrlsByStatusWeekly(context.payload.id);
                 }
+            }
+            throw new Error();
+        } catch (_error) {
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Query(() => Number)
+    async privateSumUrls(
+        @Ctx() context: MyContext,
+    ): Promise<number> {
+        try {
+            if (context.payload) {
+                return await Url.countBy({
+                    user: { id: context.payload.id }
+                })
             }
             throw new Error();
         } catch (_error) {
