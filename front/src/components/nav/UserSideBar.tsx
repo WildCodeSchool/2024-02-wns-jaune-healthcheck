@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
     AudioWaveform,
@@ -42,7 +42,6 @@ import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
 import { Roles } from "@/types/user";
-import { Pricing } from "@/components/subscription/Pricing";
 import FormUserUrl from "../FormUserUrl";
 
 const data = {
@@ -86,12 +85,13 @@ const UserSideBar: React.FC = () => {
     const user = useAuthStore((state) => state.user);
     const { open } = useSidebar();
     const logout = useAuthStore((state) => state.logout);
-    const [openPricing, setOpenPricing] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
+    const navigate = useNavigate();
 
-    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
+    const isTier = user.role === Roles.TIER;
+    const isPremium = user.role === Roles.PREMIUM;
 
     const handleLogout = () => {
         logoutQuery({
@@ -227,12 +227,12 @@ const UserSideBar: React.FC = () => {
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
-                                    {isPremium && (
+                                    {isTier && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(252 211 77)"
+                                            fill="rgb(113 63 18)"
                                             className={clsx(
-                                                "h-4 w-4 text-amber-300",
+                                                "h-4 w-4 text-yellow-900",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&
@@ -240,6 +240,20 @@ const UserSideBar: React.FC = () => {
                                                 "absolute",
                                             )}
                                         />
+                                    )}
+                                    {isPremium && (
+                                      <Crown
+                                        strokeWidth={3}
+                                        fill="rgb(252 211 77)"
+                                        className={clsx(
+                                          "h-4 w-4 text-amber-300",
+                                          "-left-[6px] -top-[6px]",
+                                          "transition-transform duration-200 ease-in-out",
+                                          open &&
+                                          "translate-x-2 translate-y-2",
+                                          "absolute",
+                                        )}
+                                      />
                                     )}
                                     <div
                                         className={clsx(
@@ -275,7 +289,11 @@ const UserSideBar: React.FC = () => {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem
-                                        onClick={() => setOpenPricing(true)}
+                                        onClick={() =>
+                                            navigate(
+                                                "/profile?tab=subscription",
+                                            )
+                                        }
                                         className="cursor-pointer"
                                     >
                                         <Crown className="mr-2 h-4 w-4" />
@@ -297,10 +315,6 @@ const UserSideBar: React.FC = () => {
                 </SidebarMenu>
             </SidebarFooter>
             <SidebarRail />
-            <Pricing
-                openPricing={openPricing}
-                setOpenPricing={setOpenPricing}
-            />
         </Sidebar>
     );
 };

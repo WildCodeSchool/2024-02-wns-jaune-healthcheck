@@ -6,6 +6,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { UserUrls } from "@/pages/UserUrls";
 import { UserHistories } from "@/pages/UserHistories";
+import Profile from "@/pages/Profile";
 
 const routes = [
     {
@@ -53,6 +54,10 @@ const routes = [
             {
                 path: "/user-url/:id",
                 element: <UrlHistories />,
+            },
+            {
+                path: "/profile",
+                element: <Profile />,
             },
         ],
     },

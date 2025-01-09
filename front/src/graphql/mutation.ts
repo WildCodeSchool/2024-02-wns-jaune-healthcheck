@@ -38,12 +38,6 @@ export const CHECK_URL = gql`
     }
 `;
 
-export const SUBSCRIBE = gql`
-    mutation Subscribe($role: String!) {
-        subscribe(role: $role)
-    }
-`;
-
 export const READ_NOTIFICATION = gql`
     mutation ReadNotification($notificationId: String!) {
         readNotification(notificationId: $notificationId)
@@ -69,8 +63,19 @@ export const CREATE_STRIPE_SETUP_INTENT = gql`
 `;
 
 export const CREATE_SUBSCRIPTION = gql`
-    mutation CreateSubscription($paymentMethodId: String!) {
-        createSubscription(paymentMethodId: $paymentMethodId)
+    mutation CreateSubscription($paymentMethodId: String!, $priceKey: String!) {
+        createSubscription(
+            paymentMethodId: $paymentMethodId
+            priceKey: $priceKey
+        )
+    }
+`;
+
+export const CHANGE_SUBSCRIPTION_TIER = gql`
+    mutation ChangeSubscriptionTier($newPriceKey: String!) {
+        changeSubscriptionTier(
+            newPriceKey: $newPriceKey
+        )
     }
 `;
 

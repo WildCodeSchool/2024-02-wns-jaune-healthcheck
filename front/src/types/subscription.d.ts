@@ -1,16 +1,21 @@
 export type SubscriptionProviderProps = {
-    showCheckout: boolean;
-    setShowCheckout: (value: boolean) => void;
-    showCancel: boolean;
-    setShowCancel: (value: boolean) => void;
+    showTier: boolean;
+    showPremium: boolean;
+    closePricing: () => void;
 };
 
 export type CheckoutProviderProps = {
-    showCheckout: boolean;
-    setShowCheckout: (value: boolean) => void;
+    showPremium: boolean;
+    closePricing: () => void;
 };
 
 export type CancelProviderProps = {
-    showCancel: boolean;
-    setShowCancel: (value: boolean) => void;
+    showFree: boolean;
+    closePricing: () => void;
+};
+
+export type PricingStates = {
+    free: boolean;
+    tier: boolean;
+    premium: boolean;
 };

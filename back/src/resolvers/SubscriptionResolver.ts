@@ -1,21 +1,33 @@
 import { Resolver, Mutation, Ctx, Arg } from "type-graphql";
 import Stripe from "stripe";
 import MyContext from "../types/MyContext";
-import { Roles, User } from "../entities/User";
+import { Roles, User } from '../entities/User';
 
 @Resolver()
-class StripeResolver {
+class SubscriptionResolver {
     private stripe: Stripe;
-    private priceId: string;
+    private tierPriceId: string;
+    private premiumPriceId: string;
 
     constructor() {
         this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
-        this.priceId = process.env.STRIPE_PREMIUM_PRICE_ID || "";
-        if (!this.priceId) {
+        this.tierPriceId = process.env.STRIPE_TIER_PRICE_ID || "";
+        this.premiumPriceId = process.env.STRIPE_PREMIUM_PRICE_ID || "";
+        if (!this.tierPriceId || !this.premiumPriceId) {
             throw new Error(
                 "Stripe price ID is not configured in environment variables",
             );
         }
+    }
+
+    private getPriceId(key: string) {
+        if (key === Roles.PREMIUM) {
+            return this.premiumPriceId;
+        } else if (key === Roles.TIER) {
+            return this.tierPriceId;
+        }
+
+        return;
     }
 
     private async getOrCreateCustomer(
@@ -61,6 +73,7 @@ class StripeResolver {
     async createSubscription(
         @Ctx() context: MyContext,
         @Arg("paymentMethodId") paymentMethodId: string,
+        @Arg("priceKey", { nullable: false }) priceKey: string,
     ): Promise<string> {
         if (!context.payload) {
             throw new Error("User is not authenticated");
@@ -71,29 +84,27 @@ class StripeResolver {
             throw new Error("User email is required to create a subscription");
         }
 
+        const priceId = this.getPriceId(priceKey);
+
         try {
-            // Récupérer ou créer le customer
             let customer = await this.getOrCreateCustomer(
                 userEmail,
                 context.payload.id,
             );
 
-            // Attacher le payment method au customer
             await this.stripe.paymentMethods.attach(paymentMethodId, {
                 customer: customer.id,
             });
 
-            // Définir comme méthode de paiement par défaut
             await this.stripe.customers.update(customer.id, {
                 invoice_settings: {
                     default_payment_method: paymentMethodId,
                 },
             });
 
-            // Créer l'abonnement
             await this.stripe.subscriptions.create({
                 customer: customer.id,
-                items: [{ price: this.priceId }],
+                items: [{ price: priceId }],
                 payment_settings: {
                     payment_method_types: ["card"],
                     save_default_payment_method: "on_subscription",
@@ -101,12 +112,11 @@ class StripeResolver {
                 expand: ["latest_invoice.payment_intent"],
             });
 
-            // Mettre à jour le rôle de l'utilisateur
             const user = await User.findOneBy({ id: context.payload.id });
             if (!user) {
                 throw new Error("User not found");
             }
-            user.role = Roles.PREMIUM;
+            user.role = priceKey as Roles.TIER || Roles.PREMIUM;
             await user.save();
 
             return JSON.stringify({
@@ -118,6 +128,65 @@ class StripeResolver {
         } catch (error) {
             console.error("Stripe subscription error:", error);
             throw new Error("Failed to create subscription");
+        }
+    }
+
+    @Mutation(() => String)
+    async changeSubscriptionTier(
+      @Ctx() context: MyContext,
+      @Arg("newPriceKey", { nullable: false }) newPriceKey: string,
+    ): Promise<string> {
+        if (!context.payload) {
+            throw new Error("User is not authenticated");
+        }
+
+        const priceId = this.getPriceId(newPriceKey);
+        if (!priceId) {
+            throw new Error("Invalid subscription tier");
+        }
+
+        try {
+            const customer = await this.getOrCreateCustomer(
+              context.payload.email,
+              context.payload.id
+            );
+
+            const subscriptions = await this.stripe.subscriptions.list({
+                customer: customer.id,
+                status: "active",
+                limit: 1,
+            });
+
+            if (subscriptions.data.length === 0) {
+                throw new Error("No active subscription found");
+            }
+
+            const currentSubscription = subscriptions.data[0];
+
+            await this.stripe.subscriptions.update(currentSubscription.id, {
+                items: [{
+                    id: currentSubscription.items.data[0].id,
+                    price: priceId,
+                }],
+                proration_behavior: 'always_invoice',
+            });
+
+            const user = await User.findOneBy({ id: context.payload.id });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            user.role = newPriceKey as Roles.TIER || Roles.PREMIUM;
+            await user.save();
+
+            return JSON.stringify({
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                role: user.role,
+            });
+        } catch (error) {
+            console.error("Subscription change error:", error);
+            throw new Error("Failed to change subscription tier");
         }
     }
 
@@ -172,4 +241,4 @@ class StripeResolver {
     }
 }
 
-export default StripeResolver;
+export default SubscriptionResolver;

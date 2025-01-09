@@ -10,7 +10,7 @@ import CheckFrequencyResolver from "./resolvers/CheckFrequencyResolver";
 import startServer from "./startServer";
 import WorkerThread from "./thread/Worker";
 import NotificationResolver from "./resolvers/NotificationResolver";
-import StripeResolver from "./resolvers/StripeResolver";
+import SubscriptionResolver from "./resolvers/SubscriptionResolver";
 
 const app = express();
 const port = process.env.BACKEND_PORT;
@@ -23,7 +23,7 @@ const start = async () => {
             UserResolver,
             CheckFrequencyResolver,
             NotificationResolver,
-            StripeResolver,
+            SubscriptionResolver,
         ],
         app,
     );
