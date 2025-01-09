@@ -32,7 +32,7 @@ import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "./custom/SelectCheckFrequency";
 import ButtonLoader from "./custom/ButtonLoader";
 import useAuthStore from '@/stores/authStore.tsx';
-import { Roles } from '@/types/user.ts';
+import { Roles } from '@/constants/role.ts';
 
 export default function FormUserUrl({
     setOpenDialog,

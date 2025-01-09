@@ -13,7 +13,7 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog.tsx";
-import { Roles } from "@/types/user.ts";
+import { Roles } from '@/constants/role.ts';
 import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
 
 export default function UpdateTierForm({

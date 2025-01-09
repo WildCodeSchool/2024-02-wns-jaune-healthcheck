@@ -11,7 +11,7 @@ import { FormEvent, useState } from 'react';
 import { StripePaymentElementChangeEvent } from '@stripe/stripe-js';
 import { toast } from '../../ui/use-toast';
 import { Check, X } from 'lucide-react';
-import { Roles } from '@/types/user.ts';
+import { Roles } from '@/constants/role.ts';
 import {
   DialogDescription,
   DialogFooter,
@@ -19,6 +19,8 @@ import {
   DialogTitle
 } from '@/components/ui/dialog.tsx';
 import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
+import { subscriptions } from '@/constants/subscription.ts';
+import { renderSubscriptionFeatureText } from '@/constants/globalFunction.tsx';
 
 export default function CheckoutForm({
                                        showPremium,
@@ -33,6 +35,7 @@ export default function CheckoutForm({
 
   const [createSubscription] = useCreateSubscriptionMutation();
   const me = useAuthStore((state) => state.me);
+  const selectedSubscription = showPremium ? subscriptions[2] : subscriptions[1]
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -81,7 +84,7 @@ export default function CheckoutForm({
               title: 'Bienvenue à bord !',
               description: 'Votre abonnement est maintenant actif.'
             });
-          }, 3500);
+          }, 3000);
         },
         onError: () => {
           toast({
@@ -166,29 +169,23 @@ export default function CheckoutForm({
             </DialogHeader>
 
             <ul className="flex flex-col gap-2 pt-2 animate-pulse">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500"/>
-                {showPremium
-                  ? <p className="text-left">
-                    Nombre d'URL Privées{' '}
-                    <span className="font-bold">Illimité</span>
+              {selectedSubscription.features.map((feature, index) => (
+                <li
+                  key={index}
+                  className="flex items-center gap-2"
+                >
+                  {feature.included ? (
+                    <Check className="w-4 h-4 text-green-500"/>
+                  ) : (
+                    <X className="w-4 h-4 text-red-500"/>
+                  )}
+                  <p className="text-left">
+                    {renderSubscriptionFeatureText(
+                      feature,
+                    )}
                   </p>
-                  : <p className="text-left">
-                    Ajoutez jusqu'à{' '}
-                    <span className="font-bold">50</span> URL
-                    Privées
-                  </p>
-                }
-              </li>
-              <li className="flex items-center gap-2">
-                {showPremium
-                  ? <Check className="w-4 h-4 text-green-500"/>
-                  : <X className="w-4 h-4 text-red-500"/>
-                }
-                <p className="text-left">
-                  Changer l'interval de vérification des URL
-                </p>
-              </li>
+                </li>
+              ))}
             </ul>
           </>
         )}

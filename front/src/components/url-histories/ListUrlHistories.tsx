@@ -25,7 +25,7 @@ import CustomPagination from "../custom/CustomPagination";
 import HistoryResponseModal from "./HistoryResponseModal";
 import ButtonLoader from "../custom/ButtonLoader";
 import useAuthStore from '@/stores/authStore.tsx';
-import { Roles } from '@/types/user.ts';
+import { Roles } from '@/constants/role.ts';
 
 type ListUrlHistoriesProps = {
     urlId: string;

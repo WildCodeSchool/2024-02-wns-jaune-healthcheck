@@ -40,7 +40,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
-import { Roles } from "@/types/user";
+import { Roles } from '@/constants/role.ts';
 import FormUserUrl from "../FormUserUrl";
 
 const data = {

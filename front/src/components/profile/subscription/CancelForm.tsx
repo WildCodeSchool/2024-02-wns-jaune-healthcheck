@@ -14,6 +14,8 @@ import {
   DialogContent
 } from '@/components/ui/dialog.tsx';
 import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
+import { subscriptions } from '@/constants/subscription.ts';
+import { renderSubscriptionFeatureText } from '@/constants/globalFunction.tsx';
 
 export default function CancelForm({
                                      showFree,
@@ -24,6 +26,7 @@ export default function CancelForm({
 
   const [unsubscribe] = useCancelSubscriptionMutation();
   const me = useAuthStore((state) => state.me);
+  const freeSubscription = subscriptions[0]
 
   const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -43,7 +46,7 @@ export default function CancelForm({
               title: 'Au revoir !',
               description: 'Votre abonnement est maintenant désactivé.'
             });
-          }, 3500);
+          }, 3000);
         },
         onError: () => {
           toast({
@@ -114,21 +117,24 @@ export default function CancelForm({
               </DialogDescription>
             </DialogHeader>
 
-            <ul className="flex flex-col gap-2 pt-2 animate-pulse">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-500"/>
-                <p className="text-left">
-                  Ajoutez jusqu'à{' '}
-                  <span className="font-bold">5</span> URL
-                  Privées
-                </p>
-              </li>
-              <li className="flex items-center gap-2">
-                <X className="w-4 h-4 text-red-500"/>
-                <p className="text-left">
-                  Changer l'interval de vérification des URL
-                </p>
-              </li>
+            <ul className="flex flex-col gap-2 py-2">
+              {freeSubscription.features.map((feature, index) => (
+                <li
+                  key={index}
+                  className="flex items-center gap-2"
+                >
+                  {feature.included ? (
+                    <Check className="w-4 h-4 text-green-500"/>
+                  ) : (
+                    <X className="w-4 h-4 text-red-500"/>
+                  )}
+                  <p className="text-left">
+                    {renderSubscriptionFeatureText(
+                      feature,
+                    )}
+                  </p>
+                </li>
+              ))}
             </ul>
           </>
         )}
