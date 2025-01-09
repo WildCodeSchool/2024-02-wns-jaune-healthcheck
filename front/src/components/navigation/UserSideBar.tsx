@@ -51,7 +51,7 @@ const data = {
             icon: CircleGauge,
         },
         {
-            name: "Mes urls",
+            name: "Mes URLs",
             url: "/urls",
             icon: IconLink,
         },

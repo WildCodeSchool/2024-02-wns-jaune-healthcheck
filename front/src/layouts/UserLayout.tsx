@@ -20,7 +20,7 @@ const UserLayout: React.FC = () => {
         <SidebarProvider>
             <UserSideBar />
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                <header className="border-b-[1px] flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex w-full justify-between items-center gap-2 px-4">
                         <section className="flex items-center gap-2">
                             <SidebarTrigger className="-ml-1" />
@@ -33,7 +33,7 @@ const UserLayout: React.FC = () => {
                         <NotificationDropdown />
                     </div>
                 </header>
-                <main className="flex-1 space-y-4 p-4 pt-2">
+                <main className="flex-1 space-y-4 p-4">
                     <Outlet />
                 </main>
             </SidebarInset>

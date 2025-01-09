@@ -25,7 +25,7 @@ export const subscriptions: Subscription[] = [
         price: 0,
         features: [
             {
-                text: "Ajoutez jusqu'à URL Privées",
+                text: "Ajoutez jusqu'à URLs Privées",
                 included: true,
                 highlight: {
                     value: "5",
@@ -33,7 +33,11 @@ export const subscriptions: Subscription[] = [
                 }
             },
             {
-                text: "Changer l'interval de vérification des URL",
+                text: "Changer l'interval de vérification des URLs",
+                included: false
+            },
+            {
+                text: "Lancer l'analyse instantanée des URLs",
                 included: false
             }
         ]
@@ -45,7 +49,7 @@ export const subscriptions: Subscription[] = [
         price: 3,
         features: [
             {
-                text: "Ajoutez jusqu'à URL Privées",
+                text: "Ajoutez jusqu'à URLs Privées",
                 included: true,
                 highlight: {
                     value: "50",
@@ -53,7 +57,11 @@ export const subscriptions: Subscription[] = [
                 }
             },
             {
-                text: "Changer l'interval de vérification des URL",
+                text: "Changer l'interval de vérification des URLs",
+                included: false
+            },
+            {
+                text: "Lancer l'analyse instantanée des URLs",
                 included: false
             }
         ]
@@ -73,7 +81,11 @@ export const subscriptions: Subscription[] = [
                 }
             },
             {
-                text: "Changer l'interval de vérification des URL",
+                text: "Changer l'interval de vérification des URLs",
+                included: true
+            },
+            {
+                text: "Lancer l'analyse instantanée des URLs",
                 included: true
             }
         ]

@@ -44,7 +44,7 @@ const UrlsBreadcrumb: React.FC = () => {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem className="block">
-                    Mes urls
+                    Mes URLs
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -75,7 +75,7 @@ const UrlBreadcrumb: React.FC<UrlBreadCrumbProps> = ({ urlId }) => {
             <BreadcrumbList>
                 <BreadcrumbItem className="block">
                     <BreadcrumbLink asChild>
-                        <Link to="/urls">Mes urls</Link>
+                        <Link to="/urls">Mes URLs</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
