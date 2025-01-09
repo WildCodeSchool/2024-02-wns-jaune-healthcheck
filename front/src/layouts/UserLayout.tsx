@@ -5,8 +5,8 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import UserSideBar from "@/components/nav/UserSideBar";
-import UserBreadcrumb from "@/components/nav/UserBreadcrumb";
+import UserSideBar from "@/components/navigation/UserSideBar";
+import UserBreadcrumb from "@/components/navigation/UserBreadcrumb";
 import useAuthStore from "@/stores/authStore";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 

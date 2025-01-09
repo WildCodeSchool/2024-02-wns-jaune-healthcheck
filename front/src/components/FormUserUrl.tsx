@@ -31,6 +31,8 @@ import { FormLoginProps } from "@/types/form";
 import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "./custom/SelectCheckFrequency";
 import ButtonLoader from "./custom/ButtonLoader";
+import useAuthStore from '@/stores/authStore.tsx';
+import { Roles } from '@/types/user.ts';
 
 export default function FormUserUrl({
     setOpenDialog,
@@ -48,6 +50,9 @@ export default function FormUserUrl({
             checkFrequency: "",
         },
     });
+
+    const user = useAuthStore((state) => state.user);
+    const isPremium = user.role === Roles.PREMIUM;
 
     // Clean form on modal close
     useEffect(() => {
@@ -181,7 +186,7 @@ export default function FormUserUrl({
                                 Ajouter l'URL en privée
                             </label>
                         </div>
-                        {isCheckFrequency && (
+                        {isCheckFrequency && isPremium && (
                             <FormField
                                 control={newUrlForm.control}
                                 name="checkFrequency"
@@ -222,7 +227,7 @@ export default function FormUserUrl({
                                 Ajouter
                             </Button>
                         ) : (
-                            <ButtonLoader variant="ghost" />
+                            <ButtonLoader variant="default" />
                         )}
                     </DialogFooter>
                 </form>

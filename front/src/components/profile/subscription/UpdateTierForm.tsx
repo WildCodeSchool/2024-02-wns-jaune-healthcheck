@@ -14,6 +14,7 @@ import {
     DialogContent,
 } from "@/components/ui/dialog.tsx";
 import { Roles } from "@/types/user.ts";
+import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
 
 export default function UpdateTierForm({
     tier,
@@ -44,6 +45,11 @@ export default function UpdateTierForm({
                     setTimeout(() => {
                         setIsUpdateValid(true);
                         closeUpdateTier();
+                        toast({
+                            variant: 'default',
+                            title: 'Merci pour votre confiance !',
+                            description: 'Votre abonnement a été mis à jour.'
+                        });
                     }, 3500);
                 },
                 onError: () => {
@@ -81,22 +87,26 @@ export default function UpdateTierForm({
                             </DialogDescription>
                         </DialogHeader>
 
-                        <DialogFooter>
+                        <DialogFooter className="flex flex-col gap-2">
                             <Button
                                 variant="outline"
                                 onClick={closeUpdateTier}
-                                className="mr-auto"
+                                className="md:mr-auto"
                             >
                                 Ne pas changer
                             </Button>
 
-                            <Button
+                            {!loading ? (
+                              <Button
                                 variant="default"
                                 disabled={loading || isUpdateValid}
                                 onClick={(e) => handleSubmit(e)}
-                            >
-                                Souscrire
-                            </Button>
+                              >
+                                  Souscrire
+                              </Button>
+                            ) : (
+                              <ButtonLoader variant="default" />
+                            )}
                         </DialogFooter>
                     </>
                 )}
@@ -113,7 +123,7 @@ export default function UpdateTierForm({
                             </DialogDescription>
                         </DialogHeader>
 
-                        <ul className="flex flex-col gap-2 py-2 animate-pulse">
+                        <ul className="flex flex-col gap-2 pt-2 animate-pulse">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-green-500" />
                                 {premium ? (

@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog.tsx';
+import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
 
 export default function CheckoutForm({
                                        showPremium,
@@ -75,6 +76,11 @@ export default function CheckoutForm({
           setTimeout(() => {
             setIsPaymentValid(false);
             closePricing()
+            toast({
+              variant: 'default',
+              title: 'Bienvenue à bord !',
+              description: 'Votre abonnement est maintenant actif.'
+            });
           }, 3500);
         },
         onError: () => {
@@ -120,22 +126,27 @@ export default function CheckoutForm({
             <DialogFooter>
               <form onSubmit={handleSubmit} className="w-full flex flex-col">
                 <PaymentElement onChange={handleFormChange} className="mb-4"/>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row justify-between gap-2">
                   <Button
                     variant="outline"
                     type="button"
-                    className="mr-auto"
+                    className="md:mr-auto"
                     onClick={closePricing}
                   >
                     Annuler
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="default"
-                    disabled={!stripe || !isFormValid || loading}
-                  >
-                    Payer
-                  </Button>
+
+                  {!loading ? (
+                    <Button
+                      type="submit"
+                      variant="default"
+                      disabled={!stripe || !isFormValid || loading}
+                    >
+                      Payer
+                    </Button>
+                  ) : (
+                    <ButtonLoader variant="default" />
+                  )}
                 </div>
               </form>
             </DialogFooter>
@@ -154,7 +165,7 @@ export default function CheckoutForm({
               </DialogDescription>
             </DialogHeader>
 
-            <ul className="flex flex-col gap-2 py-2 animate-pulse">
+            <ul className="flex flex-col gap-2 pt-2 animate-pulse">
               <li className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-green-500"/>
                 {showPremium

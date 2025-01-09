@@ -25,7 +25,7 @@ import {
 import { 
   usePrivatesUrlsByStatusQuery,
   PrivatesUrlsByStatusQuery } from "@/generated/graphql-types";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import useSocketStore from "@/stores/webSocketStore";
 
 

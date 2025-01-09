@@ -44,23 +44,6 @@ import { Roles } from "@/types/user";
 import FormUserUrl from "../FormUserUrl";
 
 const data = {
-    about: [
-        {
-            name: "Acme Inc",
-            logo: GalleryVerticalEnd,
-            plan: "Enterprise",
-        },
-        {
-            name: "Acme Corp.",
-            logo: AudioWaveform,
-            plan: "Startup",
-        },
-        {
-            name: "Evil Corp.",
-            logo: Command,
-            plan: "Free",
-        },
-    ],
     navigation: [
         {
             name: "Tableau de bord",

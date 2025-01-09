@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import ListUrlHistories from "@/components/urlHistories/ListUrlHistories";
+import ListUrlHistories from "@/components/url-histories/ListUrlHistories";
 
 export default function UrlHistories() {
     const { id } = useParams();

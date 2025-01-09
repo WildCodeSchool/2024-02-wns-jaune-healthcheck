@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogContent
 } from '@/components/ui/dialog.tsx';
+import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
 
 export default function CancelForm({
                                      showFree,
@@ -37,6 +38,11 @@ export default function CancelForm({
           setTimeout(() => {
             setIsCancellationValid(true);
             closePricing()
+            toast({
+              variant: 'default',
+              title: 'Au revoir !',
+              description: 'Votre abonnement est maintenant désactivé.'
+            });
           }, 3500);
         },
         onError: () => {
@@ -72,22 +78,26 @@ export default function CancelForm({
               </DialogDescription>
             </DialogHeader>
 
-            <DialogFooter>
+            <DialogFooter className="flex flex-col gap-2">
               <Button
                 variant="outline"
                 onClick={closePricing}
-                className="mr-auto"
+                className="md:mr-auto"
               >
                 Ne pas résilier
               </Button>
 
-              <Button
-                variant="destructive"
-                disabled={loading || isCancellationValid}
-                onClick={(e) => handleSubmit(e)}
-              >
-                Résilier
-              </Button>
+              {!loading ? (
+                <Button
+                  variant="destructive"
+                  disabled={loading || isCancellationValid}
+                  onClick={(e) => handleSubmit(e)}
+                >
+                  Résilier
+                </Button>
+              ) : (
+                <ButtonLoader variant="destructive" />
+              )}
             </DialogFooter>
           </>
         )}
@@ -104,7 +114,7 @@ export default function CancelForm({
               </DialogDescription>
             </DialogHeader>
 
-            <ul className="flex flex-col gap-2 py-2 animate-pulse">
+            <ul className="flex flex-col gap-2 pt-2 animate-pulse">
               <li className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-green-500"/>
                 <p className="text-left">

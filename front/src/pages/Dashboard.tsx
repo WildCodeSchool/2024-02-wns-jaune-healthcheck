@@ -1,7 +1,7 @@
 import RecentHistories from "@/components/dashboard/RecentHistories";
 import RecentUrls from "@/components/dashboard/RecentUrls";
-import HistoriesByStatusChart from "@/components/charts/HistoriesByStatutChart";
-import UrlsByStatusChart from "@/components/charts/UrlsByStatusChart";
+import HistoriesByStatusChart from "@/components/dashboard/charts/HistoriesByStatutChart";
+import UrlsByStatusChart from "@/components/dashboard/charts/UrlsByStatusChart";
 
 export default function Dashboard() {
     return (

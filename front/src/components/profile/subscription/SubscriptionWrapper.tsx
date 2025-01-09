@@ -74,8 +74,6 @@ export function SubscriptionWrapper() {
         });
     };
 
-    // TODO : Modal pour Update le Tier avec confirmation et précision que le prorata sera facturé immédiatement
-
     return (
         <div className="w-full h-fit m-auto">
             <section className="py-4">
@@ -88,7 +86,9 @@ export function SubscriptionWrapper() {
             </section>
 
             <section className="flex flex-col lg:flex-row justify-center items-center gap-3">
-                <Card className="w-full xl:w-1/3 h-full flex flex-col">
+                <Card
+                    className={`w-full xl:w-1/3 h-full flex flex-col ${isFree && "border-2 border-primary"}`}
+                >
                     <CardHeader>
                         <CardTitle>Gratuit</CardTitle>
                         <CardDescription>
@@ -133,7 +133,9 @@ export function SubscriptionWrapper() {
                     </CardFooter>
                 </Card>
 
-                <Card className="w-full xl:w-1/3 h-full flex flex-col">
+                <Card
+                    className={`w-full xl:w-1/3 h-full flex flex-col ${isTier && "border-2 border-primary"}`}
+                >
                     <CardHeader>
                         <CardTitle>Tier</CardTitle>
                         <CardDescription>
@@ -176,7 +178,9 @@ export function SubscriptionWrapper() {
                     </CardFooter>
                 </Card>
 
-                <Card className="w-full xl:w-1/3 h-full flex flex-col">
+                <Card
+                    className={`w-full xl:w-1/3 h-full flex flex-col ${isPremium && "border-2 border-primary"}`}
+                >
                     <CardHeader>
                         <CardTitle>Premium</CardTitle>
                         <CardDescription>
@@ -231,14 +235,13 @@ export function SubscriptionWrapper() {
                         closePricing={closePricing}
                     />
                 )}
-                {openUpdateTier.tier ||
-                    (openUpdateTier.premium && (
-                        <UpdateTierForm
-                            tier={openUpdateTier.tier}
-                            premium={openUpdateTier.premium}
-                            closeUpdateTier={closeUpdateTier}
-                        />
-                    ))}
+                {(openUpdateTier.tier || openUpdateTier.premium) && (
+                    <UpdateTierForm
+                        tier={openUpdateTier.tier}
+                        premium={openUpdateTier.premium}
+                        closeUpdateTier={closeUpdateTier}
+                    />
+                )}
             </section>
         </div>
     );

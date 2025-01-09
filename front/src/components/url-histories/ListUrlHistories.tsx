@@ -24,6 +24,8 @@ import { PaginatesHistories } from "@/generated/graphql-types";
 import CustomPagination from "../custom/CustomPagination";
 import HistoryResponseModal from "./HistoryResponseModal";
 import ButtonLoader from "../custom/ButtonLoader";
+import useAuthStore from '@/stores/authStore.tsx';
+import { Roles } from '@/types/user.ts';
 
 type ListUrlHistoriesProps = {
     urlId: string;
@@ -131,6 +133,9 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
         }
     };
 
+    const user = useAuthStore((state) => state.user);
+    const isPremium = user.role === Roles.PREMIUM;
+
     if (loading) return <div>En attente...</div>;
     if (error || urlError)
         return <div>Erreur : {error?.message || urlError?.message}</div>;
@@ -161,7 +166,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                                 historyData?.historyWithResponse.content_type || ""
                             }
                         />
-                        {
+                        {isPremium && (
                             !checkUrlLoading ? (
                                 <Button 
                                     variant="ghost"
@@ -172,7 +177,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                                 </Button>
                             ) : (
                                 <ButtonLoader variant="ghost" />
-                            )
+                            ))
                         }
                     </div>
                 </div>

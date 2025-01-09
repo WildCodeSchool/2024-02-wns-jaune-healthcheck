@@ -127,7 +127,7 @@ export default function FormUrl() {
                         Ajouter
                     </Button>
                 ) : (
-                    <ButtonLoader variant="ghost" />
+                    <ButtonLoader variant="default" />
                 )}
             </form>
         </Form>
