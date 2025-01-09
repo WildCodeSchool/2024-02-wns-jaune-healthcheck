@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Card,
     CardContent,
@@ -13,16 +12,11 @@ import clsx from "clsx";
 
 
 const CountPrivatesUrlsCard: React.FC = () => {
-    const [sumUrl, setSumUrl] = useState<number>();
-    const { loading, error } = usePrivateSumUrlsQuery({
-        onCompleted: (data) => {
-            setSumUrl(data.privateSumUrls);
-        },
+    const { data, loading, error } = usePrivateSumUrlsQuery({
         fetchPolicy: "cache-and-network",
     });
 
-
-    if (loading && !sumUrl) {
+    if (loading && !data) {
         return (
             <Skeleton className="w-full h-[400px] p-5" />
         );
@@ -50,11 +44,11 @@ const CountPrivatesUrlsCard: React.FC = () => {
                     "text-[5em] font-bold  text-primary animate-pulse"
                 )}
             >
-               {sumUrl}
+               {data?.privateSumUrls}
             </CardContent>
             <CardFooter className="flex-col gap-2 pt-4 pb-10 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none text-center">
-                    Total de {sumUrl} services ajoutés
+                    Total de {data?.privateSumUrls} services ajoutés
                 </div>
             </CardFooter>
         </Card>

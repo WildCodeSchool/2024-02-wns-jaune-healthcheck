@@ -43,10 +43,7 @@ const chartConfig = {
 
 const HistoriesByStatusChart: React.FC = () => {
     const [chartData, setChartData] = useState<PrivateHistoriesByStatusQuery>();
-    const { loading, error, refetch } = usePrivateHistoriesByStatusQuery({
-        onCompleted: (data) => {
-            setChartData(data);
-        },
+    const { data, loading, error, refetch } = usePrivateHistoriesByStatusQuery({
         fetchPolicy: "cache-and-network",
     });
     const messages = useSocketStore((state) => state.messages);
@@ -55,6 +52,11 @@ const HistoriesByStatusChart: React.FC = () => {
         refetch();
     }, [messages, refetch]);
 
+    useEffect(() => {
+        if (!data) return;
+        setChartData(data);
+    }, [data, setChartData]);
+    
     if (loading && !chartData) {
         return (
             <Skeleton className="w-full h-[400px] p-5" />
@@ -123,7 +125,7 @@ const HistoriesByStatusChart: React.FC = () => {
             </CardContent>
             <CardFooter className="flex-col gap-2 pt-4 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none text-center">
-                    Total de {sumFail} historique{sumFail && sumFail > 0 && "s"} de réponse en erreur
+                    Total de {sumFail} historique{sumFail && sumFail > 0 ? "s" :""} de réponse en erreur
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground text-center">
                     Parmis les codes de statut HTTP présentés
