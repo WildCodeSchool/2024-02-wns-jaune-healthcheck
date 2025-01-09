@@ -17,6 +17,7 @@ import { useAddUrlMutation } from "@/generated/graphql-types";
 import { GET_ALL_URLS } from "@/graphql/queries";
 import { useToast } from "../ui/use-toast";
 import { useSearchParams } from "react-router-dom";
+import ButtonLoader from "../custom/ButtonLoader";
 
 export default function FormUrl() {
     const newUrlForm = useForm<z.infer<typeof newUrlSchema>>({
@@ -43,7 +44,7 @@ export default function FormUrl() {
             onCompleted() {
                 toast({
                     variant: "default",
-                    description: `${values.name} a bien été ajouté`,
+                    description: `${values.name} a bien été ajoutée`,
                 });
                 newUrlForm.reset();
             },
@@ -121,14 +122,13 @@ export default function FormUrl() {
                         }}
                     />
                 </div>
-                <Button
-                    variant="default"
-                    type="submit"
-                    disabled={loading}
-                    className="ml-auto"
-                >
-                    {loading ? "Ajout en cours" : "Ajouter"}
-                </Button>
+                {!loading ? (
+                    <Button variant="default" type="submit" className="ml-auto">
+                        Ajouter
+                    </Button>
+                ) : (
+                    <ButtonLoader variant="ghost" />
+                )}
             </form>
         </Form>
     );

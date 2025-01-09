@@ -80,7 +80,7 @@ export default function NotificationDropdown() {
                             ))}
                         </ul>
                     ) : (
-                        <p className="w-56">Aucune notifications</p>
+                        <p className="w-56">Aucune notification</p>
                     )}
                 </DropdownMenuItem>
             </DropdownMenuContent>
