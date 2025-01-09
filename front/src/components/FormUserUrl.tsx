@@ -56,7 +56,7 @@ export default function FormUserUrl({
             newUrlForm.reset();
         }
     }, [openDialog, newUrlForm]);
-
+    
     const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();

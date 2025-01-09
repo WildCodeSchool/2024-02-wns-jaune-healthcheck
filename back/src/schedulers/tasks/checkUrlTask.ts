@@ -6,6 +6,7 @@ import { History } from "../../entities/History";
 import { Notification } from "../../entities/Notification";
 import dataSource from "../../database/dataSource";
 import Semaphore from "../../thread/Semaphore";
+import handleAxiosErrorResponse from "../../utilities/handleAxiosErreurResponse";
 
 const semaphore = new Semaphore(1); // Only one task at a time to avoid conflicts in cron jobs
 
@@ -78,10 +79,16 @@ const checkUrl = async (interval?: string) => {
                     .where("id = :id", { id: url.id })
                     .execute();
 
-                const response = await axios.get(url.path, {
-                    validateStatus: () => true,
-                    timeout: 5000,
-                });
+                let response;
+                try {
+                    response = await axios.get(url.path, {
+                        validateStatus: () => true,
+                        timeout: 5000,
+                    });
+                } catch (error) {
+                    console.log(error);
+                    response = handleAxiosErrorResponse(error.code);
+                } 
 
                 let data = response.data;
                 const contentType = response.headers?.["content-type"] || "unknown";
