@@ -1,12 +1,14 @@
 name: Build and Publish Docker Images
 
 on:
-    push:
-        branches:
-            - main
-    # pull_request:
+    # push:
     #     branches:
     #         - main
+    pull_request:
+        types: 
+            - closed
+        branches:
+            - main
 
 jobs:
     build:
