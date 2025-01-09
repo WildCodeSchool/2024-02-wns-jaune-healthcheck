@@ -30,6 +30,7 @@ export type GroupByStatusHistory = {
   __typename?: 'GroupByStatusHistory';
   countHtml: Scalars['Float']['output'];
   countJson: Scalars['Float']['output'];
+  countUnknown: Scalars['Float']['output'];
   statusCode: Scalars['Float']['output'];
 };
 
@@ -345,7 +346,7 @@ export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: string };
 export type PrivateHistoriesByStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PrivateHistoriesByStatusQuery = { __typename?: 'Query', privateHistoriesByStatus: Array<{ __typename?: 'GroupByStatusHistory', statusCode: number, countHtml: number, countJson: number }> };
+export type PrivateHistoriesByStatusQuery = { __typename?: 'Query', privateHistoriesByStatus: Array<{ __typename?: 'GroupByStatusHistory', statusCode: number, countHtml: number, countJson: number, countUnknown: number }> };
 
 export type PrivatesUrlsByStatusQueryVariables = Exact<{
   timeFrame: Scalars['String']['input'];
@@ -1129,6 +1130,7 @@ export const PrivateHistoriesByStatusDocument = gql`
     statusCode
     countHtml
     countJson
+    countUnknown
   }
 }
     `;

@@ -30,6 +30,7 @@ import { Checkbox } from "./ui/checkbox";
 import { FormLoginProps } from "@/types/form";
 import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "./custom/SelectCheckFrequency";
+import ButtonLoader from "./custom/ButtonLoader";
 
 export default function FormUserUrl({
     setOpenDialog,
@@ -56,7 +57,7 @@ export default function FormUserUrl({
             newUrlForm.reset();
         }
     }, [openDialog, newUrlForm]);
-
+    
     const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();
@@ -76,7 +77,7 @@ export default function FormUserUrl({
             onCompleted() {
                 toast({
                     variant: "default",
-                    description: `${values.name} a bien été ajouté`,
+                    description: `${values.name} a bien été ajoutée`,
                 });
                 newUrlForm.reset();
                 setOpenDialog(false);
@@ -212,14 +213,17 @@ export default function FormUserUrl({
                                 Annuler
                             </Button>
                         </DialogClose>
-                        <Button
-                            variant="default"
-                            type="submit"
-                            disabled={loading}
-                            className="ml-auto"
-                        >
-                            {loading ? "Ajout en cours" : "Ajouter"}
-                        </Button>
+                        {!loading ? (
+                            <Button
+                                variant="default"
+                                type="submit"
+                                className="ml-auto"
+                            >
+                                Ajouter
+                            </Button>
+                        ) : (
+                            <ButtonLoader variant="ghost" />
+                        )}
                     </DialogFooter>
                 </form>
             </Form>

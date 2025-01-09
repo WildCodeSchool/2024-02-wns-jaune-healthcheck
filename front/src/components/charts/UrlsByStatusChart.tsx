@@ -67,7 +67,7 @@ const UrlsByStatusChart: React.FC = () => {
   } 
 
   if (error) return <div>Erreur</div>;
-  console.log(chartData);
+
   return (
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -139,7 +139,6 @@ const UrlsByStatusChart: React.FC = () => {
               tickFormatter={(value) => {
                 switch (timeRange) {
                   case "weekly":
-                    console.log(value);
                     return new Date(value).toLocaleDateString("fr-FR", {
                       month: "short",
                       day: "2-digit",

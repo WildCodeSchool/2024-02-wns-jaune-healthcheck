@@ -171,6 +171,7 @@ export const GET_PRIVATE_HISTORIES_BY_STATUS = gql`
             statusCode
             countHtml
             countJson
+            countUnknown
         }
     }
 `;

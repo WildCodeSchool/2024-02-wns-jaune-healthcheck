@@ -11,6 +11,7 @@ import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import axios from "axios";
 import dataSource from "../database/dataSource";
+import handleAxiosErrorResponse from "../utilities/handleAxiosErreurResponse";
 
 @EventSubscriber()
 export class UrlSubscriber implements EntitySubscriberInterface<Url> {
@@ -49,10 +50,17 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
         transactionalEntityManager: EntityManager,
     ) {
         try {
-            const response = await axios.get(url.path, {
-                validateStatus: () => true, // Do not throw on non-2xx status codes
-                timeout: 5000,
-            });
+            
+            let response;
+            try {
+                response = await axios.get(url.path, {
+                    validateStatus: () => true,
+                    timeout: 5000,
+                });
+            } catch (error) {
+                console.log(error);
+                response = handleAxiosErrorResponse(error.code);
+            } 
 
             let data = response.data;
             const contentType = response.headers?.["content-type"] || "unknown";

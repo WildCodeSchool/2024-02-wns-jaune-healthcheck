@@ -34,6 +34,10 @@ const chartConfig = {
         label: "HTML",
         color: "hsl(var(--chart-2))",
     },
+    countUnknown: {
+        label: "INCONNU",
+        color: "hsl(var(--chart-3))",
+    },
 } satisfies ChartConfig
 
 
@@ -101,6 +105,12 @@ const HistoriesByStatusChart: React.FC = () => {
                             dataKey="countHtml" 
                             stroke={chartConfig.countHtml.color} 
                             fill={chartConfig.countHtml.color} 
+                            fillOpacity={0.6}
+                        />
+                        <Radar 
+                            dataKey="countUnknown" 
+                            stroke={chartConfig.countUnknown.color} 
+                            fill={chartConfig.countUnknown.color} 
                             fillOpacity={0.6}
                         />
                         <ChartLegend className="mt-8" content={<ChartLegendContent />} />

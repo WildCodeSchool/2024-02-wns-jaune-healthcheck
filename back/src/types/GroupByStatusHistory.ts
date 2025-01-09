@@ -10,6 +10,9 @@ class GroupByStatusHistory {
 
     @Field()
     countHtml: number;
+
+    @Field()
+    countUnknown: number;
 }
     
 

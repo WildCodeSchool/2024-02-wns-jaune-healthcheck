@@ -48,7 +48,7 @@ const ButtonLoader = forwardRef<HTMLButtonElement, ButtonLoaderProps>(
     }
 );
 
-// Ajoutez un displayName pour une meilleure débogage
+
 ButtonLoader.displayName = "ButtonLoader";
 
 export default ButtonLoader;

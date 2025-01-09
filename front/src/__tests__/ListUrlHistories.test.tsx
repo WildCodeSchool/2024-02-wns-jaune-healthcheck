@@ -206,7 +206,6 @@ describe("Tests ListUrlHistories", () => {
                     searchText: "",
                     sortField: "",
                     currentPage: 1,
-                    privateHistories: true,
                     urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                 },
             },
