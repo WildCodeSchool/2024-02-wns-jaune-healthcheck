@@ -3,12 +3,17 @@ import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 type SyntaxWrapperProps = {
     children: string;
+    language: "html" | "json";
 };
 
-const SyntaxWrapper: React.FC<SyntaxWrapperProps> = ({ children }) => {
+const SyntaxWrapper: React.FC<SyntaxWrapperProps> = ({ 
+    children,
+    language,
+ }) => {
+
     return (
         <SyntaxHighlighter
-            language="html"
+            language={language}
             style={solarizedlight}
             showLineNumbers={true}
             lineNumberStyle={{

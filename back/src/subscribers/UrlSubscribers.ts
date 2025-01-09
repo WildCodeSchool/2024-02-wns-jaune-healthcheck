@@ -11,6 +11,7 @@ import { Url } from "../entities/Url";
 import { History } from "../entities/History";
 import axios from "axios";
 import dataSource from "../database/dataSource";
+import handleAxiosErrorResponse from "../utilities/handleAxiosErreurResponse";
 
 @EventSubscriber()
 export class UrlSubscriber implements EntitySubscriberInterface<Url> {
@@ -49,14 +50,28 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
         transactionalEntityManager: EntityManager,
     ) {
         try {
-            const response = await axios.get(url.path, {
-                validateStatus: () => true, // Do not throw on non-2xx status codes
-            });
+            
+            let response;
+            try {
+                response = await axios.get(url.path, {
+                    validateStatus: () => true,
+                    timeout: 5000,
+                });
+            } catch (error) {
+                console.log(error);
+                response = handleAxiosErrorResponse(error.code);
+            } 
+
+            let data = response.data;
+            const contentType = response.headers?.["content-type"] || "unknown";
+
+            if (contentType.includes("application/json")) {
+                data = JSON.stringify(data);
+            }
 
             if (!dataSource.isInitialized) {
                 await dataSource.initialize();
             }
-
             const existingMessageHistory = await History.findOne({
                 where: {
                     url: {
@@ -67,7 +82,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             });
 
             if (existingMessageHistory) {
-                existingMessageHistory.response = response.data;
+                existingMessageHistory.response = data;
                 existingMessageHistory.created_at = new Date();
                 await transactionalEntityManager.save(existingMessageHistory);
                 return;
@@ -75,8 +90,9 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
 
             const history = new History();
             history.url = url;
-            history.response = response.data;
+            history.response = data;
             history.status_code = response.status;
+            history.content_type = contentType;
 
             await transactionalEntityManager.save(history);
         } catch (error) {

@@ -6,10 +6,12 @@ export const historiesData = [
     {
         status_code: 200,
         response: "Youtube response",
+        content_type: "text/html",
     },
     {
         status_code: 500,
         response: "Facebook response",
+        content_type: "text/html",
     },
 ];
 

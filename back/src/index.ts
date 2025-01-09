@@ -13,6 +13,7 @@ import NotificationResolver from "./resolvers/NotificationResolver";
 
 const app = express();
 const port = process.env.BACKEND_PORT;
+const appEnv = process.env.APP_ENV;
 
 const start = async () => {
     const { httpServer, wsServer } = await startServer(
@@ -27,8 +28,9 @@ const start = async () => {
     );
 
     // Add worker thread for checkUrlSchedule and bind io websocket Server
+    const scheduleFile = appEnv === "production" ? "checkUrlSchedule.js" : "checkUrlSchedule.ts";
     const checkUrlWorker = new WorkerThread(
-        path.join(__dirname, "schedulers", "schedules", "checkUrlSchedule.ts"),
+        path.join(__dirname, "schedulers", "schedules", scheduleFile),
         wsServer,
     );
     checkUrlWorker.start();

@@ -15,15 +15,25 @@ type HistoryResponseModalProps = {
     statusCode: string;
     path: string;
     response: string;
+    contentType: string;
 };
 
 const HistoryResponseModal: React.FC<HistoryResponseModalProps> = ({
     statusCode,
     path,
     response,
+    contentType,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
+
+    const formatResponse = (response: string) => {
+        if (!response) return "";
+        if (contentType.includes("application/json")) {
+            return JSON.stringify(JSON.parse(response), null, 2);
+        }
+        return response;
+    }
 
     return (
         <Dialog
@@ -51,8 +61,18 @@ const HistoryResponseModal: React.FC<HistoryResponseModalProps> = ({
             <DialogContent className="sm:max-w-[60%]">
                 <DialogTitle className="-mb-4">{statusCode}</DialogTitle>
                 <DialogDescription>{path}</DialogDescription>
-                <div className="overflow-y-auto overflow-x-auto max-h-[80vh] whitespace-pre-line custom-scrollbar">
-                    <SyntaxWrapper>{response}</SyntaxWrapper>
+                <div 
+                    className="overflow-y-auto overflow-x-auto max-h-[80vh] whitespace-pre-line custom-scrollbar"
+                >
+                    <SyntaxWrapper
+                        language={
+                            contentType.includes("application/json")
+                                ? "json"
+                                : "html"
+                        }
+                    >
+                        {formatResponse(response)}
+                    </SyntaxWrapper>
                 </div>
             </DialogContent>
         </Dialog>
