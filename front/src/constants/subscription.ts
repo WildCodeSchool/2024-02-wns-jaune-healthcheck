@@ -20,7 +20,7 @@ interface Subscription {
 export const subscriptions: Subscription[] = [
     {
         id: Roles.FREE,
-        title: "Gratuit",
+        title: "Basique",
         description: "Accédez aux fonctionnalitées de base.",
         price: 0,
         features: [

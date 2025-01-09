@@ -81,7 +81,7 @@ export default function CancelForm({
               </DialogDescription>
             </DialogHeader>
 
-            <DialogFooter className="flex flex-col gap-2">
+            <DialogFooter className="flex flex-col-reverse gap-2">
               <Button
                 variant="outline"
                 onClick={closePricing}
