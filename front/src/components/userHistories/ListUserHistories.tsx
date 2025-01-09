@@ -114,7 +114,7 @@ const ListUserHistories: React.FC = () => {
                                   >
                                       <Card className="hover:border hover:border-primary">
                                           <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                              <div className="flex">
+                                              <div className="flex w-40">
                                                   <CardStatus
                                                       statusCode={
                                                           item.status_code
@@ -126,7 +126,7 @@ const ListUserHistories: React.FC = () => {
                                                   Url : {item.url.path}
                                               </p>
                                               <p>
-                                                  Ajouté le :{" "}
+                                                  Ajoutée le :{" "}
                                                   <span>
                                                       {new Date(
                                                           item.created_at,
