@@ -46,11 +46,8 @@ const chartConfig = {
 const UrlsByStatusChart: React.FC = () => {
   const [timeRange, setTimeRange] = useState("daily");
   const [chartData, setChartData] = useState<PrivatesUrlsByStatusQuery>();
-  const { loading, error, refetch } = usePrivatesUrlsByStatusQuery({
+  const { data, loading, error, refetch } = usePrivatesUrlsByStatusQuery({
       variables: {timeFrame: timeRange},
-      onCompleted: (data) => {
-          setChartData(data);
-      },
       fetchPolicy: "cache-and-network",
 
   });
@@ -59,6 +56,11 @@ const UrlsByStatusChart: React.FC = () => {
   useEffect(() => {
       refetch();
   }, [messages, refetch]);
+
+  useEffect(() => {
+      if (!data) return;
+      setChartData(data);
+  }, [data, setChartData]);
 
   if (loading && !chartData) {
       return (
