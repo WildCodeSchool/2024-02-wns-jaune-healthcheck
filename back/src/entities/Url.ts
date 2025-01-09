@@ -13,7 +13,7 @@ import { History } from "./History";
 import { User } from "./User";
 import { CheckFrequency } from "./CheckFrequency";
 import PaginateUrls from "../types/PaginatesUrls";
-import GroupByStatusUrl from "@/types/GroupByStatusUrl";
+import GroupByStatusUrl from "../types/GroupByStatusUrl";
 import DateFormat from "../utilities/DateFormat";
 
 

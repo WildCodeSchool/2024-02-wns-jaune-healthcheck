@@ -142,6 +142,7 @@ export type Query = {
   notifications: Array<Notification>;
   paginatesHistories: PaginatesHistories;
   privateHistoriesByStatus: Array<GroupByStatusHistory>;
+  privateSumUrls: Scalars['Float']['output'];
   privatesUrlsByStatus: Array<GroupByStatusUrl>;
   recentPrivateHistories: Array<History>;
   recentPrivateUrls: Array<Url>;
@@ -354,6 +355,11 @@ export type PrivatesUrlsByStatusQueryVariables = Exact<{
 
 
 export type PrivatesUrlsByStatusQuery = { __typename?: 'Query', privatesUrlsByStatus: Array<{ __typename?: 'GroupByStatusUrl', dateTime: string, offLine: number, onLine: number }> };
+
+export type PrivateSumUrlsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PrivateSumUrlsQuery = { __typename?: 'Query', privateSumUrls: number };
 
 
 export const AddUrlDocument = gql`
@@ -1208,3 +1214,40 @@ export type PrivatesUrlsByStatusQueryHookResult = ReturnType<typeof usePrivatesU
 export type PrivatesUrlsByStatusLazyQueryHookResult = ReturnType<typeof usePrivatesUrlsByStatusLazyQuery>;
 export type PrivatesUrlsByStatusSuspenseQueryHookResult = ReturnType<typeof usePrivatesUrlsByStatusSuspenseQuery>;
 export type PrivatesUrlsByStatusQueryResult = Apollo.QueryResult<PrivatesUrlsByStatusQuery, PrivatesUrlsByStatusQueryVariables>;
+export const PrivateSumUrlsDocument = gql`
+    query PrivateSumUrls {
+  privateSumUrls
+}
+    `;
+
+/**
+ * __usePrivateSumUrlsQuery__
+ *
+ * To run a query within a React component, call `usePrivateSumUrlsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivateSumUrlsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivateSumUrlsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePrivateSumUrlsQuery(baseOptions?: Apollo.QueryHookOptions<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>(PrivateSumUrlsDocument, options);
+      }
+export function usePrivateSumUrlsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>(PrivateSumUrlsDocument, options);
+        }
+export function usePrivateSumUrlsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>(PrivateSumUrlsDocument, options);
+        }
+export type PrivateSumUrlsQueryHookResult = ReturnType<typeof usePrivateSumUrlsQuery>;
+export type PrivateSumUrlsLazyQueryHookResult = ReturnType<typeof usePrivateSumUrlsLazyQuery>;
+export type PrivateSumUrlsSuspenseQueryHookResult = ReturnType<typeof usePrivateSumUrlsSuspenseQuery>;
+export type PrivateSumUrlsQueryResult = Apollo.QueryResult<PrivateSumUrlsQuery, PrivateSumUrlsQueryVariables>;
