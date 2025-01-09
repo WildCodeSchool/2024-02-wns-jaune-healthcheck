@@ -157,6 +157,10 @@ export class History extends BaseEntity {
                 `SUM(CASE WHEN history.content_type LIKE 'text/html%' THEN 1 ELSE 0 END)`,
                 "countHtml"
             )
+            .addSelect(
+                `SUM(CASE WHEN history.content_type = 'unknown' THEN 1 ELSE 0 END)`,
+                "countUnknown"
+            )
             .innerJoin("history.url", "url")
             .where("url.userId = :userId", { userId: authenticatedUserId })
             .groupBy("history.status_code")
@@ -166,6 +170,7 @@ export class History extends BaseEntity {
             statusCode: parseInt(result.statusCode, 0),
             countJson: parseInt(result.countJson, 0),
             countHtml: parseInt(result.countHtml, 0),
+            countUnknown: parseInt(result.countUnknown, 0),
         }));
     }
 

@@ -110,6 +110,7 @@ class HistoryResolver {
                         statusCode,
                         countJson: data.find((value) => value.statusCode === statusCode)?.countJson || 0,
                         countHtml: data.find((value) => value.statusCode === statusCode)?.countHtml || 0,
+                        countUnknown: data.find((value) => value.statusCode === statusCode)?.countUnknown || 0,
                     };
                 });
                
