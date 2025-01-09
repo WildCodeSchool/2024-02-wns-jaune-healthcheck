@@ -36,7 +36,6 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
             currentPage: Number(searchParams?.get("currentPage")) || 1,
-            //privateHistories: false,
             urlId: urlId,
         },
         fetchPolicy: "cache-and-network",

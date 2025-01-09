@@ -196,6 +196,7 @@ const UserSideBar: React.FC = () => {
                                 </DialogTrigger>
                                 <FormUserUrl
                                     setOpenDialog={setOpenDialog}
+                                    openDialog={openDialog}
                                 />
                             </Dialog>
                         </SidebarMenuItem>
