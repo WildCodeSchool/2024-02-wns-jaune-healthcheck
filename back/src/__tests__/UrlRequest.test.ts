@@ -157,9 +157,17 @@ describe("UrlSubscriber", () => {
 
         await subscriber.afterInsert(mockEvent as InsertEvent<Url>);
 
-        expect(consoleSpy).toHaveBeenCalledWith(
-            "Failed to log URL response",
-            expect.any(Error),
+        expect(mockEntityManager.findOne).toHaveBeenCalledWith(Url, {
+            where: { id: mockUrl.id },
+        });
+        expect(axios.get).toHaveBeenCalledWith(
+            mockUrl.path,
+            expect.objectContaining({
+                validateStatus: expect.any(Function),
+            }),
+        );
+        expect(mockEntityManager.save).toHaveBeenCalledWith(
+            expect.any(History),
         );
 
         consoleSpy.mockRestore();

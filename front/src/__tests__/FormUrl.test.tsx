@@ -71,7 +71,7 @@ describe("Form url tests", () => {
                     screen.getByText((content, element) => {
                         return (
                             element?.tagName.toLowerCase() === "button" &&
-                            content.includes("Ajout en cours")
+                            content.includes("Chargement...")
                         );
                     }),
                 ).toBeInTheDocument(),
