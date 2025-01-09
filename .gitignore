@@ -2,3 +2,5 @@
 .env.test
 data/*
 docker-compose-local.test.yaml
+/.idea/
+/.vscode/

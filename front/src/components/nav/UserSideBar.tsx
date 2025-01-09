@@ -21,7 +21,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -120,11 +119,8 @@ const UserSideBar: React.FC = () => {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton
-                                    size="lg"
-                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                                >
+                            <DropdownMenuTrigger>
+                                <SidebarMenuButton size="lg" className="hover:bg-transparent hover:cursor-default">
                                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                                         <img
                                             src={Logo}
@@ -136,37 +132,9 @@ const UserSideBar: React.FC = () => {
                                         <span className="truncate font-semibold">
                                             Health Checker
                                         </span>
-                                        <span className="truncate text-xs">
-                                            Monitoring service
-                                        </span>
                                     </div>
-                                    <ChevronsUpDown className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                                align="start"
-                                side="bottom"
-                                sideOffset={4}
-                            >
-                                <DropdownMenuLabel className="text-xs text-muted-foreground">
-                                    A propos
-                                </DropdownMenuLabel>
-                                {data.about.map((team, index) => (
-                                    <DropdownMenuItem
-                                        key={team.name}
-                                        className="gap-2 p-2"
-                                    >
-                                        <div className="flex size-6 items-center justify-center rounded-sm border">
-                                            <team.logo className="size-4 shrink-0" />
-                                        </div>
-                                        {team.name}
-                                        <DropdownMenuShortcut>
-                                            ⌘{index + 1}
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
                         </DropdownMenu>
                     </SidebarMenuItem>
                 </SidebarMenu>

@@ -1,7 +1,7 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
-import { SubscriptionProviderProps } from '@/types/subscription';
+import { StripeProviderProps } from '@/types/subscription';
 import { useCreateStripeSetupIntentMutation } from '@/generated/graphql-types';
 import { useEffect, useState } from 'react';
 import { toast } from '../../ui/use-toast';
@@ -14,7 +14,7 @@ export default function StripeProvider({
                                          showTier,
                                          showPremium,
                                          closePricing
-                                       }: SubscriptionProviderProps) {
+                                       }: StripeProviderProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [setupIntentSecret, setSetupIntentSecret] = useState<string>('');
 

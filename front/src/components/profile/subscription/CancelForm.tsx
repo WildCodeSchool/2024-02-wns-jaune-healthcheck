@@ -1,4 +1,4 @@
-import { CancelProviderProps } from '@/types/subscription';
+import { CancelFormProps } from '@/types/subscription';
 import { Button } from '../../ui/button';
 import { useCancelSubscriptionMutation } from '@/generated/graphql-types';
 import useAuthStore from '@/stores/authStore';
@@ -17,7 +17,7 @@ import {
 export default function CancelForm({
                                      showFree,
                                      closePricing
-                                   }: CancelProviderProps) {
+                                   }: CancelFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isCancellationValid, setIsCancellationValid] = useState<boolean>(false);
 
@@ -76,6 +76,7 @@ export default function CancelForm({
               <Button
                 variant="outline"
                 onClick={closePricing}
+                className="mr-auto"
               >
                 Ne pas résilier
               </Button>
@@ -95,7 +96,7 @@ export default function CancelForm({
           <>
             <DialogHeader>
               <DialogTitle>
-                Votre demande de résiliation a été validé
+                Votre demande de résiliation a été validée
               </DialogTitle>
               <DialogDescription>
                 Vos avantages sont entrain d'être retirés, veuillez

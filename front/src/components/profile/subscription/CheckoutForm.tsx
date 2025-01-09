@@ -6,7 +6,7 @@ import {
 import { Button } from '../../ui/button';
 import { useCreateSubscriptionMutation } from '@/generated/graphql-types';
 import useAuthStore from '@/stores/authStore';
-import { CheckoutProviderProps } from '@/types/subscription';
+import { CheckoutFormProps } from '@/types/subscription';
 import { FormEvent, useState } from 'react';
 import { StripePaymentElementChangeEvent } from '@stripe/stripe-js';
 import { toast } from '../../ui/use-toast';
@@ -22,7 +22,7 @@ import {
 export default function CheckoutForm({
                                        showPremium,
                                        closePricing
-                                     }: CheckoutProviderProps) {
+                                     }: CheckoutFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isPaymentValid, setIsPaymentValid] = useState<boolean>(false);
@@ -113,17 +113,18 @@ export default function CheckoutForm({
                 Souscrire à la formule {showPremium ? 'Premium' : 'Tier'} ?
               </DialogTitle>
               <DialogDescription>
-                Vos avantages seront actifs immediatement.
+                Vos avantages seront activés immédiatement.
               </DialogDescription>
             </DialogHeader>
 
             <DialogFooter>
               <form onSubmit={handleSubmit} className="w-full flex flex-col">
                 <PaymentElement onChange={handleFormChange} className="mb-4"/>
-                <div className="flex flex-row gap-2 self-end">
+                <div className="flex flex-row gap-2">
                   <Button
                     variant="outline"
                     type="button"
+                    className="mr-auto"
                     onClick={closePricing}
                   >
                     Annuler
@@ -145,7 +146,7 @@ export default function CheckoutForm({
           <>
             <DialogHeader>
               <DialogTitle>
-                Votre paiment a été validé
+                Votre paiement a été validé
               </DialogTitle>
               <DialogDescription>
                 Vos avantages sont entrain d'être débloqués, veuillez
