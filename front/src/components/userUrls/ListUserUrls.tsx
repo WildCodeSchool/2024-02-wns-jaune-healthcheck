@@ -88,7 +88,7 @@ const ListUserUrls: React.FC = () => {
                 </div>
             );
         });
-    };
+    }
 
     if (error) return "Error";
 

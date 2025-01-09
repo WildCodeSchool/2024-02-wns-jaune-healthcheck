@@ -96,7 +96,7 @@ const ListUserHistories: React.FC = () => {
                 </div>
             );
         });
-    };
+    }
 
     if (error) return "Error";
 
