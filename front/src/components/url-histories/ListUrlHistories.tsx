@@ -147,7 +147,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                         {urlData?.url.path}
                     </h2>
                 </section>
-                <section className="flex space-x-2">
+                <section className="flex space-x-1">
                     <HistoryResponseModal
                         statusCode={
                             String(

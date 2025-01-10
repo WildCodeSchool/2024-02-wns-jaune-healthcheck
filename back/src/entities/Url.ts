@@ -16,7 +16,6 @@ import PaginateUrls from "../types/PaginatesUrls";
 import GroupByStatusUrl from "../types/GroupByStatusUrl";
 import DateFormat from "../utilities/DateFormat";
 
-
 @Entity()
 @ObjectType()
 export class Url extends BaseEntity {
@@ -54,7 +53,10 @@ export class Url extends BaseEntity {
     lastCheckDate: Date;
 
     @Field(() => [History])
-    @OneToMany(() => History, (history) => history.url, { eager: true })
+    @OneToMany(() => History, (history) => history.url, {
+        eager: true,
+        onDelete: "CASCADE",
+    })
     histories: History[];
 
     @Field(() => User, { nullable: true })
@@ -68,6 +70,7 @@ export class Url extends BaseEntity {
     @ManyToOne(() => CheckFrequency, (checkFrequency) => checkFrequency.urls, {
         eager: true,
         nullable: true,
+        onDelete: "CASCADE",
     })
     checkFrequency?: CheckFrequency;
 
@@ -146,32 +149,36 @@ export class Url extends BaseEntity {
         const rawResults = await this.createQueryBuilder("url")
             .select(
                 `TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')`,
-                "dateTime"
+                "dateTime",
             )
             .addSelect(
                 `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
-                "onLine"
+                "onLine",
             )
             .addSelect(
                 `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
-                "offLine"
+                "offLine",
             )
             .innerJoin("url.histories", "history")
             .innerJoin("url.user", "user")
             .where("user.id = :authenticatedUserId", {
                 authenticatedUserId: authenticatedUserId,
             })
-            .andWhere("DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW()) OR DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW() - INTERVAL '1 hour')")
+            .andWhere(
+                "DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW()) OR DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW() - INTERVAL '1 hour')",
+            )
             .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')")
             .getRawMany();
 
-
         return rawResults.map((result) => {
             return {
-                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "dateTimeHourMinute"),
+                dateTime: DateFormat.formatDateStringToLocale(
+                    result.dateTime,
+                    "dateTimeHourMinute",
+                ),
                 onLine: parseInt(result.onLine, 0),
                 offLine: parseInt(result.offLine, 0),
-            }
+            };
         });
     }
 
@@ -181,31 +188,36 @@ export class Url extends BaseEntity {
         const rawResults = await this.createQueryBuilder("url")
             .select(
                 `TO_CHAR(history.created_at, 'YYYY-MM-DD HH24')`,
-                "dateTime"
+                "dateTime",
             )
             .addSelect(
                 `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
-                "onLine"
+                "onLine",
             )
             .addSelect(
                 `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
-                "offLine"
+                "offLine",
             )
             .innerJoin("url.histories", "history")
             .innerJoin("url.user", "user")
             .where("user.id = :authenticatedUserId", {
                 authenticatedUserId: authenticatedUserId,
             })
-            .andWhere("DATE_TRUNC('day', history.created_at) = DATE_TRUNC('day', NOW())")
+            .andWhere(
+                "DATE_TRUNC('day', history.created_at) = DATE_TRUNC('day', NOW())",
+            )
             .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24')")
             .getRawMany();
 
         return rawResults.map((result) => {
             return {
-                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "dateTimeHour"),
+                dateTime: DateFormat.formatDateStringToLocale(
+                    result.dateTime,
+                    "dateTimeHour",
+                ),
                 onLine: parseInt(result.onLine, 0),
                 offLine: parseInt(result.offLine, 0),
-            }
+            };
         });
     }
 }

@@ -38,7 +38,7 @@ import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
 import { Roles } from "@/constants/role.ts";
-import FormUserUrl from "../FormUserUrl";
+import FormUserUrl from "../user-urls/FormUserUrl.tsx";
 
 const data = {
     navigation: [
