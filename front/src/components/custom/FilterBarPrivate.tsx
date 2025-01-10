@@ -35,11 +35,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 placeholder="Rechercher..."
                 value={searchQuery}
                 onChange={handleInputChange}
-                className="w-full max-w-lg"
+                className="w-full"
             />
             <div className="flex max-md:justify-center justify-end gap-4 flex-grow w-full">
             <Select value={visibilityFilter} onValueChange={onVisibilityChange}>
-                <SelectTrigger className="max-md:w-full max-w-[250px]">
+                <SelectTrigger className="max-md:w-full w-full">
                     <SelectValue placeholder="Visibilité" />
                 </SelectTrigger>
                 <SelectContent>
@@ -49,7 +49,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 </SelectContent>
             </Select>
             <Select value={sortKey} onValueChange={handleSortChange}>
-                <SelectTrigger className="max-md:w-full max-w-[250px]">
+                <SelectTrigger className="max-md:w-full w-full">
                     <SelectValue placeholder="Choisir un tri" />
                 </SelectTrigger>
                 <SelectContent>
