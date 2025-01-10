@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Ctx, Arg } from "type-graphql";
 import Stripe from "stripe";
 import MyContext from "../types/MyContext";
-import { Roles, User } from '../entities/User';
+import { Roles, User } from "../entities/User";
 
 @Resolver()
 class SubscriptionResolver {
@@ -116,7 +116,7 @@ class SubscriptionResolver {
             if (!user) {
                 throw new Error("User not found");
             }
-            user.role = priceKey as Roles.TIER || Roles.PREMIUM;
+            user.role = (priceKey as Roles.TIER) || Roles.PREMIUM;
             await user.save();
 
             return JSON.stringify({
@@ -133,8 +133,8 @@ class SubscriptionResolver {
 
     @Mutation(() => String)
     async changeSubscriptionTier(
-      @Ctx() context: MyContext,
-      @Arg("newPriceKey", { nullable: false }) newPriceKey: string,
+        @Ctx() context: MyContext,
+        @Arg("newPriceKey", { nullable: false }) newPriceKey: string,
     ): Promise<string> {
         if (!context.payload) {
             throw new Error("User is not authenticated");
@@ -147,8 +147,8 @@ class SubscriptionResolver {
 
         try {
             const customer = await this.getOrCreateCustomer(
-              context.payload.email,
-              context.payload.id
+                context.payload.email,
+                context.payload.id,
             );
 
             const subscriptions = await this.stripe.subscriptions.list({
@@ -164,18 +164,20 @@ class SubscriptionResolver {
             const currentSubscription = subscriptions.data[0];
 
             await this.stripe.subscriptions.update(currentSubscription.id, {
-                items: [{
-                    id: currentSubscription.items.data[0].id,
-                    price: priceId,
-                }],
-                proration_behavior: 'always_invoice',
+                items: [
+                    {
+                        id: currentSubscription.items.data[0].id,
+                        price: priceId,
+                    },
+                ],
+                proration_behavior: "always_invoice",
             });
 
             const user = await User.findOneBy({ id: context.payload.id });
             if (!user) {
                 throw new Error("User not found");
             }
-            user.role = newPriceKey as Roles.TIER || Roles.PREMIUM;
+            user.role = (newPriceKey as Roles.TIER) || Roles.PREMIUM;
             await user.save();
 
             return JSON.stringify({

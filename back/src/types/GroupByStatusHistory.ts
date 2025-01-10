@@ -14,8 +14,5 @@ class GroupByStatusHistory {
     @Field()
     countUnknown: number;
 }
-    
-
-
 
 export default GroupByStatusHistory;

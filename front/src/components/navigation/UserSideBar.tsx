@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
     ChevronsUpDown,
@@ -68,7 +68,7 @@ const UserSideBar: React.FC = () => {
     const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
     const navigate = useNavigate();
-    const location = useLocation()
+    const location = useLocation();
 
     const isTier = user.role === Roles.TIER;
     const isPremium = user.role === Roles.PREMIUM;
@@ -159,7 +159,11 @@ const UserSideBar: React.FC = () => {
                     <SidebarMenu>
                         {data.navigation.map((item) => (
                             <SidebarMenuItem key={item.name}>
-                                <SidebarMenuButton asChild tooltip={item.name} isActive={location.pathname === item.url}>
+                                <SidebarMenuButton
+                                    asChild
+                                    tooltip={item.name}
+                                    isActive={location.pathname === item.url}
+                                >
                                     <Link to={item.url}>
                                         <item.icon />
                                         <span>{item.name}</span>

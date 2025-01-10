@@ -30,7 +30,8 @@ const start = async () => {
     );
 
     // Add worker thread for checkUrlSchedule and bind io websocket Server
-    const scheduleFile = appEnv === "production" ? "checkUrlSchedule.js" : "checkUrlSchedule.ts";
+    const scheduleFile =
+        appEnv === "production" ? "checkUrlSchedule.js" : "checkUrlSchedule.ts";
     const checkUrlWorker = new WorkerThread(
         path.join(__dirname, "schedulers", "schedules", scheduleFile),
         wsServer,
