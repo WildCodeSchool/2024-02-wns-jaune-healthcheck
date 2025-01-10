@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import { usePrivateSumUrlsQuery } from "@/generated/graphql-types";
 import clsx from "clsx";
 
@@ -28,13 +28,13 @@ const CountPrivatesUrlsCard: React.FC = () => {
         <Card
             className="flex flex-col justify-between h-full w-full"
         >
-            <CardHeader className="items-center pb-4">
+            <CardHeader className="items-left pb-4">
                 <CardTitle
                     className="text-lg"
                 >
                     Vos services
                 </CardTitle>
-                <CardDescription className="text-center">
+                <CardDescription className="text-left">
                     Nombre de services privés surveillés 
                 </CardDescription>
             </CardHeader>

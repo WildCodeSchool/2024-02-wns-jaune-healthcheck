@@ -138,9 +138,9 @@ const URLList: React.FC = () => {
                               );
                           })}
                     {!data?.urls.urls.length && (
-                        <div>
-                            <p className="text-muted-foreground">
-                                Aucune URL trouvée
+                        <div className="w-full">
+                            <p className="text-center text-muted-foreground italic">
+                                Aucune URL trouvée.
                             </p>
                         </div>
                     )}

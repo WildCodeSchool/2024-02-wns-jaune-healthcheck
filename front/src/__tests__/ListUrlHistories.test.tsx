@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import ListUrlHistories from "@/components/urlHistories/ListUrlHistories";
+import ListUrlHistories from "@/components/url-histories/ListUrlHistories";
 import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";

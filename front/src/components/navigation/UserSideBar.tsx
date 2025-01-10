@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
-    AudioWaveform,
     ChevronsUpDown,
-    Command,
-    GalleryVerticalEnd,
     LogOut,
     CircleGauge,
     Link as IconLink,
@@ -21,7 +18,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -41,28 +37,10 @@ import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
-import { Roles } from "@/types/user";
-import { Pricing } from "@/components/subscription/Pricing";
+import { Roles } from '@/constants/role.ts';
 import FormUserUrl from "../FormUserUrl";
 
 const data = {
-    about: [
-        {
-            name: "Acme Inc",
-            logo: GalleryVerticalEnd,
-            plan: "Enterprise",
-        },
-        {
-            name: "Acme Corp.",
-            logo: AudioWaveform,
-            plan: "Startup",
-        },
-        {
-            name: "Evil Corp.",
-            logo: Command,
-            plan: "Free",
-        },
-    ],
     navigation: [
         {
             name: "Tableau de bord",
@@ -70,7 +48,7 @@ const data = {
             icon: CircleGauge,
         },
         {
-            name: "Mes urls",
+            name: "Mes URLs",
             url: "/urls",
             icon: IconLink,
         },
@@ -86,12 +64,13 @@ const UserSideBar: React.FC = () => {
     const user = useAuthStore((state) => state.user);
     const { open } = useSidebar();
     const logout = useAuthStore((state) => state.logout);
-    const [openPricing, setOpenPricing] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState(false);
-    const [logoutQuery, { loading }] = useLogoutLazyQuery();
+    const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
+    const navigate = useNavigate();
 
-    const isPremium = user.role === Roles.PREMIUM || user.role === Roles.ADMIN;
+    const isTier = user.role === Roles.TIER;
+    const isPremium = user.role === Roles.PREMIUM;
 
     const handleLogout = () => {
         logoutQuery({
@@ -120,11 +99,8 @@ const UserSideBar: React.FC = () => {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton
-                                    size="lg"
-                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                                >
+                            <DropdownMenuTrigger>
+                                <SidebarMenuButton size="lg" className="hover:bg-transparent hover:cursor-default">
                                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                                         <img
                                             src={Logo}
@@ -136,37 +112,9 @@ const UserSideBar: React.FC = () => {
                                         <span className="truncate font-semibold">
                                             Health Checker
                                         </span>
-                                        <span className="truncate text-xs">
-                                            Monitoring service
-                                        </span>
                                     </div>
-                                    <ChevronsUpDown className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                                align="start"
-                                side="bottom"
-                                sideOffset={4}
-                            >
-                                <DropdownMenuLabel className="text-xs text-muted-foreground">
-                                    A propos
-                                </DropdownMenuLabel>
-                                {data.about.map((team, index) => (
-                                    <DropdownMenuItem
-                                        key={team.name}
-                                        className="gap-2 p-2"
-                                    >
-                                        <div className="flex size-6 items-center justify-center rounded-sm border">
-                                            <team.logo className="size-4 shrink-0" />
-                                        </div>
-                                        {team.name}
-                                        <DropdownMenuShortcut>
-                                            ⌘{index + 1}
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
                         </DropdownMenu>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -227,12 +175,12 @@ const UserSideBar: React.FC = () => {
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
-                                    {isPremium && (
+                                    {isTier && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(252 211 77)"
+                                            fill="rgb(113 63 18)"
                                             className={clsx(
-                                                "h-4 w-4 text-amber-300",
+                                                "h-4 w-4 text-yellow-900",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&
@@ -240,6 +188,20 @@ const UserSideBar: React.FC = () => {
                                                 "absolute",
                                             )}
                                         />
+                                    )}
+                                    {isPremium && (
+                                      <Crown
+                                        strokeWidth={3}
+                                        fill="rgb(252 211 77)"
+                                        className={clsx(
+                                          "h-4 w-4 text-amber-300",
+                                          "-left-[6px] -top-[6px]",
+                                          "transition-transform duration-200 ease-in-out",
+                                          open &&
+                                          "translate-x-2 translate-y-2",
+                                          "absolute",
+                                        )}
+                                      />
                                     )}
                                     <div
                                         className={clsx(
@@ -270,20 +232,20 @@ const UserSideBar: React.FC = () => {
                                 sideOffset={4}
                             >
                                 <DropdownMenuLabel>
-                                    <p>Profil</p>
+                                    <h1>Profil</h1>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem
-                                        onClick={() => setOpenPricing(true)}
+                                        onClick={() =>
+                                            navigate(
+                                                "/profile?tab=subscription",
+                                            )
+                                        }
                                         className="cursor-pointer"
                                     >
                                         <Crown className="mr-2 h-4 w-4" />
-                                        <p>
-                                            {loading
-                                                ? "Chargement ..."
-                                                : "Abonnements"}
-                                        </p>
+                                        <span>Abonnements</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
 
@@ -293,11 +255,7 @@ const UserSideBar: React.FC = () => {
                                     className="cursor-pointer"
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    <p>
-                                        {loading
-                                            ? "Chargement..."
-                                            : "Déconnexion"}
-                                    </p>
+                                    <span>Déconnexion</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -305,10 +263,6 @@ const UserSideBar: React.FC = () => {
                 </SidebarMenu>
             </SidebarFooter>
             <SidebarRail />
-            <Pricing
-                openPricing={openPricing}
-                setOpenPricing={setOpenPricing}
-            />
         </Sidebar>
     );
 };

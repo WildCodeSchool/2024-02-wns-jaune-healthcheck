@@ -142,12 +142,12 @@ export default function FormRegister() {
                             }}
                         />
                     </div>
-                    <DialogFooter className="pt-2">
+                    <DialogFooter className="pt-2 flex flex-col-reverse gap-2">
                         <DialogClose asChild>
                             <Button
                                 type="button"
                                 variant="outline"
-                                className="mr-auto"
+                                className="md:mr-auto"
                             >
                                 Annuler
                             </Button>
