@@ -208,38 +208,4 @@ export class Url extends BaseEntity {
             }
         });
     }
-
-    static async getPrivatesUrlsByStatusWeekly(
-        authenticatedUserId: string,
-    ): Promise<GroupByStatusUrl[]> {
-        const rawResults = await this.createQueryBuilder("url")
-            .select(
-                `TO_CHAR(history.created_at, 'YYYY-MM-DD')`,
-                "dateTime"
-            )
-            .addSelect(
-                `COUNT(DISTINCT CASE WHEN history.status_code = 200 THEN url.id END)`,
-                "onLine"
-            )
-            .addSelect(
-                `COUNT(DISTINCT CASE WHEN history.status_code <> 200 THEN url.id END)`,
-                "offLine"
-            )
-            .innerJoin("url.histories", "history")
-            .innerJoin("url.user", "user")
-            .where("user.id = :authenticatedUserId", {
-                authenticatedUserId: authenticatedUserId,
-            })
-            .andWhere("DATE_TRUNC('week', history.created_at) = DATE_TRUNC('week', NOW())")
-            .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD')")
-            .getRawMany();
-
-        return rawResults.map((result) => {
-            return {
-                dateTime: DateFormat.formatDateStringToLocale(result.dateTime, "date"),
-                onLine: parseInt(result.onLine, 0),
-                offLine: parseInt(result.offLine, 0),
-            }
-        });
-    }
 }

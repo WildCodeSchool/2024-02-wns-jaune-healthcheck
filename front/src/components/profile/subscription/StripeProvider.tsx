@@ -58,7 +58,7 @@ export default function StripeProvider({
             options={{
               clientSecret: setupIntentSecret,
               paymentMethodCreation: 'manual'
-            }}
+            } as any}
           >
             <CheckoutForm
               showPremium={showPremium}

@@ -1,12 +1,19 @@
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from 'type-graphql';
-import { Url } from '../entities/Url';
-import { CheckFrequency } from '../entities/CheckFrequency';
-import { validate } from 'class-validator';
-import { QueryFailedError } from 'typeorm';
-import MyContext from '../types/MyContext';
-import PaginateUrls from '../types/PaginatesUrls';
-import GroupByStatusUrl from '../types/GroupByStatusUrl';
-import { Roles, User } from '../entities/User';
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Arg,
+    InputType,
+    Field,
+    Ctx,
+} from "type-graphql";
+import { Url } from "../entities/Url";
+import { CheckFrequency } from "../entities/CheckFrequency";
+import { validate } from "class-validator";
+import { QueryFailedError } from "typeorm";
+import MyContext from "../types/MyContext";
+import PaginateUrls from "../types/PaginatesUrls";
+import GroupByStatusUrl from "../types/GroupByStatusUrl";
 
 
 @InputType()
@@ -51,7 +58,7 @@ class UrlResolver {
     @Query(() => [GroupByStatusUrl])
     async privatesUrlsByStatus(
         @Ctx() context: MyContext,
-        @Arg("timeFrame") timeFrame: "daily" | "hourly" | "weekly",
+        @Arg("timeFrame") timeFrame: "daily" | "hourly",
     ): Promise<GroupByStatusUrl[]> {
         try {
             if (context.payload) {
@@ -60,8 +67,6 @@ class UrlResolver {
                         return await Url.getPrivatesUrlsByStatusDaily(context.payload.id);
                     case "hourly":
                         return await Url.getPrivatesUrlsByStatusHourly(context.payload.id);
-                    case "weekly":
-                        return await Url.getPrivatesUrlsByStatusWeekly(context.payload.id);
                 }
             }
             throw new Error();
@@ -132,47 +137,17 @@ class UrlResolver {
         }
     }
 
-    @Mutation(() => Url || undefined)
+    @Mutation(() => Url)
     async addUrl(
         @Ctx() context: MyContext,
         @Arg("urlData") urlData: UrlInput,
         @Arg("isPrivate", { defaultValue: false }) isPrivate: boolean,
         @Arg("checkFrequencyId", { nullable: true }) checkFrequencyId?: string,
-    ): Promise<Url | undefined> {
+    ): Promise<Url> {
         try {
             let url;
 
             if (context.payload && isPrivate) {
-                const count = await Url.count({
-                    where: {
-                        user: { id: context.payload.id },
-                        private: true
-                    }
-                })
-
-                if (count > 0) {
-                    const currentUser = await User.findOneBy({
-                        id: context.payload?.id
-                    })
-
-                    switch (currentUser?.role) {
-                        case Roles.FREE:
-                            if (count >= 5) {
-                                throw new Error("Free limitation")
-                            }
-                            break
-                        case Roles.TIER:
-                            if (count >= 50) {
-                                throw new Error("Tier limitation")
-                            }
-                            break
-                        case Roles.PREMIUM:
-                            break
-                        default:
-                            break
-                    }
-                }
-
                 if (!checkFrequencyId) {
                     const defaultFrequency = await CheckFrequency.findOneBy({
                         interval: "Jour",
@@ -185,7 +160,6 @@ class UrlResolver {
                     path: encodeURI(urlData.path),
                     user: { id: context.payload.id },
                     checkFrequency: { id: checkFrequencyId },
-                    private: isPrivate
                 });
             } else {
                 url = Url.create({ ...urlData, path: encodeURI(urlData.path) });
@@ -207,16 +181,6 @@ class UrlResolver {
             if (error.message === "Data validation error") {
                 throw new Error(
                     "Erreur de validation des données, l'url doit comporter un chemin valide ex: http(s)://...",
-                );
-            }
-            if (error.message === "Free limitation") {
-                throw new Error(
-                  "La limite d'URL privée de la formule Gratuite a été atteinte.",
-                );
-            }
-            if (error.message === "Tier limitation") {
-                throw new Error(
-                  "La limite d'URL privée de la formule Tier a été atteinte.",
                 );
             }
             throw new Error("Internal server error");
