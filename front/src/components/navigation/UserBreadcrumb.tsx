@@ -5,7 +5,7 @@ import {
     BreadcrumbSeparator,
     BreadcrumbLink,
 } from "@/components/ui/breadcrumb";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from 'react-router-dom';
 import { useUrlQuery } from "@/generated/graphql-types";
 
 type UserBreadcrumbProps = {
@@ -32,7 +32,7 @@ const BreadcrumbWrapper: React.FC<breadcrumbWrapperProps> = ({ children }) => {
 const DashboardBreadcrumb: React.FC = () => {
     return (
         <BreadcrumbWrapper>
-            <BreadcrumbItem className="hidden md:block">
+            <BreadcrumbItem className="block">
                 Tableau de bord
             </BreadcrumbItem>
         </BreadcrumbWrapper>
@@ -43,8 +43,8 @@ const UrlsBreadcrumb: React.FC = () => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                    Mes urls
+                <BreadcrumbItem className="block">
+                    Mes URLs
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -55,7 +55,7 @@ const HistoriesBreadcrumb: React.FC = () => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="block">
                     Mes historiques
                 </BreadcrumbItem>
             </BreadcrumbList>
@@ -73,18 +73,30 @@ const UrlBreadcrumb: React.FC<UrlBreadCrumbProps> = ({ urlId }) => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="block">
                     <BreadcrumbLink asChild>
-                        <Link to="/urls">Mes urls</Link>
+                        <Link to="/urls">Mes URLs</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="block">
                     {loading && "..."}
                     {data && !loading && data.url?.name}
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
+    );
+};
+
+const ProfileSubscription: React.FC = () => {
+    return (
+      <Breadcrumb>
+          <BreadcrumbList>
+              <BreadcrumbItem className="block">
+                  Profil
+              </BreadcrumbItem>
+          </BreadcrumbList>
+      </Breadcrumb>
     );
 };
 
@@ -101,6 +113,8 @@ const UserBreadcrumb: React.FC<UserBreadcrumbProps> = ({ path }) => {
         case `/user-url/${id}`:
             if (!id) return null;
             return <UrlBreadcrumb urlId={id} />;
+        case "/profile":
+            return <ProfileSubscription />;
         default:
             return null;
     }

@@ -21,7 +21,7 @@ import {
     usePrivateHistoriesByStatusQuery,
     PrivateHistoriesByStatusQuery,
  } from "@/generated/graphql-types";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import useSocketStore from "@/stores/webSocketStore";
 
 
@@ -73,13 +73,13 @@ const HistoriesByStatusChart: React.FC = () => {
 
     return (
         <Card>
-            <CardHeader className="items-center pb-4">
+            <CardHeader className="items-start pb-4">
                 <CardTitle
                     className="text-lg"
                 >
                     Statuts de vos services
                 </CardTitle>
-                <CardDescription className="text-center">
+                <CardDescription className="text-left">
                     Historique des statuts de vos services par type de contenu
                 </CardDescription>
             </CardHeader>

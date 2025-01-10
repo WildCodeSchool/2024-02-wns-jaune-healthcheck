@@ -1,8 +1,8 @@
 import RecentHistories from "@/components/dashboard/RecentHistories";
 import RecentUrls from "@/components/dashboard/RecentUrls";
-import HistoriesByStatusChart from "@/components/charts/HistoriesByStatutChart";
-import UrlsByStatusChart from "@/components/charts/UrlsByStatusChart";
-import CountPrivatesUrlsCard from "@/components/custom/countPrivatesUrlsCard";
+import CountPrivatesUrlsCard from "@/components/dashboard/charts/CountPrivatesUrlsCard";
+import HistoriesByStatusChart from "@/components/dashboard/charts/HistoriesByStatutChart";
+import UrlsByStatusChart from "@/components/dashboard/charts/UrlsByStatusChart";
 
 export default function Dashboard() {
     return (

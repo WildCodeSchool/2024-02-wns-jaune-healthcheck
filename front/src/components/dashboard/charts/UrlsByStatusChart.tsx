@@ -25,7 +25,7 @@ import {
 import { 
   usePrivatesUrlsByStatusQuery,
   PrivatesUrlsByStatusQuery } from "@/generated/graphql-types";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import useSocketStore from "@/stores/webSocketStore";
 
 
@@ -97,9 +97,6 @@ const UrlsByStatusChart: React.FC = () => {
             <SelectItem value="daily" className="rounded-lg">
               Par heure
             </SelectItem>
-            <SelectItem value="weekly" className="rounded-lg">
-              Par jour
-            </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -144,11 +141,6 @@ const UrlsByStatusChart: React.FC = () => {
               minTickGap={32}
               tickFormatter={(value) => {
                 switch (timeRange) {
-                  case "weekly":
-                    return new Date(value).toLocaleDateString("fr-FR", {
-                      month: "short",
-                      day: "2-digit",
-                    });
                   case "daily":
                     return `${new Date(value).toLocaleDateString("fr-FR", {
                       hour: "2-digit",

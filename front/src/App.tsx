@@ -3,7 +3,7 @@ import useAuthStore from "./stores/authStore";
 import useSocketStore from "./stores/webSocketStore";
 import { useEffect } from "react";
 import { useMeLazyQuery } from "./generated/graphql-types";
-import { Roles } from "@/types/user";
+import { Roles } from '@/constants/role.ts';
 import { Dialog, DialogTrigger } from "./components/ui/dialog";
 import { Button } from "./components/ui/button";
 import { Shield } from "lucide-react";
@@ -12,7 +12,6 @@ import AdminPanel from "./components/admin/AdminPanel";
 function App({ children }: { children: React.ReactNode }) {
     const isLogged = useAuthStore((state) => state.isLogged);
 
-    /* TODO : Voir pour ajouter un loader animé sur la première visite */
     const [meQuery] = useMeLazyQuery();
     const me = useAuthStore((state) => state.me);
     const user = useAuthStore((state) => state.user);
