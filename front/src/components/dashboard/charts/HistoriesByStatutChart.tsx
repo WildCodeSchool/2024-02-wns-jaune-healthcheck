@@ -35,7 +35,7 @@ const chartConfig = {
         color: "hsl(var(--chart-2))",
     },
     countUnknown: {
-        label: "INCONNU",
+        label: "Autre",
         color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig

@@ -71,13 +71,13 @@ const UrlsByStatusChart: React.FC = () => {
   if (error) return <div>Erreur</div>;
 
   return (
-    <Card className={chartData?.privatesUrlsByStatus.length ? "h-full flex flex-col" : "hidden"}>
+    <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-left sm:text-left">
           <CardTitle
             className="text-lg"
           >
-            Etat de santé de vos services
+            État de santé de vos services
           </CardTitle>
           <CardDescription>
             Présentation périodique de l'état de santé de vos services.
