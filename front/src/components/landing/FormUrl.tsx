@@ -127,9 +127,9 @@ export default function FormUrl() {
                         Ajouter
                     </Button>
                 ) : (
-                  <div className="ml-auto">
-                    <ButtonLoader variant="default"/>
-                  </div>
+                    <div className="ml-auto">
+                        <ButtonLoader variant="default" />
+                    </div>
                 )}
             </form>
         </Form>

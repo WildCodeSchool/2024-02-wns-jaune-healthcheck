@@ -12,6 +12,7 @@ export const checkUrlMock = {
             checkUrl: {
                 name: "Test",
                 path: "https://google.fr",
+                private: false,
             },
         },
     },

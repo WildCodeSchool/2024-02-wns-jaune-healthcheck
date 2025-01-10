@@ -40,14 +40,14 @@ export default function Landing() {
                         <span className="underline underline-offset-8 text-primary">
                             publiques
                         </span>
-                        <br /> ajoutée par la communauté .
+                        <br /> ajoutées par la communauté.
                     </h1>
                     <h2>
                         Vous ne la{" "}
                         <span className="underline underline-offset-8 text-primary">
-                            trouvez pas
+                            trouvez pas{" "}
                         </span>
-                        , et bien{" "}
+                        ? Et bien{" "}
                         <span className="underline underline-offset-8 text-primary">
                             ajoutez la
                         </span>
@@ -62,7 +62,7 @@ export default function Landing() {
             <section className="w-full max-w-6xl mx-auto space-y-14">
                 <section className="text-center space-y-6">
                     <h1 className="text-4xl xs:text-3xl sm:text-5xl md:text-6xl font-bold">
-                        Rejoignez-nous <br/>
+                        Rejoignez-nous <br />
                         et bénéficiez de{" "}
                         <span className="underline underline-offset-8 text-primary">
                             précieux
@@ -81,7 +81,7 @@ export default function Landing() {
                         en un clic.
                     </h2>
                 </section>
-                <SubscriptionList/>
+                <SubscriptionList />
             </section>
         </div>
     );

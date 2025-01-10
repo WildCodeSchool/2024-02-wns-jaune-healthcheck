@@ -33,7 +33,7 @@ const HistoryResponseModal: React.FC<HistoryResponseModalProps> = ({
             return JSON.stringify(JSON.parse(response), null, 2);
         }
         return response;
-    }
+    };
 
     return (
         <Dialog
@@ -61,9 +61,7 @@ const HistoryResponseModal: React.FC<HistoryResponseModalProps> = ({
             <DialogContent className="sm:max-w-[60%]">
                 <DialogTitle className="-mb-4">{statusCode}</DialogTitle>
                 <DialogDescription>{path}</DialogDescription>
-                <div 
-                    className="overflow-y-auto overflow-x-auto max-h-[80vh] whitespace-pre-line custom-scrollbar"
-                >
+                <div className="overflow-y-auto overflow-x-auto max-h-[80vh] whitespace-pre-line custom-scrollbar">
                     <SyntaxWrapper
                         language={
                             contentType.includes("application/json")

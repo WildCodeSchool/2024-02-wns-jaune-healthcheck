@@ -43,46 +43,49 @@ export default function RecentUrls() {
                         <p>Loading</p>
                     ) : (
                         data?.recentPrivateUrls.map((url) => (
-                          <li key={url.id} className="flex items-center text-sm">
-                              <CardStatus
-                                statusCode={
-                                    url.histories[0]
-                                      ? url.histories[0].status_code
-                                      : null
-                                }
-                              />
-                              <div className="ml-4 min-w-0 flex-1 space-y-1">
-                                  <p className="font-medium leading-none">
-                                      {url.name}
-                                  </p>
-                                  <TooltipProvider>
-                                      <Tooltip>
-                                          <TooltipTrigger className="text-muted-foreground block w-full truncate text-left">
-                                              {url.path}
-                                          </TooltipTrigger>
-                                          <TooltipContent>
-                                              <p>{url.path}</p>
-                                          </TooltipContent>
-                                      </Tooltip>
-                                  </TooltipProvider>
-                              </div>
-                              <div className="ml-4 flex-shrink-0">
-                                  <p className="font-light italic text-muted-foreground">
-                                      Ajoutée le
-                                  </p>
-                                  <p className="font-medium">
-                                      {formatLocalDate(url.createdAt)}
-                                  </p>
-                              </div>
-                          </li>
+                            <li
+                                key={url.id}
+                                className="flex items-center text-sm"
+                            >
+                                <CardStatus
+                                    statusCode={
+                                        url.histories[0]
+                                            ? url.histories[0].status_code
+                                            : null
+                                    }
+                                />
+                                <div className="ml-4 min-w-0 flex-1 space-y-1">
+                                    <p className="font-medium leading-none">
+                                        {url.name}
+                                    </p>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger className="text-muted-foreground block w-full truncate text-left">
+                                                {url.path}
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>{url.path}</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </div>
+                                <div className="ml-4 flex-shrink-0">
+                                    <p className="font-light italic text-muted-foreground">
+                                        Ajoutée le
+                                    </p>
+                                    <p className="font-medium">
+                                        {formatLocalDate(url.createdAt)}
+                                    </p>
+                                </div>
+                            </li>
                         ))
                     )}
                     {!data?.recentPrivateUrls.length && (
-                      <li className="flex justify-center items-center text-sm">
-                          <p className="text-muted-foreground italic">
-                              Aucune URL disponible.
-                          </p>
-                      </li>
+                        <li className="flex justify-center items-center text-sm">
+                            <p className="text-muted-foreground italic">
+                                Aucune URL disponible.
+                            </p>
+                        </li>
                     )}
                 </ul>
             </CardContent>

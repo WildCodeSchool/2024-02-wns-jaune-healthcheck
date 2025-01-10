@@ -4,7 +4,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Roles } from '@/constants/role.ts';
+import { Roles } from "@/constants/role.ts";
 import { useMeLazyQuery } from "@/generated/graphql-types";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";

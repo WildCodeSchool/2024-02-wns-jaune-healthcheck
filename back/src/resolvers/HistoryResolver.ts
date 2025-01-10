@@ -103,17 +103,30 @@ class HistoryResolver {
     async privateHistoriesByStatus(@Ctx() context: MyContext) {
         try {
             if (context.payload) {
-                const data = await History.getGroupByStatusPrivateHistories(context.payload.id);
-                const statusCodes = [200, 401, 403, 301, 302, 304, 404, 408, 500, 502, 503, 504, 520];
+                const data = await History.getGroupByStatusPrivateHistories(
+                    context.payload.id,
+                );
+                const statusCodes = [
+                    200, 401, 403, 301, 302, 304, 404, 408, 500, 502, 503, 504,
+                    520,
+                ];
                 return statusCodes.map((statusCode) => {
                     return {
                         statusCode,
-                        countJson: data.find((value) => value.statusCode === statusCode)?.countJson || 0,
-                        countHtml: data.find((value) => value.statusCode === statusCode)?.countHtml || 0,
-                        countUnknown: data.find((value) => value.statusCode === statusCode)?.countUnknown || 0,
+                        countJson:
+                            data.find(
+                                (value) => value.statusCode === statusCode,
+                            )?.countJson || 0,
+                        countHtml:
+                            data.find(
+                                (value) => value.statusCode === statusCode,
+                            )?.countHtml || 0,
+                        countUnknown:
+                            data.find(
+                                (value) => value.statusCode === statusCode,
+                            )?.countUnknown || 0,
                     };
                 });
-               
             } else {
                 throw new Error();
             }

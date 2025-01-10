@@ -17,23 +17,23 @@ export default function Dashboard() {
                 <div className="lg:col-span-8 h-full">
                     {/* Second chart wrapper */}
                     <div className="h-full">
-                        <UrlsByStatusChart/>
+                        <UrlsByStatusChart />
                     </div>
                 </div>
                 <div className="lg:col-span-4 h-full">
                     <div className="h-full">
-                        <HistoriesByStatusChart/>
+                        <HistoriesByStatusChart />
                     </div>
                 </div>
                 <div className="lg:col-span-4 h-full">
                     <div className="h-full">
-                        <CountPrivatesUrlsCard/>
+                        <CountPrivatesUrlsCard />
                     </div>
                 </div>
                 <div className="lg:col-span-8 h-full">
                     <div className="grid grid-cols-1 gap-4 h-full">
-                        <RecentUrls/>
-                        <RecentHistories/>
+                        <RecentUrls />
+                        <RecentHistories />
                     </div>
                 </div>
             </section>

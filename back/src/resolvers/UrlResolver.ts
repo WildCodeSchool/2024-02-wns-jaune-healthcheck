@@ -162,12 +162,16 @@ class UrlResolver {
                 url = Url.create({
                     ...urlData,
                     path: encodeURI(urlData.path),
+                    private: isPrivate,
                     user: { id: context.payload.id },
                     checkFrequency: { id: checkFrequencyId },
-                    private: isPrivate
                 });
             } else {
-                url = Url.create({ ...urlData, path: encodeURI(urlData.path) });
+                url = Url.create({
+                    ...urlData,
+                    path: encodeURI(urlData.path),
+                    private: false,
+                });
             }
 
             const dataValidationError = await validate(url);
