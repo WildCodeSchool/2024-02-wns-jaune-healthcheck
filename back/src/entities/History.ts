@@ -49,6 +49,28 @@ export class History extends BaseEntity {
     notification?: Notification | null;
 
     static async deleteOldHistoriesByUrl(url: Url) {
+        const checkFrequency = url.checkFrequency?.interval;
+        let conservedNumber: number;
+
+        if (!checkFrequency) conservedNumber = 62;
+        switch (checkFrequency) {
+            case "Minute":
+                conservedNumber = 1440; // 24 hours
+                break;
+            case "Heure":
+                conservedNumber = 168; // 7 days
+                break;
+            case "Jour":
+                conservedNumber = 62; // ~ 2 month
+                break;
+            case "Semaine":
+                conservedNumber = 52; // ~ 1 year
+                break;
+            default:
+                conservedNumber = 62;
+        }
+            
+
         const query = `
             id NOT IN (
                 SELECT id FROM
@@ -58,7 +80,7 @@ export class History extends BaseEntity {
                             FROM history 
                             WHERE urlId = :urlId 
                             ORDER BY created_at DESC 
-                            LIMIT 29
+                            LIMIT :conservedNumber
                         )
 
                         UNION
@@ -75,7 +97,10 @@ export class History extends BaseEntity {
         `;
         return this.createQueryBuilder("history")
             .delete()
-            .where(query, { urlId: url.id })
+            .where(query, { 
+                conservedNumber: conservedNumber,
+                urlId: url.id 
+            })
             .execute();
     }
 

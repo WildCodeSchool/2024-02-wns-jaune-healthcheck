@@ -58,7 +58,7 @@ class UrlResolver {
     @Query(() => [GroupByStatusUrl])
     async privatesUrlsByStatus(
         @Ctx() context: MyContext,
-        @Arg("timeFrame") timeFrame: "daily" | "hourly" | "weekly",
+        @Arg("timeFrame") timeFrame: "daily" | "hourly",
     ): Promise<GroupByStatusUrl[]> {
         try {
             if (context.payload) {
@@ -67,8 +67,6 @@ class UrlResolver {
                         return await Url.getPrivatesUrlsByStatusDaily(context.payload.id);
                     case "hourly":
                         return await Url.getPrivatesUrlsByStatusHourly(context.payload.id);
-                    case "weekly":
-                        return await Url.getPrivatesUrlsByStatusWeekly(context.payload.id);
                 }
             }
             throw new Error();
