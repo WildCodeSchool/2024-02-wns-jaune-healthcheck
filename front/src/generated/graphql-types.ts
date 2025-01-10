@@ -67,7 +67,6 @@ export type History = {
 };
 
 export type Mutation = {
-<<<<<<< HEAD
   __typename?: 'Mutation';
   addUrl: Url;
   cancelSubscription: Scalars['String']['output'];
@@ -83,20 +82,6 @@ export type Mutation = {
   readNotification: Scalars['String']['output'];
   updateCheckFrequency: Url;
   updateUrlName: Url;
-=======
-    __typename?: "Mutation";
-    addUrl: Url;
-    cancelSubscription: Scalars["String"]["output"];
-    changeSubscriptionTier: Scalars["String"]["output"];
-    checkUrl: Url;
-    createStripeSetupIntent: Scalars["String"]["output"];
-    createSubscription: Scalars["String"]["output"];
-    createUser: Scalars["String"]["output"];
-    deleteAllNotifications: Scalars["String"]["output"];
-    deleteNotification: Scalars["String"]["output"];
-    login: Scalars["String"]["output"];
-    readNotification: Scalars["String"]["output"];
->>>>>>> aae94c2 (Tests : correction des tests front)
 };
 
 export type MutationAddUrlArgs = {
@@ -128,15 +113,12 @@ export type MutationDeleteNotificationArgs = {
     notificationId: Scalars["String"]["input"];
 };
 
-<<<<<<< HEAD
 
 export type MutationDeleteUrlArgs = {
   id: Scalars['String']['input'];
 };
 
 
-=======
->>>>>>> aae94c2 (Tests : correction des tests front)
 export type MutationLoginArgs = {
     email: Scalars["String"]["input"];
     password: Scalars["String"]["input"];
