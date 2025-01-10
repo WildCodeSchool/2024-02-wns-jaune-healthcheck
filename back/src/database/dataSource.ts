@@ -18,6 +18,7 @@ import { Notification1728629185397 } from './migrations/1728629185397-notificati
 import { TierRoleEnum1736421400775 } from './migrations/1736421400775-tier-role-enum';
 import {
   AddFieldContentTypeHistoryTable1736153283751 } from "./migrations/1736153283751-Add-field-content-type-history-table";
+import { UrlDeleteCascade1736522105212 } from './migrations/1736522105212-url-delete-cascade';
 
 const dataSource = new DataSource({
   type: 'postgres',
@@ -41,7 +42,8 @@ const dataSource = new DataSource({
     RolesEnum1728550416099,
     Notification1728629185397,
     AddFieldContentTypeHistoryTable1736153283751,
-    TierRoleEnum1736421400775
+    TierRoleEnum1736421400775,
+    UrlDeleteCascade1736522105212
   ]
 });
 

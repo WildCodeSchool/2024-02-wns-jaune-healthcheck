@@ -84,3 +84,29 @@ export const CANCEL_SUBSCRIPTION = gql`
         cancelSubscription
     }
 `;
+
+export const UPDATE_URL_NAME = gql`
+    mutation UpdateUrlName($id: String!, $name: String!) {
+        updateUrlName(id: $id, name: $name) {
+            id
+            name
+        }
+    }
+`;
+
+export const UPDATE_URL_CHECK_FREQUENCY = gql`
+    mutation UpdateCheckFrequency($id: String!, $checkFrequencyId: String!) {
+        updateCheckFrequency(id: $id, checkFrequencyId: $checkFrequencyId) {
+            id
+            checkFrequency {
+                id
+            }
+        }
+    }
+`;
+
+export const DELETE_URL = gql`
+    mutation DeleteUrl($id: String!) {
+        deleteUrl(id: $id)
+    }
+`;

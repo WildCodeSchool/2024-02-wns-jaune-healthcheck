@@ -62,8 +62,11 @@ export type Mutation = {
   createUser: Scalars['String']['output'];
   deleteAllNotifications: Scalars['String']['output'];
   deleteNotification: Scalars['String']['output'];
+  deleteUrl: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   readNotification: Scalars['String']['output'];
+  updateCheckFrequency: Url;
+  updateUrlName: Url;
 };
 
 
@@ -102,6 +105,11 @@ export type MutationDeleteNotificationArgs = {
 };
 
 
+export type MutationDeleteUrlArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -110,6 +118,18 @@ export type MutationLoginArgs = {
 
 export type MutationReadNotificationArgs = {
   notificationId: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateCheckFrequencyArgs = {
+  checkFrequencyId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateUrlNameArgs = {
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type Notification = {
@@ -300,6 +320,29 @@ export type CancelSubscriptionMutationVariables = Exact<{ [key: string]: never; 
 
 
 export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription: string };
+
+export type UpdateCheckFrequencyMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  checkFrequencyId: Scalars['String']['input'];
+}>;
+
+
+export type UpdateCheckFrequencyMutation = { __typename?: 'Mutation', updateCheckFrequency: { __typename?: 'Url', id: string, checkFrequency?: { __typename?: 'CheckFrequency', id: string } | null } };
+
+export type UpdateUrlNameMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUrlNameMutation = { __typename?: 'Mutation', updateUrlName: { __typename?: 'Url', id: string, name: string } };
+
+export type DeleteUrlMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteUrlMutation = { __typename?: 'Mutation', deleteUrl: boolean };
 
 export type GetAllURlsQueryVariables = Exact<{
   currentPage: Scalars['Float']['input'];
@@ -743,6 +786,109 @@ export function useCancelSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
 export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
 export type CancelSubscriptionMutationOptions = Apollo.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+export const UpdateCheckFrequencyDocument = gql`
+    mutation UpdateCheckFrequency($id: String!, $checkFrequencyId: String!) {
+  updateCheckFrequency(id: $id, checkFrequencyId: $checkFrequencyId) {
+    id
+    checkFrequency {
+      id
+    }
+  }
+}
+    `;
+export type UpdateCheckFrequencyMutationFn = Apollo.MutationFunction<UpdateCheckFrequencyMutation, UpdateCheckFrequencyMutationVariables>;
+
+/**
+ * __useUpdateCheckFrequencyMutation__
+ *
+ * To run a mutation, you first call `useUpdateCheckFrequencyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCheckFrequencyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCheckFrequencyMutation, { data, loading, error }] = useUpdateCheckFrequencyMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      checkFrequencyId: // value for 'checkFrequencyId'
+ *   },
+ * });
+ */
+export function useUpdateCheckFrequencyMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCheckFrequencyMutation, UpdateCheckFrequencyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCheckFrequencyMutation, UpdateCheckFrequencyMutationVariables>(UpdateCheckFrequencyDocument, options);
+      }
+export type UpdateCheckFrequencyMutationHookResult = ReturnType<typeof useUpdateCheckFrequencyMutation>;
+export type UpdateCheckFrequencyMutationResult = Apollo.MutationResult<UpdateCheckFrequencyMutation>;
+export type UpdateCheckFrequencyMutationOptions = Apollo.BaseMutationOptions<UpdateCheckFrequencyMutation, UpdateCheckFrequencyMutationVariables>;
+export const UpdateUrlNameDocument = gql`
+    mutation UpdateUrlName($id: String!, $name: String!) {
+  updateUrlName(id: $id, name: $name) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateUrlNameMutationFn = Apollo.MutationFunction<UpdateUrlNameMutation, UpdateUrlNameMutationVariables>;
+
+/**
+ * __useUpdateUrlNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateUrlNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUrlNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUrlNameMutation, { data, loading, error }] = useUpdateUrlNameMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateUrlNameMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUrlNameMutation, UpdateUrlNameMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUrlNameMutation, UpdateUrlNameMutationVariables>(UpdateUrlNameDocument, options);
+      }
+export type UpdateUrlNameMutationHookResult = ReturnType<typeof useUpdateUrlNameMutation>;
+export type UpdateUrlNameMutationResult = Apollo.MutationResult<UpdateUrlNameMutation>;
+export type UpdateUrlNameMutationOptions = Apollo.BaseMutationOptions<UpdateUrlNameMutation, UpdateUrlNameMutationVariables>;
+export const DeleteUrlDocument = gql`
+    mutation DeleteUrl($id: String!) {
+  deleteUrl(id: $id)
+}
+    `;
+export type DeleteUrlMutationFn = Apollo.MutationFunction<DeleteUrlMutation, DeleteUrlMutationVariables>;
+
+/**
+ * __useDeleteUrlMutation__
+ *
+ * To run a mutation, you first call `useDeleteUrlMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUrlMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUrlMutation, { data, loading, error }] = useDeleteUrlMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteUrlMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUrlMutation, DeleteUrlMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUrlMutation, DeleteUrlMutationVariables>(DeleteUrlDocument, options);
+      }
+export type DeleteUrlMutationHookResult = ReturnType<typeof useDeleteUrlMutation>;
+export type DeleteUrlMutationResult = Apollo.MutationResult<DeleteUrlMutation>;
+export type DeleteUrlMutationOptions = Apollo.BaseMutationOptions<DeleteUrlMutation, DeleteUrlMutationVariables>;
 export const GetAllURlsDocument = gql`
     query GetAllURls($currentPage: Float!, $sortField: String!, $searchText: String!, $privateUrls: Boolean) {
   urls(

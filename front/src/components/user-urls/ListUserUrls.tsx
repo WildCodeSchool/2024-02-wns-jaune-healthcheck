@@ -16,10 +16,43 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 import { EllipsisVertical } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx";
+import FormUpdateUserUrlName from "@/components/user-urls/FormUpdateUserUrlName.tsx";
+import { Dialog } from "@/components/ui/dialog.tsx";
+import FormDeleteUserUrl from '@/components/user-urls/FormDeleteUserUrl.tsx';
+import FormUpdateUserUrlFrequency from '@/components/user-urls/FormUpdateUserUrlFrequency.tsx';
+import { Roles } from '@/constants/role.ts';
+import useAuthStore from '@/stores/authStore.tsx';
+
+type urlDialog = {
+    name: boolean,
+    frequency: boolean,
+    delete: boolean
+}
+
+type selectedItem = {
+    id: string;
+    urlName?: string;
+    urlPath?: string;
+};
 
 const ListUserUrls: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+    const user = useAuthStore((state) => state.user);
+    const [openDialog, setOpenDialog] = useState<urlDialog>({
+        name: false,
+        frequency: false,
+        delete: false,
+    });
+    const [selectedItem, setSelectedItem] = useState<selectedItem | null>(null);
+
+    /* FILTRE et PAGINATION */
+    const [searchParams, setSearchParams] = useSearchParams();
     const [visibility, setVisibility] = useState<"private" | "public" | "all">(
         "all",
     );
@@ -53,6 +86,7 @@ const ListUserUrls: React.FC = () => {
         if (!data) {
             return;
         }
+        console.log(data.urls)
         setPaginateUrls(data.urls as PaginateUrls);
     }, [data]);
 
@@ -87,6 +121,10 @@ const ListUserUrls: React.FC = () => {
         setSearchParams(newSearchParams);
     };
 
+    const pushToHistory = (itemId: string) => {
+        navigate(`/user-url/${itemId}`);
+    };
+
     if (loading && !PaginateUrls.urls.length) {
         return Array.from({ length: 10 }, (_, index) => {
             return (
@@ -97,10 +135,49 @@ const ListUserUrls: React.FC = () => {
         });
     }
 
+    /* MUTATION DIALOG */
+    const isPremium = user.role === Roles.PREMIUM;
+
+    const handleUpdateName = (urlId: string, urlName: string) => {
+        setSelectedItem({
+            id: urlId,
+            urlName,
+        });
+        setOpenDialog({ ...openDialog, name: true });
+    };
+
+    const handleUpdateCheckFrequency = (urlId: string, urlName: string) => {
+        setSelectedItem({
+            id: urlId,
+            urlName
+        });
+        setOpenDialog({ ...openDialog, frequency: true });
+    };
+
+    const handleDeleteUrl = (urlId: string, urlPath: string) => {
+        setSelectedItem({
+            id: urlId,
+            urlPath,
+        });
+        setOpenDialog({ ...openDialog, delete: true });
+    };
+
+    const closeDialog = () => {
+        setSelectedItem({
+            id: "",
+            urlName: "",
+            urlPath: ""
+        })
+        setOpenDialog({
+            name: false,
+            frequency: false,
+            delete: false,
+        });
+    };
+
     if (error) {
         return "Error";
     }
-
     return (
         <div className="h-fit">
             <section className="pb-4">
@@ -138,26 +215,36 @@ const ListUserUrls: React.FC = () => {
                             {PaginateUrls.urls.map((item) => (
                                 <TableRow
                                     key={item.id}
-                                    onClick={() =>
-                                        navigate(`/user-url/${item.id}`)
-                                    }
                                     className="hover:cursor-pointer"
                                 >
-                                    <TableCell>
+                                    <TableCell
+                                        onClick={() => pushToHistory(item.id)}
+                                    >
                                         <CardStatus
                                             statusCode={
                                                 item.histories[0].status_code
                                             }
                                         />
                                     </TableCell>
-                                    <TableCell className="font-semibold">
+                                    <TableCell
+                                        onClick={() => pushToHistory(item.id)}
+                                        className="font-semibold"
+                                    >
                                         {item.name}
                                     </TableCell>
-                                    <TableCell>{item.path}</TableCell>
-                                    <TableCell>
+                                    <TableCell
+                                        onClick={() => pushToHistory(item.id)}
+                                    >
+                                        {item.path}
+                                    </TableCell>
+                                    <TableCell
+                                        onClick={() => pushToHistory(item.id)}
+                                    >
                                         {item.private ? "Oui" : "Non"}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell
+                                        onClick={() => pushToHistory(item.id)}
+                                    >
                                         <p className="text-muted-foreground italic first-letter:uppercase">
                                             {new Date(
                                                 item.createdAt,
@@ -168,10 +255,107 @@ const ListUserUrls: React.FC = () => {
                                         </p>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <EllipsisVertical
-                                            size={16}
-                                            className="ml-auto"
-                                        />
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                                <EllipsisVertical
+                                                    size={16}
+                                                    className="ml-auto"
+                                                />
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        handleUpdateName(
+                                                            item.id,
+                                                            item.name,
+                                                        );
+                                                    }}
+                                                >
+                                                    Changer le nom
+                                                </DropdownMenuItem>
+                                                {item.private && isPremium && (<DropdownMenuItem
+                                                    onClick={() => {
+                                                        handleUpdateCheckFrequency(
+                                                            item.id,
+                                                          item.name
+                                                        );
+                                                    }}
+                                                >
+                                                    Changer la fréquence
+                                                </DropdownMenuItem>)}
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        handleDeleteUrl(
+                                                            item.id,
+                                                            item.path,
+                                                        );
+                                                    }}
+                                                    className="text-red-500"
+                                                >
+                                                    Supprimer
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+
+                                        {openDialog.name && selectedItem && (
+                                            <Dialog
+                                                open={openDialog.name}
+                                                onOpenChange={(isOpen) =>
+                                                    setOpenDialog({
+                                                        ...openDialog,
+                                                        name: isOpen,
+                                                    })
+                                                }
+                                            >
+                                                <FormUpdateUserUrlName
+                                                    urlId={selectedItem.id}
+                                                    currentName={
+                                                        selectedItem.urlName as string
+                                                    }
+                                                    closeDialog={closeDialog}
+                                                />
+                                            </Dialog>
+                                        )}
+
+                                        {openDialog.frequency && selectedItem && (
+                                          <Dialog
+                                            open={openDialog.frequency}
+                                            onOpenChange={(isOpen) =>
+                                              setOpenDialog({
+                                                  ...openDialog,
+                                                  frequency: isOpen,
+                                              })
+                                            }
+                                          >
+                                              <FormUpdateUserUrlFrequency
+                                                urlId={selectedItem.id}
+                                                currentName={
+                                                    selectedItem.urlName as string
+                                                }
+                                                closeDialog={closeDialog}
+                                              />
+                                          </Dialog>
+                                        )}
+
+                                        {openDialog.delete && selectedItem && (
+                                          <Dialog
+                                            open={openDialog.delete}
+                                            onOpenChange={(isOpen) =>
+                                              setOpenDialog({
+                                                  ...openDialog,
+                                                  delete: isOpen,
+                                              })
+                                            }
+                                          >
+                                              <FormDeleteUserUrl
+                                                urlId={selectedItem.id}
+                                                urlPath={
+                                                    selectedItem.urlPath as string
+                                                }
+                                                closeDialog={closeDialog}
+                                              />
+                                          </Dialog>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}

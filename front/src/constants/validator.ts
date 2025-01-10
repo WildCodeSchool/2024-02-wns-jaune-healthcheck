@@ -46,3 +46,20 @@ export const loginSchema = z.object({
             "Doit contenir minimum une majuscule, une minuscule, un chiffre et un caractère spécial",
         ),
 });
+
+export const updateNameSchema = z.object({
+    name: z
+      .string()
+      .min(3, "Minimum 3 caractères")
+      .max(55, "Maximum 55 caractères")
+});
+
+export const updateFrequencySchema = z.object({
+    checkFrequency: z.string().min(1, "La fréquence ne peut pas être vide."),
+});
+
+export const deleteUrlSchema = z.object({
+    path: z.string().min(10, "Minimum 10 caractères").startsWith("https://", {
+        message: "L'URL doit être sécurisée pour être ajoutée",
+    }),
+});
