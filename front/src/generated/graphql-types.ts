@@ -309,7 +309,7 @@ export type GetAllURlsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllURlsQuery = { __typename?: 'Query', urls: { __typename?: 'PaginateUrls', totalPages: number, currentPage: number, previousPage: number, nextPage: number, urls: Array<{ __typename?: 'Url', id: string, name: string, path: string, createdAt: any, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }> }> } };
+export type GetAllURlsQuery = { __typename?: 'Query', urls: { __typename?: 'PaginateUrls', totalPages: number, currentPage: number, previousPage: number, nextPage: number, urls: Array<{ __typename?: 'Url', id: string, name: string, path: string, private: boolean, createdAt: any, histories: Array<{ __typename?: 'History', id: string, response: string, status_code: number, created_at: any }> }> } };
 
 export type UrlQueryVariables = Exact<{
   urlId: Scalars['String']['input'];
@@ -327,7 +327,7 @@ export type PaginatesHistoriesQueryVariables = Exact<{
 }>;
 
 
-export type PaginatesHistoriesQuery = { __typename?: 'Query', paginatesHistories: { __typename?: 'PaginatesHistories', currentPage: number, nextPage: number, previousPage: number, totalPages: number, histories: Array<{ __typename?: 'History', id: string, created_at: any, status_code: number, url: { __typename?: 'Url', id: string, name: string, path: string } }> } };
+export type PaginatesHistoriesQuery = { __typename?: 'Query', paginatesHistories: { __typename?: 'PaginatesHistories', currentPage: number, nextPage: number, previousPage: number, totalPages: number, histories: Array<{ __typename?: 'History', id: string, created_at: any, status_code: number, url: { __typename?: 'Url', id: string, name: string, path: string, private: boolean } }> } };
 
 export type RecentPrivateUrlsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -755,6 +755,7 @@ export const GetAllURlsDocument = gql`
       id
       name
       path
+      private
       createdAt
       histories {
         id
@@ -879,6 +880,7 @@ export const PaginatesHistoriesDocument = gql`
         id
         name
         path
+        private
       }
     }
   }

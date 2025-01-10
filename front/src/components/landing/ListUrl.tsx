@@ -79,25 +79,29 @@ const URLList: React.FC = () => {
                 onSortChange={handleSortChange}
             />
             <div className="flex-grow">
-                <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
-                    {data && data.urls.urls
-                        ? data.urls.urls.map((item) => <UrlCard item={item} />)
-                        : Array.from({ length: 16 }, (_, index) => {
-                              return (
-                                  <Skeleton
-                                      key={index}
-                                      className="h-[143px] rounded-lg"
-                                  />
-                              );
-                          })}
-                    {!data?.urls.urls.length && (
-                        <div className="w-full">
-                            <p className="text-center text-muted-foreground italic">
-                                Aucune URL trouvée.
-                            </p>
-                        </div>
-                    )}
-                </List>
+                {data && (
+                    <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
+                        {data.urls.urls
+                            ? data.urls.urls.map((item) => (
+                                  <UrlCard item={item} />
+                              ))
+                            : Array.from({ length: 16 }, (_, index) => {
+                                  return (
+                                      <Skeleton
+                                          key={index}
+                                          className="h-[143px] rounded-lg"
+                                      />
+                                  );
+                              })}
+                    </List>
+                )}
+                {!data?.urls.urls.length && (
+                  <div className="mx-auto w-full flex justify-center align-middle">
+                      <p className="text-center text-muted-foreground italic">
+                          Aucune URL trouvée.
+                      </p>
+                  </div>
+                )}
             </div>
             {data && data.urls.totalPages > 1 && data.urls.totalPages !== 0 && (
                 <CustomPagination

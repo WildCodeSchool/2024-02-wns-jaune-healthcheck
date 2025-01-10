@@ -1,25 +1,32 @@
 import { useState, useEffect } from "react";
-import {
-    Card,
-    List,
-    ListItem,
-    CardStatus,
-    CardContent,
-} from "@/components/ui/card";
-import { useSearchParams, Link } from "react-router-dom";
+import { CardStatus } from "@/components/ui/card";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import FilterBar from "@/components/custom/FilterBarPrivate";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginateUrls } from "@/generated/graphql-types";
 import CustomPagination from "@/components/custom/CustomPagination";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table.tsx";
+import { EllipsisVertical } from "lucide-react";
 
 const ListUserUrls: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [visibility, setVisibility] = useState<"private" | "public" | "all">(
         "all",
     );
     const getPrivateUrlsValue = (visibility: string): boolean | undefined => {
-        if (visibility === "all") return undefined;
+        if (visibility === "all") {
+            return undefined;
+        }
         return visibility === "private";
     };
 
@@ -43,7 +50,9 @@ const ListUserUrls: React.FC = () => {
     const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
 
     useEffect(() => {
-        if (!data) return;
+        if (!data) {
+            return;
+        }
         setPaginateUrls(data.urls as PaginateUrls);
     }, [data]);
 
@@ -82,108 +91,116 @@ const ListUserUrls: React.FC = () => {
         return Array.from({ length: 10 }, (_, index) => {
             return (
                 <div className="w-full mt-24" key={index}>
-                    <Skeleton
-                        className="h-[40px] rounded-lg"
-                    />
+                    <Skeleton className="h-[40px] rounded-lg" />
                 </div>
             );
         });
     }
 
-    if (error) return "Error";
+    if (error) {
+        return "Error";
+    }
 
     return (
-      <div className="w-full h-fit m-auto">
-          <section className="pb-4">
-              <h1 className="font-semibold text-2xl mb-[1px]">
-                  Liste des URLs
-              </h1>
-              <h2 className="mb-4 text-sm text-gray-500">
-                  Filtrez les comme bon vous semble.
-              </h2>
-          </section>
-          <section className="flex flex-col gap-4">
-              <FilterBar
-                onSearch={handleSearch}
-                onSortChange={handleSortChange}
-                searchQuery={searchParams.get('searchUrl') || ''}
-                sortKey={searchParams.get('sortField') || ''}
-                onVisibilityChange={(value) =>
-                  setVisibility(value as "private" | "public" | "all")
-                }
-                visibilityFilter={visibility}
-              />
-              <div className="w-full flex-grow">
-                  <List className="w-full">
-                      {PaginateUrls.urls.map((item) => (
-                        <ListItem
-                          key={item.id}
-                          className="flex justify-center items-start w-full"
-                        >
-                            <Link
-                              key={item.id}
-                              to={`/user-url/${item.id}`}
-                              rel="noopener noreferrer"
-                              className="w-full"
-                            >
-                                <Card className="hover:border hover:border-primary">
-                                    <CardContent
-                                      className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                        <div className="flex w-40">
-                                            <CardStatus
-                                              statusCode={
-                                                  item.histories[0]
-                                                    ? item
-                                                      .histories[0]
-                                                      .status_code
-                                                    : null
-                                              }
-                                            />
-                                            <p className="truncate">
-                                                {item.name}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center">
-                                                  <span className="font-extralight text-sm whitespace-nowrap">
-                                                      Url :{" "}
-                                                  </span>
-                                            <span className="font-extralight text-sm ml-1">
-                                                      {item.path}
-                                                  </span>
-                                        </div>
-                                        <p>
-                                            Ajoutée le :{" "}
-                                            {new Date(
-                                              item.createdAt,
-                                            ).toLocaleDateString()}
-                                        </p>
-                                        <button>:</button>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        </ListItem>
-                      ))
-                      }
-                      {!loading && !PaginateUrls.urls.length && (
-                        <p className="text-center text-muted-foreground">
-                            Aucune URL
-                        </p>
-                      )}
-                  </List>
-              </div>
-              {PaginateUrls.urls.length &&
-              PaginateUrls.totalPages > 1 &&
-              PaginateUrls.totalPages !== 0 ? (
-                <CustomPagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  previousPage={previousPage}
-                  nextPage={nextPage}
-                  onPageChange={handlePageChange}
+        <div className="w-full h-fit m-auto">
+            <section className="pb-4">
+                <h1 className="font-semibold text-2xl mb-[1px]">
+                    Liste des URLs
+                </h1>
+                <h2 className="mb-4 text-sm text-gray-500">
+                    Filtrez les comme bon vous semble.
+                </h2>
+            </section>
+            <section className="flex flex-col gap-4">
+                <FilterBar
+                    onSearch={handleSearch}
+                    onSortChange={handleSortChange}
+                    searchQuery={searchParams.get("searchUrl") || ""}
+                    sortKey={searchParams.get("sortField") || ""}
+                    onVisibilityChange={(value) =>
+                        setVisibility(value as "private" | "public" | "all")
+                    }
+                    visibilityFilter={visibility}
                 />
-              ) : null}
-          </section>
-      </div>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Nom</TableHead>
+                            <TableHead>URL</TableHead>
+                            <TableHead>Privée</TableHead>
+                            <TableHead>Date d'ajout</TableHead>
+                            <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    {PaginateUrls.urls && (
+                        <TableBody>
+                            {PaginateUrls.urls.map((item) => (
+                                <TableRow
+                                    key={item.id}
+                                    onClick={() =>
+                                        navigate(`/user-url/${item.id}`)
+                                    }
+                                    className="hover:cursor-pointer"
+                                >
+                                    <TableCell>
+                                        <CardStatus
+                                            statusCode={
+                                                item.histories[0].status_code
+                                            }
+                                        />
+                                    </TableCell>
+                                    <TableCell className="font-semibold">
+                                        {item.name}
+                                    </TableCell>
+                                    <TableCell>{item.path}</TableCell>
+                                    <TableCell>
+                                        {item.private ? "Oui" : "Non"}
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className="text-muted-foreground italic first-letter:uppercase">
+                                            {new Date(
+                                                item.createdAt,
+                                            ).toLocaleDateString()}{" "}
+                                            {new Date(
+                                                item.createdAt,
+                                            ).toLocaleTimeString()}
+                                        </p>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <EllipsisVertical
+                                            size={16}
+                                            className="ml-auto"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    )}
+                    {!loading && !PaginateUrls.urls.length && (
+                        <TableFooter className="bg-transparent">
+                            <TableCell
+                                className="text-center text-sm font-normal text-muted-foreground italic"
+                                colSpan={6}
+                            >
+                                Aucune URL disponible.
+                            </TableCell>
+                        </TableFooter>
+                    )}
+                </Table>
+                {PaginateUrls.urls.length &&
+                PaginateUrls.totalPages > 1 &&
+                PaginateUrls.totalPages !== 0 ? (
+                    <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        onPageChange={handlePageChange}
+                    />
+                ) : null}
+            </section>
+        </div>
     );
 };
 

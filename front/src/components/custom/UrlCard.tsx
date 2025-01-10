@@ -47,7 +47,7 @@ export default function UrlCard({ item }: UrlCardProps) {
                                     : null
                             }
                         />
-                        <p className="text-sm">
+                        <p className="text-sm font-medium">
                             {item.histories[0]
                                 ? `Status ${item.histories[0].status_code}`
                                 : ""}

@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-    Card,
-    List,
-    ListItem,
-    CardStatus,
-    CardContent,
-} from "@/components/ui/card";
-import { useSearchParams } from "react-router-dom";
+import { CardStatus } from "@/components/ui/card";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import FilterBar from "@/components/custom/FilterBarPrivate";
 import {
     PaginatesHistories,
@@ -14,12 +8,27 @@ import {
 } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomPagination from "@/components/custom/CustomPagination";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table.tsx";
+import ReactTimeAgo from "react-time-ago";
+import TimeAgo from "javascript-time-ago";
+import fr from "javascript-time-ago/locale/fr";
 
 const ListUserHistories: React.FC = () => {
+    TimeAgo.addLocale(fr);
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [visibility, setVisibility] = useState<"private" | "public" | "all">(
         "all",
     );
+    const navigate = useNavigate();
 
     const getPrivateHistoriesValue = (
         visibility: string,
@@ -125,65 +134,62 @@ const ListUserHistories: React.FC = () => {
                     }
                     visibilityFilter={visibility}
                 />
-                <div className="w-full flex-grow">
-                    <List className="w-full">
-                        {PaginateHistories.histories.map((item) => (
-                            <ListItem
-                                key={item.id}
-                                className="flex justify-center items-start w-full"
-                            >
-                                <a
-                                    href={`/history-url/${item.url.id}`}
-                                    rel="noopener noreferrer"
-                                    className="w-full"
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Nom</TableHead>
+                            <TableHead>URL</TableHead>
+                            <TableHead>Privée</TableHead>
+                            <TableHead className="text-right">
+                                Vérifié
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    {PaginateHistories.histories && (
+                        <TableBody>
+                            {PaginateHistories.histories.map((item) => (
+                                <TableRow
+                                    key={item.id}
+                                    onClick={() =>
+                                        navigate(`/history-url/${item.url.id}`)
+                                    }
+                                    className="hover:cursor-pointer"
                                 >
-                                    <Card className="hover:border hover:border-primary">
-                                        <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                            <div className="flex w-40">
-                                                <CardStatus
-                                                    statusCode={
-                                                        item.status_code
-                                                    }
-                                                />
-                                                <p>{item.url.name}</p>
-                                            </div>
-                                            <p className="font-extralight text-sm">
-                                                Url : {item.url.path}
-                                            </p>
-                                            <p>
-                                                Ajoutée le :{" "}
-                                                <span>
-                                                    {new Date(
-                                                        item.created_at,
-                                                    ).toLocaleDateString()}
-                                                </span>
-                                                <span>
-                                                    {" "}
-                                                    {new Date(
-                                                        item.created_at,
-                                                    ).toLocaleTimeString()}
-                                                </span>
-                                            </p>
-
-                                            {/* Modifier quand la requête sera faite (type d'affichage : il y a 5heures / il y a 5minutes) */}
-                                            {/* <p>
-                                                  Mis à jour le :{" "}
-                                                  {item.lastCheckDate || "null"}
-                                              </p> */}
-                                            <button>:</button>
-                                        </CardContent>
-                                    </Card>
-                                </a>
-                            </ListItem>
-                        ))}
-                        {!loading &&
-                            !data?.paginatesHistories.histories.length && (
-                                <p className="text-center text-muted-foreground">
-                                    Aucun historique
-                                </p>
-                            )}
-                    </List>
-                </div>
+                                    <TableCell>
+                                        <CardStatus
+                                            statusCode={item.status_code}
+                                        />
+                                    </TableCell>
+                                    <TableCell className="font-semibold">
+                                        {item.url.name}
+                                    </TableCell>
+                                    <TableCell>{item.url.path}</TableCell>
+                                    <TableCell>
+                                        {item.url.private ? "Oui" : "Non"}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <ReactTimeAgo
+                                            date={new Date(item.created_at)}
+                                            locale="fr"
+                                            className="text-muted-foreground italic first-letter:uppercase"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    )}
+                    {!loading && !PaginateHistories.histories.length && (
+                        <TableFooter className="bg-transparent">
+                            <TableCell
+                                className="text-center text-sm font-normal text-muted-foreground italic"
+                                colSpan={5}
+                            >
+                                Aucun historique disponible.
+                            </TableCell>
+                        </TableFooter>
+                    )}
+                </Table>
                 {PaginateHistories.histories.length &&
                 PaginateHistories.totalPages > 1 &&
                 PaginateHistories.totalPages !== 0 ? (

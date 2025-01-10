@@ -5,8 +5,8 @@ import {
     CardHeader,
     CardStatus,
     CardTitle,
-    ListItem,
-} from "@/components/ui/card.tsx";
+    ListItem, CardFooter
+} from '@/components/ui/card.tsx';
 
 type History = {
     id: string;
@@ -41,15 +41,18 @@ export default function HistoryCard({ item }: HistoryCardProps) {
                 <CardContent className="flex flex-col gap-1">
                     <section className="flex">
                         <CardStatus statusCode={item.status_code} />
-                        <p className="text-sm">Status {item.status_code}</p>
-                    </section>
-                    <section className="flex">
-                        <p className="text-sm">Testée le{" "}
-                            <span className="font-semibold">{new Date(item.created_at).toLocaleDateString()}</span> à{" "}
-                            <span className="font-semibold">{new Date(item.created_at).toLocaleTimeString()}</span>
-                        </p>
+                        <p className="text-sm font-medium">Status {item.status_code}</p>
                     </section>
                 </CardContent>
+                <CardFooter>
+                    <section className="flex flex-col">
+                        <p className="font-light italic text-muted-foreground text-sm">Testée le{" "}
+                        </p>
+                        <p className="font-medium">{new Date(item.created_at).toLocaleDateString()} à{" "}
+                            {new Date(item.created_at).toLocaleTimeString()}
+                        </p>
+                    </section>
+                </CardFooter>
             </Card>
         </ListItem>
     );

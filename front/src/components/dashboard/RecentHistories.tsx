@@ -86,14 +86,12 @@ export default function RecentHistories() {
                     ))
                 )}
                 {!data?.recentPrivateHistories.length && (
-                  <li className="flex items-center text-sm">
-                      <div className="ml-4 space-y-1">
-                          <p className="font-medium leading-none">
-                              Aucun historique
-                          </p>
-                      </div>
+                  <li className="flex justify-center items-center text-sm">
+                      <p className="text-muted-foreground italic">
+                          Aucune URL disponible.
+                      </p>
                   </li>
-              )}
+                )}
             </ul>
         </CardContent>
         </Card>
