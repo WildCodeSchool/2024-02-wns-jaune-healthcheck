@@ -26,7 +26,7 @@ const CountPrivatesUrlsCard: React.FC = () => {
 
     return (
         <Card
-            className="flex flex-col justify-between h-full w-full"
+            className="flex flex-col justify-between h-fit w-full"
         >
             <CardHeader className="items-left pb-4">
                 <CardTitle
@@ -34,7 +34,7 @@ const CountPrivatesUrlsCard: React.FC = () => {
                 >
                     Vos services
                 </CardTitle>
-                <CardDescription className="text-left">
+                <CardDescription className="text-left text-wrap">
                     Nombre de services privés surveillés 
                 </CardDescription>
             </CardHeader>

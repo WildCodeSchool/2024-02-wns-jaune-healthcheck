@@ -102,7 +102,7 @@ const ListUserUrls: React.FC = () => {
     }
 
     return (
-        <div className="w-full h-fit m-auto">
+        <div className="h-fit m-auto">
             <section className="pb-4">
                 <h1 className="font-semibold text-2xl mb-[1px]">
                     Liste des URLs
@@ -111,7 +111,7 @@ const ListUserUrls: React.FC = () => {
                     Filtrez les comme bon vous semble.
                 </h2>
             </section>
-            <section className="flex flex-col gap-4">
+            <section className="flex flex-col gap-4 max-sm:w-screen">
                 <FilterBar
                     onSearch={handleSearch}
                     onSortChange={handleSortChange}

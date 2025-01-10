@@ -71,9 +71,9 @@ const UrlsByStatusChart: React.FC = () => {
   if (error) return <div>Erreur</div>;
 
   return (
-    <Card className={chartData?.privatesUrlsByStatus.length ? "block" : "hidden"}>
+    <Card className={chartData?.privatesUrlsByStatus.length ? "h-full flex flex-col" : "hidden"}>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
+        <div className="grid flex-1 gap-1 text-left sm:text-left">
           <CardTitle
             className="text-lg"
           >
@@ -103,10 +103,10 @@ const UrlsByStatusChart: React.FC = () => {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className="flex-1 px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="w-full h-[375px]"  // ou ajustez cette valeur selon vos besoins
         >
           <AreaChart data={chartData?.privatesUrlsByStatus}>
             <defs>
