@@ -65,3 +65,10 @@ ou
 ```bash
 make run-dev
 ```
+
+Pour tester le système d'abonnement, l'API Stripe fournit deux numéro de cartes :
+
+```
+4242 4242 4242 4242 : Paiement réussi
+4000 0000 0000 9995 : Paiement refusé
+```
