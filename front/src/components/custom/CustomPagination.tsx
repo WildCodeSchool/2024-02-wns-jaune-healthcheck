@@ -138,7 +138,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
     };
 
     return (
-        <Pagination className="mt-4 mb-2">
+        <Pagination className="mb-2">
             <PaginationContent>
                 <PaginationItem>
                     <ResponsivePaginationPrevious

@@ -72,7 +72,7 @@ const HistoriesByStatusChart: React.FC = () => {
     }, 0);
 
     return (
-        <Card>
+        <Card className="h-full w-full">
             <CardHeader className="items-start pb-4">
                 <CardTitle
                     className="text-lg"
@@ -80,20 +80,16 @@ const HistoriesByStatusChart: React.FC = () => {
                     Statuts de vos services
                 </CardTitle>
                 <CardDescription className="text-left">
-                    Historique des statuts de vos services par type de contenu
+                    Historique des statuts de vos services par type de contenu.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="w-full h-[300px]"
                 >
                     <RadarChart
                         data={chartData?.privateHistoriesByStatus}
-                        margin={{
-                            top: -40,
-                            bottom: -10,
-                        }}
                     >
                         <ChartTooltip
                             cursor={false}

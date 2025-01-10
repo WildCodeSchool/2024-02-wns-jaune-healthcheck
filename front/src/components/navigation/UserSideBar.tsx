@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from "clsx";
 import {
     ChevronsUpDown,
@@ -37,7 +37,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "@/assets/logo.svg";
 import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
-import { Roles } from '@/constants/role.ts';
+import { Roles } from "@/constants/role.ts";
 import FormUserUrl from "../FormUserUrl";
 
 const data = {
@@ -48,12 +48,12 @@ const data = {
             icon: CircleGauge,
         },
         {
-            name: "Mes URLs",
+            name: "URLs",
             url: "/urls",
             icon: IconLink,
         },
         {
-            name: "Mes historiques",
+            name: "Historiques",
             url: "/histories",
             icon: History,
         },
@@ -68,6 +68,7 @@ const UserSideBar: React.FC = () => {
     const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
     const navigate = useNavigate();
+    const location = useLocation()
 
     const isTier = user.role === Roles.TIER;
     const isPremium = user.role === Roles.PREMIUM;
@@ -100,7 +101,10 @@ const UserSideBar: React.FC = () => {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <SidebarMenuButton size="lg" className="hover:bg-transparent hover:cursor-default">
+                                <SidebarMenuButton
+                                    size="lg"
+                                    className="hover:bg-transparent hover:cursor-default"
+                                >
                                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                                         <img
                                             src={Logo}
@@ -155,7 +159,7 @@ const UserSideBar: React.FC = () => {
                     <SidebarMenu>
                         {data.navigation.map((item) => (
                             <SidebarMenuItem key={item.name}>
-                                <SidebarMenuButton asChild tooltip={item.name}>
+                                <SidebarMenuButton asChild tooltip={item.name} isActive={location.pathname === item.url}>
                                     <Link to={item.url}>
                                         <item.icon />
                                         <span>{item.name}</span>
@@ -190,18 +194,18 @@ const UserSideBar: React.FC = () => {
                                         />
                                     )}
                                     {isPremium && (
-                                      <Crown
-                                        strokeWidth={3}
-                                        fill="rgb(252 211 77)"
-                                        className={clsx(
-                                          "h-4 w-4 text-amber-300",
-                                          "-left-[6px] -top-[6px]",
-                                          "transition-transform duration-200 ease-in-out",
-                                          open &&
-                                          "translate-x-2 translate-y-2",
-                                          "absolute",
-                                        )}
-                                      />
+                                        <Crown
+                                            strokeWidth={3}
+                                            fill="rgb(252 211 77)"
+                                            className={clsx(
+                                                "h-4 w-4 text-amber-300",
+                                                "-left-[6px] -top-[6px]",
+                                                "transition-transform duration-200 ease-in-out",
+                                                open &&
+                                                    "translate-x-2 translate-y-2",
+                                                "absolute",
+                                            )}
+                                        />
                                     )}
                                     <div
                                         className={clsx(
