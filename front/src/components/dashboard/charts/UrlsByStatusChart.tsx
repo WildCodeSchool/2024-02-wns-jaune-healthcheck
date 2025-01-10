@@ -46,11 +46,8 @@ const chartConfig = {
 const UrlsByStatusChart: React.FC = () => {
   const [timeRange, setTimeRange] = useState("daily");
   const [chartData, setChartData] = useState<PrivatesUrlsByStatusQuery>();
-  const { loading, error, refetch } = usePrivatesUrlsByStatusQuery({
+  const { data, loading, error, refetch } = usePrivatesUrlsByStatusQuery({
       variables: {timeFrame: timeRange},
-      onCompleted: (data) => {
-          setChartData(data);
-      },
       fetchPolicy: "cache-and-network",
 
   });
@@ -59,6 +56,11 @@ const UrlsByStatusChart: React.FC = () => {
   useEffect(() => {
       refetch();
   }, [messages, refetch]);
+
+  useEffect(() => {
+      if (!data) return;
+      setChartData(data);
+  }, [data, setChartData]);
 
   if (loading && !chartData) {
       return (
@@ -72,7 +74,11 @@ const UrlsByStatusChart: React.FC = () => {
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Etat de santé de vos services</CardTitle>
+          <CardTitle
+            className="text-lg"
+          >
+            Etat de santé de vos services
+          </CardTitle>
           <CardDescription>
             Présentation périodique de l'état de santé de vos services
           </CardDescription>

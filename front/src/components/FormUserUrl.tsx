@@ -15,7 +15,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator";
 import { useAddUrlMutation } from "@/generated/graphql-types";
-import { GET_ALL_URLS, GET_RECENT_PRIVATE_URLS } from "@/graphql/queries";
+import { 
+    GET_ALL_URLS, 
+    GET_RECENT_PRIVATE_URLS, 
+    GET_PRIVATE_SUM_URLS, 
+    GET_RECENT_PRIVATE_HISTORIES,
+    GET_PRIVATE_URLS_BY_STATUS,
+    GET_PRIVATE_HISTORIES_BY_STATUS} from "@/graphql/queries";
 import { useToast } from "@/components/ui/use-toast";
 import {
     DialogClose,
@@ -105,6 +111,18 @@ export default function FormUserUrl({
                 },
                 {
                     query: GET_RECENT_PRIVATE_URLS,
+                },
+                {
+                    query: GET_RECENT_PRIVATE_HISTORIES,
+                },
+                {
+                    query: GET_PRIVATE_URLS_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_HISTORIES_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_SUM_URLS,
                 },
             ],
         });

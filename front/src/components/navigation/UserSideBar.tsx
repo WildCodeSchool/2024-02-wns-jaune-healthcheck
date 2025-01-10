@@ -3,10 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
-    AudioWaveform,
     ChevronsUpDown,
-    Command,
-    GalleryVerticalEnd,
     LogOut,
     CircleGauge,
     Link as IconLink,

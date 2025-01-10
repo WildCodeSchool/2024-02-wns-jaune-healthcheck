@@ -87,7 +87,7 @@ class SubscriptionResolver {
         const priceId = this.getPriceId(priceKey);
 
         try {
-            let customer = await this.getOrCreateCustomer(
+            const customer = await this.getOrCreateCustomer(
                 userEmail,
                 context.payload.id,
             );
@@ -191,7 +191,7 @@ class SubscriptionResolver {
     }
 
     @Mutation(() => String)
-    async cancelSubscription(@Ctx() context: MyContext): Promise<String> {
+    async cancelSubscription(@Ctx() context: MyContext): Promise<string> {
         if (!context.payload) {
             throw new Error("User is not authenticated");
         }
