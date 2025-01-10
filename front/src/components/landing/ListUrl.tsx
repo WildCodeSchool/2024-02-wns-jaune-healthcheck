@@ -10,7 +10,7 @@ import UrlCard from "@/components/custom/UrlCard.tsx";
 
 const URLList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { error, data } = useGetAllURlsQuery({
+    const { loading, error, data } = useGetAllURlsQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
@@ -30,9 +30,7 @@ const URLList: React.FC = () => {
     const { totalPages, currentPage, previousPage, nextPage } = PaginateUrls;
 
     useEffect(() => {
-        if (!data) {
-            return;
-        }
+        if (!data) return;
         setPaginateUrls(data.urls as PaginateUrls);
     }, [data]);
 
@@ -79,10 +77,10 @@ const URLList: React.FC = () => {
                 onSortChange={handleSortChange}
             />
             <div className="flex-grow">
-                {data && (
+                {PaginateUrls && (
                     <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
-                        {data.urls.urls
-                            ? data.urls.urls.map((item) => (
+                        {PaginateUrls.urls
+                            ? PaginateUrls.urls.map((item) => (
                                   <UrlCard item={item} />
                               ))
                             : Array.from({ length: 16 }, (_, index) => {
@@ -95,23 +93,25 @@ const URLList: React.FC = () => {
                               })}
                     </List>
                 )}
-                {!data?.urls.urls.length && (
+                {!loading && !PaginateUrls.urls.length ? (
                   <div className="mx-auto w-full flex justify-center align-middle">
                       <p className="text-center text-muted-foreground italic">
                           Aucune URL trouvée.
                       </p>
                   </div>
-                )}
+                ): null}
             </div>
-            {data && data.urls.totalPages > 1 && data.urls.totalPages !== 0 && (
-                <CustomPagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    previousPage={previousPage}
-                    nextPage={nextPage}
-                    onPageChange={handlePageChange}
-                />
-            )}
+            {PaginateUrls.urls.length &&
+                PaginateUrls.totalPages > 1 &&
+                PaginateUrls.totalPages !== 0 ? (
+                    <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        onPageChange={handlePageChange}
+                    />
+                ) : null}
         </div>
     );
 };
