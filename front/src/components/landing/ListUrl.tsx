@@ -81,7 +81,7 @@ const URLList: React.FC = () => {
                     <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
                         {PaginateUrls.urls
                             ? PaginateUrls.urls.map((item) => (
-                                  <UrlCard item={item} />
+                                  <UrlCard item={item} key={item.id} />
                               ))
                             : Array.from({ length: 16 }, (_, index) => {
                                   return (
@@ -94,24 +94,24 @@ const URLList: React.FC = () => {
                     </List>
                 )}
                 {!loading && !PaginateUrls.urls.length ? (
-                  <div className="mx-auto w-full flex justify-center align-middle">
-                      <p className="text-center text-muted-foreground italic">
-                          Aucune URL trouvée.
-                      </p>
-                  </div>
-                ): null}
+                    <div className="mx-auto w-full flex justify-center align-middle">
+                        <p className="text-center text-muted-foreground italic">
+                            Aucune URL trouvée.
+                        </p>
+                    </div>
+                ) : null}
             </div>
             {PaginateUrls.urls.length &&
-                PaginateUrls.totalPages > 1 &&
-                PaginateUrls.totalPages !== 0 ? (
-                    <CustomPagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        onPageChange={handlePageChange}
-                    />
-                ) : null}
+            PaginateUrls.totalPages > 1 &&
+            PaginateUrls.totalPages !== 0 ? (
+                <CustomPagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    previousPage={previousPage}
+                    nextPage={nextPage}
+                    onPageChange={handlePageChange}
+                />
+            ) : null}
         </div>
     );
 };
