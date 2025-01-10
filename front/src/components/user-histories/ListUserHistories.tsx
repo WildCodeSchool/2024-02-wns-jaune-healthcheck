@@ -24,7 +24,9 @@ const ListUserHistories: React.FC = () => {
     const getPrivateHistoriesValue = (
         visibility: string,
     ): boolean | undefined => {
-        if (visibility === "all") return undefined;
+        if (visibility === "all") {
+            return undefined;
+        }
         return visibility === "private";
     };
 
@@ -51,7 +53,9 @@ const ListUserHistories: React.FC = () => {
         PaginateHistories;
 
     useEffect(() => {
-        if (!data) return;
+        if (!data) {
+            return;
+        }
         setPaginateHistories(data.paginatesHistories as PaginatesHistories);
     }, [data]);
 
@@ -90,87 +94,97 @@ const ListUserHistories: React.FC = () => {
         return Array.from({ length: 10 }, (_, index) => {
             return (
                 <div className="w-full mt-24" key={index}>
-                    <Skeleton
-                        className="h-[40px] rounded-lg"
-                    />
+                    <Skeleton className="h-[40px] rounded-lg" />
                 </div>
             );
         });
     }
 
-    if (error) return "Error";
+    if (error) {
+        return "Error";
+    }
 
     return (
-        <div className="flex flex-col gap-8">
-            <FilterBar
-                onSearch={handleSearch}
-                onSortChange={handleSortChange}
-                searchQuery={searchParams.get("searchUrl") || ""}
-                sortKey={searchParams.get("sortField") || ""}
-                onVisibilityChange={(value) =>
-                    setVisibility(value as "private" | "public" | "all")
-                }
-                visibilityFilter={visibility}
-            />
-            <div className="w-full flex-grow">
-                <List className="w-full">
-                    {PaginateHistories.histories.map((item) => (
-                        <ListItem
-                            key={item.id}
-                            className="flex justify-center items-start w-full"
-                        >
-                            <a
-                                href={`/history-url/${item.url.id}`}
-                                rel="noopener noreferrer"
-                                className="w-full"
+        <div className="w-full h-fit m-auto">
+            <section className="pb-4">
+                <h1 className="font-semibold text-2xl mb-[1px]">
+                    Historique de vos URLs
+                </h1>
+                <h2 className="mb-4 text-sm text-gray-500">
+                    Filtrez les comme bon vous semble.
+                </h2>
+            </section>
+            <section className="flex flex-col gap-4">
+                <FilterBar
+                    onSearch={handleSearch}
+                    onSortChange={handleSortChange}
+                    searchQuery={searchParams.get("searchUrl") || ""}
+                    sortKey={searchParams.get("sortField") || ""}
+                    onVisibilityChange={(value) =>
+                        setVisibility(value as "private" | "public" | "all")
+                    }
+                    visibilityFilter={visibility}
+                />
+                <div className="w-full flex-grow">
+                    <List className="w-full">
+                        {PaginateHistories.histories.map((item) => (
+                            <ListItem
+                                key={item.id}
+                                className="flex justify-center items-start w-full"
                             >
-                                <Card className="hover:border hover:border-primary">
-                                    <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                        <div className="flex w-40">
-                                            <CardStatus
-                                                statusCode={
-                                                    item.status_code
-                                                }
-                                            />
-                                            <p>{item.url.name}</p>
-                                        </div>
-                                        <p className="font-extralight text-sm">
-                                            Url : {item.url.path}
-                                        </p>
-                                        <p>
-                                            Ajoutée le :{" "}
-                                            <span>
-                                                {new Date(
-                                                    item.created_at,
-                                                ).toLocaleDateString()}
-                                            </span>
-                                            <span>
-                                                {" "}
-                                                {new Date(
-                                                    item.created_at,
-                                                ).toLocaleTimeString()}
-                                            </span>
-                                        </p>
+                                <a
+                                    href={`/history-url/${item.url.id}`}
+                                    rel="noopener noreferrer"
+                                    className="w-full"
+                                >
+                                    <Card className="hover:border hover:border-primary">
+                                        <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+                                            <div className="flex w-40">
+                                                <CardStatus
+                                                    statusCode={
+                                                        item.status_code
+                                                    }
+                                                />
+                                                <p>{item.url.name}</p>
+                                            </div>
+                                            <p className="font-extralight text-sm">
+                                                Url : {item.url.path}
+                                            </p>
+                                            <p>
+                                                Ajoutée le :{" "}
+                                                <span>
+                                                    {new Date(
+                                                        item.created_at,
+                                                    ).toLocaleDateString()}
+                                                </span>
+                                                <span>
+                                                    {" "}
+                                                    {new Date(
+                                                        item.created_at,
+                                                    ).toLocaleTimeString()}
+                                                </span>
+                                            </p>
 
-                                        {/* Modifier quand la requête sera faite (type d'affichage : il y a 5heures / il y a 5minutes) */}
-                                        {/* <p>
+                                            {/* Modifier quand la requête sera faite (type d'affichage : il y a 5heures / il y a 5minutes) */}
+                                            {/* <p>
                                                   Mis à jour le :{" "}
                                                   {item.lastCheckDate || "null"}
                                               </p> */}
-                                        <button>:</button>
-                                    </CardContent>
-                                </Card>
-                            </a>
-                        </ListItem>
-                    ))}
-                    {!loading && !data?.paginatesHistories.histories.length && (
-                        <p className="text-center text-muted-foreground">
-                            Aucun historique
-                        </p>
-                    )}
-                </List>
-            </div>
-            {PaginateHistories.histories.length &&
+                                            <button>:</button>
+                                        </CardContent>
+                                    </Card>
+                                </a>
+                            </ListItem>
+                        ))}
+                        {!loading &&
+                            !data?.paginatesHistories.histories.length && (
+                                <p className="text-center text-muted-foreground">
+                                    Aucun historique
+                                </p>
+                            )}
+                    </List>
+                </div>
+                {PaginateHistories.histories.length &&
                 PaginateHistories.totalPages > 1 &&
                 PaginateHistories.totalPages !== 0 ? (
                     <CustomPagination
@@ -180,7 +194,8 @@ const ListUserHistories: React.FC = () => {
                         nextPage={nextPage}
                         onPageChange={handlePageChange}
                     />
-            ): null}
+                ) : null}
+            </section>
         </div>
     );
 };

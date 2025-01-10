@@ -93,86 +93,97 @@ const ListUserUrls: React.FC = () => {
     if (error) return "Error";
 
     return (
-        <div className="flex flex-col gap-8">
-            <FilterBar
+      <div className="w-full h-fit m-auto">
+          <section className="pb-4">
+              <h1 className="font-semibold text-2xl mb-[1px]">
+                  Liste des URLs
+              </h1>
+              <h2 className="mb-4 text-sm text-gray-500">
+                  Filtrez les comme bon vous semble.
+              </h2>
+          </section>
+          <section className="flex flex-col gap-4">
+              <FilterBar
                 onSearch={handleSearch}
                 onSortChange={handleSortChange}
-                searchQuery={searchParams.get("searchUrl") || ""}
-                sortKey={searchParams.get("sortField") || ""}
+                searchQuery={searchParams.get('searchUrl') || ''}
+                sortKey={searchParams.get('sortField') || ''}
                 onVisibilityChange={(value) =>
-                    setVisibility(value as "private" | "public" | "all")
+                  setVisibility(value as "private" | "public" | "all")
                 }
                 visibilityFilter={visibility}
-            />
-            <div className="w-full flex-grow">
-                <List className="w-full">
-                    {PaginateUrls.urls.map((item) => (
-                              <ListItem
-                                  key={item.id}
-                                  className="flex justify-center items-start w-full"
-                              >
-                                  <Link
-                                      key={item.id}
-                                      to={`/user-url/${item.id}`}
-                                      rel="noopener noreferrer"
-                                      className="w-full"
-                                  >
-                                      <Card className="hover:border hover:border-primary">
-                                          <CardContent className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
-                                              <div className="flex w-40">
-                                                  <CardStatus
-                                                      statusCode={
-                                                          item.histories[0]
-                                                              ? item
-                                                                    .histories[0]
-                                                                    .status_code
-                                                              : null
-                                                      }
-                                                  />
-                                                  <p className="truncate">
-                                                      {item.name}
-                                                  </p>
-                                              </div>
-                                              <div className="flex items-center">
+              />
+              <div className="w-full flex-grow">
+                  <List className="w-full">
+                      {PaginateUrls.urls.map((item) => (
+                        <ListItem
+                          key={item.id}
+                          className="flex justify-center items-start w-full"
+                        >
+                            <Link
+                              key={item.id}
+                              to={`/user-url/${item.id}`}
+                              rel="noopener noreferrer"
+                              className="w-full"
+                            >
+                                <Card className="hover:border hover:border-primary">
+                                    <CardContent
+                                      className="h-full py-3 grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center">
+                                        <div className="flex w-40">
+                                            <CardStatus
+                                              statusCode={
+                                                  item.histories[0]
+                                                    ? item
+                                                      .histories[0]
+                                                      .status_code
+                                                    : null
+                                              }
+                                            />
+                                            <p className="truncate">
+                                                {item.name}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center">
                                                   <span className="font-extralight text-sm whitespace-nowrap">
                                                       Url :{" "}
                                                   </span>
-                                                  <span className="font-extralight text-sm ml-1">
+                                            <span className="font-extralight text-sm ml-1">
                                                       {item.path}
                                                   </span>
-                                              </div>
-                                              <p>
-                                                  Ajoutée le :{" "}
-                                                  {new Date(
-                                                      item.createdAt,
-                                                  ).toLocaleDateString()}
-                                              </p>
-                                              <button>:</button>
-                                          </CardContent>
-                                      </Card>
-                                  </Link>
-                              </ListItem>
-                          ))
-                        }
-                    {!loading && !PaginateUrls.urls.length && (
+                                        </div>
+                                        <p>
+                                            Ajoutée le :{" "}
+                                            {new Date(
+                                              item.createdAt,
+                                            ).toLocaleDateString()}
+                                        </p>
+                                        <button>:</button>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        </ListItem>
+                      ))
+                      }
+                      {!loading && !PaginateUrls.urls.length && (
                         <p className="text-center text-muted-foreground">
                             Aucune URL
                         </p>
-                    )}
-                </List>
-            </div>
-            {PaginateUrls.urls.length && 
-                PaginateUrls.totalPages > 1 && 
-                PaginateUrls.totalPages !== 0 ? (
+                      )}
+                  </List>
+              </div>
+              {PaginateUrls.urls.length &&
+              PaginateUrls.totalPages > 1 &&
+              PaginateUrls.totalPages !== 0 ? (
                 <CustomPagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    previousPage={previousPage}
-                    nextPage={nextPage}
-                    onPageChange={handlePageChange}
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  previousPage={previousPage}
+                  nextPage={nextPage}
+                  onPageChange={handlePageChange}
                 />
-            ): null}
-        </div>
+              ) : null}
+          </section>
+      </div>
     );
 };
 

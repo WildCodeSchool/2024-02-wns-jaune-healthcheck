@@ -44,7 +44,7 @@ const UrlsBreadcrumb: React.FC = () => {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem className="block">
-                    Mes URLs
+                    URLs
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
@@ -56,7 +56,7 @@ const HistoriesBreadcrumb: React.FC = () => {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem className="block">
-                    Mes historiques
+                    Historiques
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>

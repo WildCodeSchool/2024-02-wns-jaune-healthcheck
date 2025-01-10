@@ -2,30 +2,23 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useUrlQuery } from "@/generated/graphql-types";
 import { Check } from "lucide-react";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    List,
-    ListItem,
-    CardStatus,
-    CardContent,
-} from "@/components/ui/card";
+import { List } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import useSocketStore from "@/stores/webSocketStore";
 import {
     usePaginatesHistoriesQuery,
     useCheckUrlMutation,
-    useHistoryWithResponseQuery
+    useHistoryWithResponseQuery,
 } from "@/generated/graphql-types";
 import FilterBar from "../custom/FilterBar";
 import { PaginatesHistories } from "@/generated/graphql-types";
 import CustomPagination from "../custom/CustomPagination";
 import HistoryResponseModal from "./HistoryResponseModal";
 import ButtonLoader from "../custom/ButtonLoader";
-import useAuthStore from '@/stores/authStore.tsx';
-import { Roles } from '@/constants/role.ts';
+import useAuthStore from "@/stores/authStore.tsx";
+import { Roles } from "@/constants/role.ts";
+import HistoryCard from "@/components/custom/HistoryCard.tsx";
 
 type ListUrlHistoriesProps = {
     urlId: string;
@@ -42,8 +35,8 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
         },
         fetchPolicy: "cache-and-network",
         onCompleted: (data) => {
-            setPaginateHistories(data.paginatesHistories as PaginatesHistories)
-        }
+            setPaginateHistories(data.paginatesHistories as PaginatesHistories);
+        },
     });
 
     const { data: historyData, refetch: refectchHistoryResponse } =
@@ -136,119 +129,82 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
     const user = useAuthStore((state) => state.user);
     const isPremium = user.role === Roles.PREMIUM;
 
-    if (loading) return <div>En attente...</div>;
-    if (error || urlError)
+    if (loading) {
+        return <div>En attente...</div>;
+    }
+    if (error || urlError) {
         return <div>Erreur : {error?.message || urlError?.message}</div>;
+    }
 
     return (
-        <>
-            <div className="flex-grow">
-                <div className="flex items-start justify-between mb-6">
-                    <div className="me-4">
-                        <h1 className="text-lg font-semibold leading-[15px]">
-                            {urlData?.url.name}
-                        </h1>
-                        <h4 className="leading-[20px]">{urlData?.url.path}</h4>
-                    </div>
-                    <div className="flex space-x-2">
-                        <HistoryResponseModal
-                            statusCode={
-                                String(
-                                    historyData?.historyWithResponse
-                                        .status_code,
-                                ) || ""
-                            }
-                            path={urlData?.url.path || ""}
-                            response={
-                                historyData?.historyWithResponse.response || ""
-                            }
-                            contentType={
-                                historyData?.historyWithResponse.content_type || ""
-                            }
-                        />
-                        {isPremium && (
-                            !checkUrlLoading ? (
-                                <Button 
-                                    variant="ghost"
-                                    onClick={handleCheckUrl} 
-                                >
-                                    <Check size={20} className="me-2" />
-                                    Lancer une analyse
-                                </Button>
-                            ) : (
-                                <ButtonLoader variant="ghost" />
-                            ))
+        <div className="w-full h-fit m-auto">
+            <div className="pb-4 mb-4 flex justify-between">
+                <section>
+                    <h1 className="font-semibold text-2xl mb-[1px]">
+                        {urlData?.url.name}
+                    </h1>
+                    <h2 className="text-sm text-gray-500">
+                        {urlData?.url.path}
+                    </h2>
+                </section>
+                <section className="flex space-x-2">
+                    <HistoryResponseModal
+                        statusCode={
+                            String(
+                                historyData?.historyWithResponse.status_code,
+                            ) || ""
                         }
-                    </div>
-                </div>
-                <FilterBar
-                    onSearch={handleSearch}
-                    onSortChange={handleSortChange}
-                    searchQuery={searchParams?.get("searchUrl") || ""}
-                    sortKey={searchParams?.get("sortField") || ""}
-                />
-                <List
-                    data-testid="histories-container"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0"
-                >
-                    {PaginateHistories &&
-                        PaginateHistories.histories.map((history) => (
-                            <ListItem key={history.id}>
-                                <Card>
-                                    <CardHeader className="p-4">
-                                        <CardTitle
-                                            className="flex text-md"
-                                            title={history.id}
-                                        >
-                                            <CardStatus
-                                                statusCode={history.status_code}
-                                            />
-                                            <span className="ml-2">
-                                                {history.url.name}
-                                            </span>
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <div>{history.response}</div>
-                                    <CardContent className="flex justify-end p-4 pt-0">
-                                        <div className="flex flex-col items-end">
-                                            <p className="text-sm">
-                                                Statut {history.status_code}
-                                            </p>
-                                            <span className="text-sm">
-                                                {new Date(
-                                                    history.created_at,
-                                                ).toLocaleDateString()}{" "}
-                                                à{" "}
-                                                {new Date(
-                                                    history.created_at,
-                                                ).toLocaleTimeString()}
-                                            </span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </ListItem>
+                        path={urlData?.url.path || ""}
+                        response={
+                            historyData?.historyWithResponse.response || ""
+                        }
+                        contentType={
+                            historyData?.historyWithResponse.content_type || ""
+                        }
+                    />
+                    {isPremium &&
+                        (!checkUrlLoading ? (
+                            <Button variant="ghost" onClick={handleCheckUrl}>
+                                <Check size={20} className="me-2" />
+                                Lancer une analyse
+                            </Button>
+                        ) : (
+                            <ButtonLoader variant="ghost" />
                         ))}
-                    {!PaginateHistories.histories.length && (
-                        <p className="text-muted-foreground">
-                            Aucun historique
-                        </p>
-                    )}
-                </List>
-                {PaginateHistories &&
-                    PaginateHistories.totalPages > 1 &&
-                    PaginateHistories.totalPages !== 0 && (
-                        <div className="mt-8">
-                            <CustomPagination
-                                totalPages={totalPages}
-                                currentPage={currentPage}
-                                previousPage={previousPage}
-                                nextPage={nextPage}
-                                onPageChange={handlePageChange}
-                            />
-                        </div>
-                    )}
+                </section>
             </div>
-        </>
+            <FilterBar
+                onSearch={handleSearch}
+                onSortChange={handleSortChange}
+                searchQuery={searchParams?.get("searchUrl") || ""}
+                sortKey={searchParams?.get("sortField") || ""}
+            />
+            <List
+                data-testid="histories-container"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0"
+            >
+                {PaginateHistories &&
+                    PaginateHistories.histories.map((history) => (
+                        <HistoryCard item={history} />
+                    ))}
+                {!PaginateHistories.histories.length && (
+                    <p className="text-muted-foreground">Aucun historique</p>
+                )}
+            </List>
+            {PaginateHistories &&
+                PaginateHistories.totalPages > 1 &&
+                PaginateHistories.totalPages !== 0 && (
+                    <div className="mt-8">
+                        <CustomPagination
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            previousPage={previousPage}
+                            nextPage={nextPage}
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
+                )}
+        </div>
     );
 };
 
