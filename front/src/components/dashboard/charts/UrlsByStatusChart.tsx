@@ -80,7 +80,7 @@ const UrlsByStatusChart: React.FC = () => {
             Etat de santé de vos services
           </CardTitle>
           <CardDescription>
-            Présentation périodique de l'état de santé de vos services
+            Présentation périodique de l'état de santé de vos services.
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>

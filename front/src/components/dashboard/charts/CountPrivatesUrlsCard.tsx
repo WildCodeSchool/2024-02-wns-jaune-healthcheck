@@ -35,7 +35,7 @@ const CountPrivatesUrlsCard: React.FC = () => {
                     Vos services
                 </CardTitle>
                 <CardDescription className="text-left text-wrap">
-                    Nombre de services privés surveillés 
+                    Nombre de services privés surveillés.
                 </CardDescription>
             </CardHeader>
             <CardContent

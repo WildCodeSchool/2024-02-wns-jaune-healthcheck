@@ -80,7 +80,7 @@ const HistoriesByStatusChart: React.FC = () => {
                     Statuts de vos services
                 </CardTitle>
                 <CardDescription className="text-left">
-                    Historique des statuts de vos services par type de contenu
+                    Historique des statuts de vos services par type de contenu.
                 </CardDescription>
             </CardHeader>
             <CardContent>
