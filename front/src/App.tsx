@@ -43,7 +43,7 @@ function App({ children }: { children: React.ReactNode }) {
     }, [connectSocket, disconnectSocket, isLogged]);
 
     return (
-        <div className="relative">
+        <div className="relative overflow-x-hidden">
             {user.role === Roles.ADMIN && (
                 <>
                     <Dialog>

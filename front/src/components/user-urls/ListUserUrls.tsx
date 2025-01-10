@@ -179,7 +179,7 @@ const ListUserUrls: React.FC = () => {
         return "Error";
     }
     return (
-        <div className="h-fit m-auto">
+        <div className="h-fit">
             <section className="pb-4">
                 <h1 className="font-semibold text-2xl mb-[1px]">
                     Liste des URLs
@@ -188,7 +188,7 @@ const ListUserUrls: React.FC = () => {
                     Filtrez les comme bon vous semble.
                 </h2>
             </section>
-            <section className="flex flex-col gap-4 max-sm:w-screen">
+            <section className="flex flex-col gap-4">
                 <FilterBar
                     onSearch={handleSearch}
                     onSortChange={handleSortChange}
@@ -373,15 +373,15 @@ const ListUserUrls: React.FC = () => {
                     )}
                 </Table>
                 {PaginateUrls.urls.length &&
-                PaginateUrls.totalPages > 1 &&
-                PaginateUrls.totalPages !== 0 ? (
-                    <CustomPagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        previousPage={previousPage}
-                        nextPage={nextPage}
-                        onPageChange={handlePageChange}
-                    />
+                    PaginateUrls.totalPages > 1 &&
+                    PaginateUrls.totalPages !== 0 ? (
+                        <CustomPagination
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            previousPage={previousPage}
+                            nextPage={nextPage}
+                            onPageChange={handlePageChange}
+                        />
                 ) : null}
             </section>
         </div>
