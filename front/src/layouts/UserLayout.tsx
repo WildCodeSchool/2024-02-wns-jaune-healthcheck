@@ -9,12 +9,15 @@ import UserSideBar from "@/components/navigation/UserSideBar";
 import UserBreadcrumb from "@/components/navigation/UserBreadcrumb";
 import useAuthStore from "@/stores/authStore";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
+import ThemeToggle from "@/components/custom/ThemeToggle.tsx";
 
 const UserLayout: React.FC = () => {
     const location = useLocation();
     const isLogged = useAuthStore((state) => state.isLogged);
 
-    if (!isLogged) return <Navigate to="/home" />;
+    if (!isLogged) {
+        return <Navigate to="/home" />;
+    }
 
     return (
         <SidebarProvider>
@@ -30,7 +33,10 @@ const UserLayout: React.FC = () => {
                             />
                             <UserBreadcrumb path={location.pathname} />
                         </section>
-                        <NotificationDropdown />
+                        <section className="flex items-center gap-2">
+                            <ThemeToggle />
+                            <NotificationDropdown />
+                        </section>
                     </div>
                 </header>
                 <main className="flex-1 space-y-4 p-4">
