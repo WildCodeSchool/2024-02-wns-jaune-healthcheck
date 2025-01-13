@@ -50,7 +50,6 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
         transactionalEntityManager: EntityManager,
     ) {
         try {
-            
             let response;
             try {
                 response = await axios.get(url.path, {
@@ -60,7 +59,7 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
             } catch (error) {
                 console.log(error);
                 response = handleAxiosErrorResponse(error.code);
-            } 
+            }
 
             let data = response.data;
             const contentType = response.headers?.["content-type"] || "unknown";

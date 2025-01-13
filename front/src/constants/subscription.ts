@@ -1,4 +1,4 @@
-import { Roles } from '@/constants/role.ts';
+import { Roles } from "@/constants/role.ts";
 
 export interface Feature {
     text: string;
@@ -21,7 +21,7 @@ export const subscriptions: Subscription[] = [
     {
         id: Roles.FREE,
         title: "Basique",
-        description: "Accédez aux fonctionnalitées de base.",
+        description: "Accédez aux fonctionnalités de base.",
         price: 0,
         features: [
             {
@@ -29,18 +29,18 @@ export const subscriptions: Subscription[] = [
                 included: true,
                 highlight: {
                     value: "5",
-                    position: 1
-                }
+                    position: 1,
+                },
             },
             {
                 text: "Changer l'interval de vérification des URLs",
-                included: false
+                included: false,
             },
             {
                 text: "Lancer l'analyse instantanée des URLs",
-                included: false
-            }
-        ]
+                included: false,
+            },
+        ],
     },
     {
         id: Roles.TIER,
@@ -53,18 +53,18 @@ export const subscriptions: Subscription[] = [
                 included: true,
                 highlight: {
                     value: "50",
-                    position: 1
-                }
+                    position: 1,
+                },
             },
             {
                 text: "Changer l'interval de vérification des URLs",
-                included: false
+                included: false,
             },
             {
                 text: "Lancer l'analyse instantanée des URLs",
-                included: false
-            }
-        ]
+                included: false,
+            },
+        ],
     },
     {
         id: Roles.PREMIUM,
@@ -77,17 +77,17 @@ export const subscriptions: Subscription[] = [
                 included: true,
                 highlight: {
                     value: "Illimité",
-                    position: 2
-                }
+                    position: 2,
+                },
             },
             {
                 text: "Changer l'interval de vérification des URLs",
-                included: true
+                included: true,
             },
             {
                 text: "Lancer l'analyse instantanée des URLs",
-                included: true
-            }
-        ]
-    }
+                included: true,
+            },
+        ],
+    },
 ];

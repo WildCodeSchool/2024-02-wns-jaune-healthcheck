@@ -3,7 +3,7 @@ import useAuthStore from "./stores/authStore";
 import useSocketStore from "./stores/webSocketStore";
 import { useEffect } from "react";
 import { useMeLazyQuery } from "./generated/graphql-types";
-import { Roles } from '@/constants/role.ts';
+import { Roles } from "@/constants/role.ts";
 import { Dialog, DialogTrigger } from "./components/ui/dialog";
 import { Button } from "./components/ui/button";
 import { Shield } from "lucide-react";
@@ -43,7 +43,7 @@ function App({ children }: { children: React.ReactNode }) {
     }, [connectSocket, disconnectSocket, isLogged]);
 
     return (
-        <div className="relative">
+        <div className="relative overflow-x-hidden">
             {user.role === Roles.ADMIN && (
                 <>
                     <Dialog>

@@ -73,14 +73,38 @@ export const CREATE_SUBSCRIPTION = gql`
 
 export const CHANGE_SUBSCRIPTION_TIER = gql`
     mutation ChangeSubscriptionTier($newPriceKey: String!) {
-        changeSubscriptionTier(
-            newPriceKey: $newPriceKey
-        )
+        changeSubscriptionTier(newPriceKey: $newPriceKey)
     }
 `;
 
 export const CANCEL_SUBSCRIPTION = gql`
     mutation CancelSubscription {
         cancelSubscription
+    }
+`;
+
+export const UPDATE_URL_NAME = gql`
+    mutation UpdateUrlName($id: String!, $name: String!) {
+        updateUrlName(id: $id, name: $name) {
+            id
+            name
+        }
+    }
+`;
+
+export const UPDATE_URL_CHECK_FREQUENCY = gql`
+    mutation UpdateCheckFrequency($id: String!, $checkFrequencyId: String!) {
+        updateCheckFrequency(id: $id, checkFrequencyId: $checkFrequencyId) {
+            id
+            checkFrequency {
+                id
+            }
+        }
+    }
+`;
+
+export const DELETE_URL = gql`
+    mutation DeleteUrl($id: String!) {
+        deleteUrl(id: $id)
     }
 `;

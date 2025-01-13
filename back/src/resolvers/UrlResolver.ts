@@ -8,13 +8,14 @@ import {
     Ctx,
 } from "type-graphql";
 import { Url } from "../entities/Url";
+import { History } from "../entities/History";
 import { CheckFrequency } from "../entities/CheckFrequency";
 import { validate } from "class-validator";
 import { QueryFailedError } from "typeorm";
 import MyContext from "../types/MyContext";
 import PaginateUrls from "../types/PaginatesUrls";
 import GroupByStatusUrl from "../types/GroupByStatusUrl";
-
+import dataSource from '../database/dataSource';
 
 @InputType()
 export class UrlInput implements Partial<Url> {
@@ -64,9 +65,13 @@ class UrlResolver {
             if (context.payload) {
                 switch (timeFrame) {
                     case "daily":
-                        return await Url.getPrivatesUrlsByStatusDaily(context.payload.id);
+                        return await Url.getPrivatesUrlsByStatusDaily(
+                            context.payload.id,
+                        );
                     case "hourly":
-                        return await Url.getPrivatesUrlsByStatusHourly(context.payload.id);
+                        return await Url.getPrivatesUrlsByStatusHourly(
+                            context.payload.id,
+                        );
                 }
             }
             throw new Error();
@@ -76,14 +81,12 @@ class UrlResolver {
     }
 
     @Query(() => Number)
-    async privateSumUrls(
-        @Ctx() context: MyContext,
-    ): Promise<number> {
+    async privateSumUrls(@Ctx() context: MyContext): Promise<number> {
         try {
             if (context.payload) {
                 return await Url.countBy({
-                    user: { id: context.payload.id }
-                })
+                    user: { id: context.payload.id },
+                });
             }
             throw new Error();
         } catch (_error) {
@@ -152,17 +155,23 @@ class UrlResolver {
                     const defaultFrequency = await CheckFrequency.findOneBy({
                         interval: "Jour",
                     });
-                    if (defaultFrequency)
+                    if (defaultFrequency) {
                         checkFrequencyId = defaultFrequency.id;
+                    }
                 }
                 url = Url.create({
                     ...urlData,
                     path: encodeURI(urlData.path),
+                    private: isPrivate,
                     user: { id: context.payload.id },
                     checkFrequency: { id: checkFrequencyId },
                 });
             } else {
-                url = Url.create({ ...urlData, path: encodeURI(urlData.path) });
+                url = Url.create({
+                    ...urlData,
+                    path: encodeURI(urlData.path),
+                    private: false,
+                });
             }
 
             const dataValidationError = await validate(url);
@@ -203,6 +212,95 @@ class UrlResolver {
             throw new Error("Internal server error");
         }
     }
+
+    @Mutation(() => Url)
+    async updateCheckFrequency(
+        @Ctx() context: MyContext,
+        @Arg("id") id: string,
+        @Arg("checkFrequencyId") checkFrequencyId: string,
+    ): Promise<Url> {
+        try {
+            const url = await Url.findOneByOrFail({
+                id,
+                user: {
+                    id: context.payload?.id,
+                },
+            });
+
+            url.checkFrequency = { id: checkFrequencyId } as CheckFrequency;
+            await url.save();
+
+            return url;
+        } catch (error) {
+            if (error.name === "EntityNotFound") {
+                throw new Error("URL not found");
+            }
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Mutation(() => Url)
+    async updateUrlName(
+      @Ctx() context: MyContext,
+      @Arg("id") id: string,
+      @Arg("name") name: string,
+    ): Promise<Url> {
+        try {
+            const url = await Url.findOneByOrFail({
+                id,
+                user: {
+                    id: context.payload?.id,
+                },
+            });
+
+            url.name = name;
+            await url.save();
+
+            return url;
+        } catch (error) {
+            if (error.name === "EntityNotFound") {
+                throw new Error("URL not found");
+            }
+            throw new Error("Internal server error");
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async deleteUrl(
+      @Ctx() context: MyContext,
+      @Arg("id") id: string,
+    ): Promise<boolean> {
+        const entityManager = dataSource.manager
+        const queryRunner = entityManager.connection.createQueryRunner()
+
+        try {
+            await queryRunner.startTransaction();
+
+            const url = await queryRunner.manager.findOneByOrFail(Url, {
+                id,
+                user: {
+                    id: context.payload?.id
+                }
+            });
+            
+            await queryRunner.manager.delete(History, { url: { id } });
+
+            await queryRunner.manager.remove(url);
+
+            await queryRunner.commitTransaction();
+
+            return true;
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+
+            if (error.name === "EntityNotFound") {
+                throw new Error("URL not found");
+            }
+            throw new Error("Internal server error");
+        }
+    }
+
+
 }
 
 export default UrlResolver;

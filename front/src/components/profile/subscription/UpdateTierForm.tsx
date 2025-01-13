@@ -13,8 +13,8 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog.tsx";
-import { Roles } from '@/constants/role.ts';
-import ButtonLoader from '@/components/custom/ButtonLoader.tsx';
+import { Roles } from "@/constants/role.ts";
+import ButtonLoader from "@/components/custom/ButtonLoader.tsx";
 
 export default function UpdateTierForm({
     tier,
@@ -46,9 +46,9 @@ export default function UpdateTierForm({
                         setIsUpdateValid(true);
                         closeUpdateTier();
                         toast({
-                            variant: 'default',
-                            title: 'Merci pour votre confiance !',
-                            description: 'Votre abonnement a été mis à jour.'
+                            variant: "default",
+                            title: "Merci pour votre confiance !",
+                            description: "Votre abonnement a été mis à jour.",
                         });
                     }, 3500);
                 },
@@ -97,15 +97,15 @@ export default function UpdateTierForm({
                             </Button>
 
                             {!loading ? (
-                              <Button
-                                variant="default"
-                                disabled={loading || isUpdateValid}
-                                onClick={(e) => handleSubmit(e)}
-                              >
-                                  Souscrire
-                              </Button>
+                                <Button
+                                    variant="default"
+                                    disabled={loading || isUpdateValid}
+                                    onClick={(e) => handleSubmit(e)}
+                                >
+                                    Souscrire
+                                </Button>
                             ) : (
-                              <ButtonLoader variant="default" />
+                                <ButtonLoader variant="default" />
                             )}
                         </DialogFooter>
                     </>

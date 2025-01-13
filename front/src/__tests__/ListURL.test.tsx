@@ -12,6 +12,7 @@ const mockUrls = {
                 id: "1",
                 name: "Test URL 1",
                 path: "/test1",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -26,6 +27,7 @@ const mockUrls = {
                 id: "2",
                 name: "Test URL 2",
                 path: "/test2",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -61,6 +63,7 @@ const mockWithPagination = {
                 id: "17",
                 name: "Test URL 17",
                 path: "/test17",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -86,6 +89,7 @@ const sortedUrls = {
                 id: "1",
                 name: "Test URL 1",
                 path: "/test1",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -100,6 +104,7 @@ const sortedUrls = {
                 id: "2",
                 name: "Test URL 2",
                 path: "/test2",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -125,6 +130,7 @@ const filteredMockUrls = {
                 id: "1",
                 name: "Test URL 1",
                 path: "/test1",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -150,6 +156,7 @@ const nextPageUrls = {
                 id: "3",
                 name: "Test URL 3",
                 path: "/test3",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -164,6 +171,7 @@ const nextPageUrls = {
                 id: "4",
                 name: "Test URL 4",
                 path: "/test4",
+                private: false,
                 createdAt: new Date().toISOString(),
                 histories: [
                     {
@@ -186,7 +194,12 @@ describe("Unit tests URLList", () => {
     const defaultMock = {
         request: {
             query: GET_ALL_URLS,
-            variables: { searchText: "", sortField: "", currentPage: 1 },
+            variables: {
+                searchText: "",
+                sortField: "",
+                currentPage: 1,
+                privateUrls: undefined,
+            },
         },
         result: { data: mockUrls },
     };
@@ -218,8 +231,8 @@ describe("Unit tests URLList", () => {
             </MemoryRouter>,
         );
         await waitFor(() => {
-            expect(screen.getByText("Status 200")).toBeInTheDocument();
-            expect(screen.getByText("Status 404")).toBeInTheDocument();
+            expect(screen.getByText("Statut 200")).toBeInTheDocument();
+            expect(screen.getByText("Statut 404")).toBeInTheDocument();
         });
     });
 
@@ -381,9 +394,14 @@ describe("Unit tests URLList", () => {
                 </MockedProvider>
             </MemoryRouter>,
         );
-        await waitFor(() => {
-            expect(screen.getByText("Aucune URL trouvée")).toBeInTheDocument();
-        });
+        await waitFor(
+            () => {
+                expect(
+                    screen.getByText(/Aucune URL trouvée/i),
+                ).toBeInTheDocument();
+            },
+            { timeout: 2000 },
+        );
     });
 
     it("should data with pagination", async () => {

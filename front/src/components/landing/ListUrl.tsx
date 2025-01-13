@@ -1,24 +1,16 @@
 import { useState, useEffect } from "react";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    List,
-    ListItem,
-    CardStatus,
-    CardContent,
-} from "@/components/ui/card";
+import { List } from "@/components/ui/card";
 import { useSearchParams } from "react-router-dom";
 import FilterBar from "../custom/FilterBar";
 import { useGetAllURlsQuery } from "@/generated/graphql-types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginateUrls } from "@/generated/graphql-types";
 import CustomPagination from "../custom/CustomPagination";
+import UrlCard from "@/components/custom/UrlCard.tsx";
 
 const URLList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { error, data } = useGetAllURlsQuery({
+    const { loading, error, data } = useGetAllURlsQuery({
         variables: {
             searchText: searchParams?.get("searchUrl") || "",
             sortField: searchParams?.get("sortField") || "",
@@ -73,7 +65,9 @@ const URLList: React.FC = () => {
         setSearchParams(newSearchParams);
     };
 
-    if (error) return "Error";
+    if (error) {
+        return "Error";
+    }
     return (
         <div className="flex flex-col gap-8">
             <FilterBar
@@ -83,70 +77,33 @@ const URLList: React.FC = () => {
                 onSortChange={handleSortChange}
             />
             <div className="flex-grow">
-                <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
-                    {data && data.urls.urls
-                        ? data.urls.urls.map((item) => (
-                              <ListItem
-                                  key={item.id}
-                                  className="flex justify-center items-start w-full"
-                              >
-                                  <a
-                                      href={`/url/${item.id}`}
-                                      rel="noopener noreferrer"
-                                      className="w-full max-w-lg"
-                                  >
-                                      <Card className="w-full hover:border hover:border-primary">
-                                          <CardHeader>
-                                              <CardTitle
-                                                  className="truncate"
-                                                  title={item.name}
-                                              >
-                                                  {item.name}
-                                              </CardTitle>
-                                              <CardDescription
-                                                  className="truncate"
-                                                  title={item.path}
-                                              >
-                                                  {item.path}
-                                              </CardDescription>
-                                          </CardHeader>
-                                          <CardContent className="flex">
-                                              <CardStatus
-                                                  statusCode={
-                                                      item.histories[0]
-                                                          ? item.histories[0]
-                                                                .status_code
-                                                          : null
-                                                  }
-                                              />
-                                              <p className="text-sm">
-                                                  {item.histories[0]
-                                                      ? `Status ${item.histories[0].status_code}`
-                                                      : ""}
-                                              </p>
-                                          </CardContent>
-                                      </Card>
-                                  </a>
-                              </ListItem>
-                          ))
-                        : Array.from({ length: 16 }, (_, index) => {
-                              return (
-                                  <Skeleton
-                                      key={index}
-                                      className="h-[143px] rounded-lg"
-                                  />
-                              );
-                          })}
-                    {!data?.urls.urls.length && (
-                        <div className="w-full">
-                            <p className="text-center text-muted-foreground italic">
-                                Aucune URL trouvée.
-                            </p>
-                        </div>
-                    )}
-                </List>
+                {PaginateUrls && (
+                    <List className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 space-y-0">
+                        {PaginateUrls.urls
+                            ? PaginateUrls.urls.map((item) => (
+                                  <UrlCard item={item} key={item.id} />
+                              ))
+                            : Array.from({ length: 16 }, (_, index) => {
+                                  return (
+                                      <Skeleton
+                                          key={index}
+                                          className="h-[143px] rounded-lg"
+                                      />
+                                  );
+                              })}
+                    </List>
+                )}
+                {!loading && !PaginateUrls.urls.length ? (
+                    <div className="mx-auto w-full flex justify-center align-middle">
+                        <p className="text-center text-muted-foreground italic">
+                            Aucune URL trouvée.
+                        </p>
+                    </div>
+                ) : null}
             </div>
-            {data && data.urls.totalPages > 1 && data.urls.totalPages !== 0 && (
+            {PaginateUrls.urls.length &&
+            PaginateUrls.totalPages > 1 &&
+            PaginateUrls.totalPages !== 0 ? (
                 <CustomPagination
                     totalPages={totalPages}
                     currentPage={currentPage}
@@ -154,7 +111,7 @@ const URLList: React.FC = () => {
                     nextPage={nextPage}
                     onPageChange={handlePageChange}
                 />
-            )}
+            ) : null}
         </div>
     );
 };
