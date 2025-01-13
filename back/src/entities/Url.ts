@@ -8,7 +8,7 @@ import {
     ManyToOne,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
-import { IsUrl, Length } from "class-validator";
+import { IsUrl, Length, Contains } from "class-validator";
 import { History } from "./History";
 import { User } from "./User";
 import { CheckFrequency } from "./CheckFrequency";
@@ -38,6 +38,9 @@ export class Url extends BaseEntity {
             message: "Le chemin doit être une URL valide",
         },
     )
+    @Contains('https', {
+        message: "L'URL doit être sécurisée (utiliser HTTPS)",
+    })
     path: string;
 
     @Field()
