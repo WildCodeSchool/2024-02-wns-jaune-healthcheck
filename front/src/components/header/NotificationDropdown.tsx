@@ -7,14 +7,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Bell, Circle, Moon, Sun, Trash } from 'lucide-react';
+import { Bell, Circle, Trash } from "lucide-react";
 import Notification from "../custom/Notification";
 import { useNotificationsQuery } from "@/generated/graphql-types";
 import useSocketStore from "@/stores/webSocketStore";
 import { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { GET_NOTIFICATIONS } from "@/graphql/queries";
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from "@/components/ui/button.tsx";
 
 export default function NotificationDropdown() {
     const {
@@ -39,9 +39,6 @@ export default function NotificationDropdown() {
             ],
         });
     };
-
-    // TODO: Verifier taille Circle notif non lue
-    // TODO: les text-red plus clair en dark
 
     return (
         <DropdownMenu>
