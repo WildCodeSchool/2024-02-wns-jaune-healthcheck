@@ -182,9 +182,9 @@ export default function CheckoutForm({
                         {selectedSubscription.features.map((feature, index) => (
                             <li key={index} className="flex items-center gap-2">
                                 {feature.included ? (
-                                    <Check className="w-4 h-4 text-green-500" />
+                                    <Check className="w-4 h-4 text-green-600 dark:text-teal-400" />
                                 ) : (
-                                    <X className="w-4 h-4 text-red-500" />
+                                    <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
                                 )}
                                 <p className="text-left">
                                     {renderSubscriptionFeatureText(feature)}

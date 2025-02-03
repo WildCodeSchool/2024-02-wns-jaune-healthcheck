@@ -24,16 +24,16 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import FormUpdateUserUrlName from "@/components/user-urls/FormUpdateUserUrlName.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
-import FormDeleteUserUrl from '@/components/user-urls/FormDeleteUserUrl.tsx';
-import FormUpdateUserUrlFrequency from '@/components/user-urls/FormUpdateUserUrlFrequency.tsx';
-import { Roles } from '@/constants/role.ts';
-import useAuthStore from '@/stores/authStore.tsx';
+import FormDeleteUserUrl from "@/components/user-urls/FormDeleteUserUrl.tsx";
+import FormUpdateUserUrlFrequency from "@/components/user-urls/FormUpdateUserUrlFrequency.tsx";
+import { Roles } from "@/constants/role.ts";
+import useAuthStore from "@/stores/authStore.tsx";
 
 type urlDialog = {
-    name: boolean,
-    frequency: boolean,
-    delete: boolean
-}
+    name: boolean;
+    frequency: boolean;
+    delete: boolean;
+};
 
 type selectedItem = {
     id: string;
@@ -86,7 +86,7 @@ const ListUserUrls: React.FC = () => {
         if (!data) {
             return;
         }
-        console.log(data.urls)
+        console.log(data.urls);
         setPaginateUrls(data.urls as PaginateUrls);
     }, [data]);
 
@@ -149,7 +149,7 @@ const ListUserUrls: React.FC = () => {
     const handleUpdateCheckFrequency = (urlId: string, urlName: string) => {
         setSelectedItem({
             id: urlId,
-            urlName
+            urlName,
         });
         setOpenDialog({ ...openDialog, frequency: true });
     };
@@ -166,8 +166,8 @@ const ListUserUrls: React.FC = () => {
         setSelectedItem({
             id: "",
             urlName: "",
-            urlPath: ""
-        })
+            urlPath: "",
+        });
         setOpenDialog({
             name: false,
             frequency: false,
@@ -184,7 +184,7 @@ const ListUserUrls: React.FC = () => {
                 <h1 className="font-semibold text-2xl mb-[1px]">
                     Liste des URLs
                 </h1>
-                <h2 className="mb-4 text-sm text-gray-500">
+                <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     Filtrez les comme bon vous semble.
                 </h2>
             </section>
@@ -273,16 +273,18 @@ const ListUserUrls: React.FC = () => {
                                                 >
                                                     Changer le nom
                                                 </DropdownMenuItem>
-                                                {item.private && isPremium && (<DropdownMenuItem
-                                                    onClick={() => {
-                                                        handleUpdateCheckFrequency(
-                                                            item.id,
-                                                          item.name
-                                                        );
-                                                    }}
-                                                >
-                                                    Changer la fréquence
-                                                </DropdownMenuItem>)}
+                                                {item.private && isPremium && (
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            handleUpdateCheckFrequency(
+                                                                item.id,
+                                                                item.name,
+                                                            );
+                                                        }}
+                                                    >
+                                                        Changer la fréquence
+                                                    </DropdownMenuItem>
+                                                )}
                                                 <DropdownMenuItem
                                                     onClick={() => {
                                                         handleDeleteUrl(
@@ -290,7 +292,7 @@ const ListUserUrls: React.FC = () => {
                                                             item.path,
                                                         );
                                                     }}
-                                                    className="text-red-500"
+                                                    className="text-red-600 dark:text-rose-400"
                                                 >
                                                     Supprimer
                                                 </DropdownMenuItem>
@@ -317,44 +319,47 @@ const ListUserUrls: React.FC = () => {
                                             </Dialog>
                                         )}
 
-                                        {openDialog.frequency && selectedItem && (
-                                          <Dialog
-                                            open={openDialog.frequency}
-                                            onOpenChange={(isOpen) =>
-                                              setOpenDialog({
-                                                  ...openDialog,
-                                                  frequency: isOpen,
-                                              })
-                                            }
-                                          >
-                                              <FormUpdateUserUrlFrequency
-                                                urlId={selectedItem.id}
-                                                currentName={
-                                                    selectedItem.urlName as string
-                                                }
-                                                closeDialog={closeDialog}
-                                              />
-                                          </Dialog>
-                                        )}
+                                        {openDialog.frequency &&
+                                            selectedItem && (
+                                                <Dialog
+                                                    open={openDialog.frequency}
+                                                    onOpenChange={(isOpen) =>
+                                                        setOpenDialog({
+                                                            ...openDialog,
+                                                            frequency: isOpen,
+                                                        })
+                                                    }
+                                                >
+                                                    <FormUpdateUserUrlFrequency
+                                                        urlId={selectedItem.id}
+                                                        currentName={
+                                                            selectedItem.urlName as string
+                                                        }
+                                                        closeDialog={
+                                                            closeDialog
+                                                        }
+                                                    />
+                                                </Dialog>
+                                            )}
 
                                         {openDialog.delete && selectedItem && (
-                                          <Dialog
-                                            open={openDialog.delete}
-                                            onOpenChange={(isOpen) =>
-                                              setOpenDialog({
-                                                  ...openDialog,
-                                                  delete: isOpen,
-                                              })
-                                            }
-                                          >
-                                              <FormDeleteUserUrl
-                                                urlId={selectedItem.id}
-                                                urlPath={
-                                                    selectedItem.urlPath as string
+                                            <Dialog
+                                                open={openDialog.delete}
+                                                onOpenChange={(isOpen) =>
+                                                    setOpenDialog({
+                                                        ...openDialog,
+                                                        delete: isOpen,
+                                                    })
                                                 }
-                                                closeDialog={closeDialog}
-                                              />
-                                          </Dialog>
+                                            >
+                                                <FormDeleteUserUrl
+                                                    urlId={selectedItem.id}
+                                                    urlPath={
+                                                        selectedItem.urlPath as string
+                                                    }
+                                                    closeDialog={closeDialog}
+                                                />
+                                            </Dialog>
                                         )}
                                     </TableCell>
                                 </TableRow>
@@ -373,15 +378,15 @@ const ListUserUrls: React.FC = () => {
                     )}
                 </Table>
                 {PaginateUrls.urls.length &&
-                    PaginateUrls.totalPages > 1 &&
-                    PaginateUrls.totalPages !== 0 ? (
-                        <CustomPagination
-                            totalPages={totalPages}
-                            currentPage={currentPage}
-                            previousPage={previousPage}
-                            nextPage={nextPage}
-                            onPageChange={handlePageChange}
-                        />
+                PaginateUrls.totalPages > 1 &&
+                PaginateUrls.totalPages !== 0 ? (
+                    <CustomPagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        previousPage={previousPage}
+                        nextPage={nextPage}
+                        onPageChange={handlePageChange}
+                    />
                 ) : null}
             </section>
         </div>

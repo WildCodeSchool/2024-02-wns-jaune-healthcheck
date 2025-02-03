@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Roles } from "@/constants/role.ts";
 import ButtonLoader from "@/components/custom/ButtonLoader.tsx";
+import { subscriptions } from "@/constants/subscription";
+import { renderSubscriptionFeatureText } from "@/constants/globalFunction";
 
 export default function UpdateTierForm({
     tier,
@@ -26,6 +28,8 @@ export default function UpdateTierForm({
 
     const [changeSubscriptionTier] = useChangeSubscriptionTierMutation();
     const me = useAuthStore((state) => state.me);
+
+    const selectedSubscription = premium ? subscriptions[2] : subscriptions[1];
 
     const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -124,33 +128,25 @@ export default function UpdateTierForm({
                         </DialogHeader>
 
                         <ul className="flex flex-col gap-2 pt-2 animate-pulse">
-                            <li className="flex items-center gap-2">
-                                <Check className="w-4 h-4 text-green-500" />
-                                {premium ? (
-                                    <p className="text-left">
-                                        Nombre d'URL Privées{" "}
-                                        <span className="font-bold">
-                                            Illimité
-                                        </span>
-                                    </p>
-                                ) : (
-                                    <p className="text-left">
-                                        Ajoutez jusqu'à{" "}
-                                        <span className="font-bold">50</span>{" "}
-                                        URL Privées
-                                    </p>
-                                )}
-                            </li>
-                            <li className="flex items-center gap-2">
-                                {premium ? (
-                                    <Check className="w-4 h-4 text-green-500" />
-                                ) : (
-                                    <X className="w-4 h-4 text-red-500" />
-                                )}
-                                <p className="text-left">
-                                    Changer l'interval de vérification des URL
-                                </p>
-                            </li>
+                            {selectedSubscription.features.map(
+                                (feature, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex items-center gap-2"
+                                    >
+                                        {feature.included ? (
+                                            <Check className="w-4 h-4 text-green-600 dark:text-teal-400" />
+                                        ) : (
+                                            <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
+                                        )}
+                                        <p className="text-left">
+                                            {renderSubscriptionFeatureText(
+                                                feature,
+                                            )}
+                                        </p>
+                                    </li>
+                                ),
+                            )}
                         </ul>
                     </>
                 )}

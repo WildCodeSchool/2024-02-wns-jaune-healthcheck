@@ -94,7 +94,7 @@ export function SubscriptionWrapper() {
                 <h1 className="font-semibold text-2xl mb-[1px]">
                     Gérez votre abonnement et vos avantages
                 </h1>
-                <h2 className="mb-4 text-sm text-gray-500">
+                <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     Séléctionnez la formule la plus adaptée à votre utilisation.
                 </h2>
             </section>
@@ -116,7 +116,7 @@ export function SubscriptionWrapper() {
                         <CardContent>
                             <p className="font-bold text-2xl md:text-4xl mb-2">
                                 {subscription.price}€{" "}
-                                <span className="text-sm font-medium text-gray-600">
+                                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                                     / mois
                                 </span>
                             </p>
@@ -128,9 +128,9 @@ export function SubscriptionWrapper() {
                                         className="flex items-center gap-2"
                                     >
                                         {feature.included ? (
-                                            <Check className="w-4 h-4 text-green-500" />
+                                            <Check className="w-4 h-4 text-green-600 dark:text-teal-400" />
                                         ) : (
-                                            <X className="w-4 h-4 text-red-500" />
+                                            <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
                                         )}
                                         <p className="text-left">
                                             {renderSubscriptionFeatureText(

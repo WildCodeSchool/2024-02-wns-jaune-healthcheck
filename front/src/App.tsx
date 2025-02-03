@@ -8,6 +8,7 @@ import { Dialog, DialogTrigger } from "./components/ui/dialog";
 import { Button } from "./components/ui/button";
 import { Shield } from "lucide-react";
 import AdminPanel from "./components/admin/AdminPanel";
+import { ThemeProvider } from "@/components/custom/ThemeProvider.tsx";
 
 function App({ children }: { children: React.ReactNode }) {
     const isLogged = useAuthStore((state) => state.isLogged);
@@ -43,26 +44,28 @@ function App({ children }: { children: React.ReactNode }) {
     }, [connectSocket, disconnectSocket, isLogged]);
 
     return (
-        <div className="relative overflow-x-hidden">
-            {user.role === Roles.ADMIN && (
-                <>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button
-                                variant="default"
-                                size={"sm"}
-                                className="fixed right-2 bottom-2"
-                            >
-                                <Shield />
-                            </Button>
-                        </DialogTrigger>
-                        <AdminPanel />
-                    </Dialog>
-                </>
-            )}
-            {children}
-            <Toaster />
-        </div>
+        <ThemeProvider>
+            <div className="relative overflow-x-hidden">
+                {user.role === Roles.ADMIN && (
+                    <>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant="default"
+                                    size={"sm"}
+                                    className="fixed right-2 bottom-2"
+                                >
+                                    <Shield />
+                                </Button>
+                            </DialogTrigger>
+                            <AdminPanel />
+                        </Dialog>
+                    </>
+                )}
+                {children}
+                <Toaster />
+            </div>
+        </ThemeProvider>
     );
 }
 

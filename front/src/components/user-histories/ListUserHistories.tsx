@@ -119,7 +119,7 @@ const ListUserHistories: React.FC = () => {
                 <h1 className="font-semibold text-2xl mb-[1px]">
                     Historique de vos URLs
                 </h1>
-                <h2 className="mb-4 text-sm text-gray-500">
+                <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     Filtrez les comme bon vous semble.
                 </h2>
             </section>

@@ -10,21 +10,21 @@ export const formatLocalDate = (date: string) => {
 
 export const getStatusColor = (statusCode: number | null) => {
     if (statusCode === null) {
-        return "bg-gray-600";
+        return "bg-gray-600 dark:bg-gray-400";
     }
     if (statusCode >= 200 && statusCode < 300) {
-        return "bg-green-600";
+        return "bg-green-600 dark:bg-teal-400";
     }
     if (statusCode >= 300 && statusCode < 400) {
-        return "bg-yellow-600";
+        return "bg-yellow-600 dark:bg-amber-400";
     }
     if (statusCode >= 400 && statusCode < 500) {
-        return "bg-red-600";
+        return "bg-red-600 dark:bg-rose-400";
     }
     if (statusCode >= 500 && statusCode < 600) {
-        return "bg-red-600";
+        return "bg-red-600 dark:bg-rose-400";
     }
-    return "bg-gray-600";
+    return "bg-gray-600 dark:bg-gray-400";
 };
 
 export const renderSubscriptionFeatureText = (feature: Feature) => {
