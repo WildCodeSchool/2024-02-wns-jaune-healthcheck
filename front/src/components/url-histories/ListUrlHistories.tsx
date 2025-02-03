@@ -143,7 +143,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
                     <h1 className="font-semibold text-2xl mb-[1px]">
                         {urlData?.url.name}
                     </h1>
-                    <h2 className="text-sm text-gray-500">
+                    <h2 className="text-sm text-gray-500 dark:text-gray-400">
                         {urlData?.url.path}
                     </h2>
                 </section>

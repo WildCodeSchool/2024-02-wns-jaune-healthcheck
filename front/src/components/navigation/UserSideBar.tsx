@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
     ChevronsUpDown,
@@ -39,6 +39,7 @@ import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
 import { Roles } from "@/constants/role.ts";
 import FormUserUrl from "../user-urls/FormUserUrl.tsx";
+import { useTheme } from "../custom/ThemeProvider.tsx";
 
 const data = {
     navigation: [
@@ -68,10 +69,16 @@ const UserSideBar: React.FC = () => {
     const [logoutQuery] = useLogoutLazyQuery();
     const { toast } = useToast();
     const navigate = useNavigate();
-    const location = useLocation()
+    const location = useLocation();
+    const { theme } = useTheme();
 
     const isTier = user.role === Roles.TIER;
     const isPremium = user.role === Roles.PREMIUM;
+
+    const fillTierCrown =
+        theme === "dark" ? "rgb(251, 146, 60)" : "rgb(194, 65, 12)";
+    const fillPremiumCrown =
+        theme === "dark" ? "rgb(253, 224, 71)" : "rgb(234, 179, 8)";
 
     const handleLogout = () => {
         logoutQuery({
@@ -159,7 +166,11 @@ const UserSideBar: React.FC = () => {
                     <SidebarMenu>
                         {data.navigation.map((item) => (
                             <SidebarMenuItem key={item.name}>
-                                <SidebarMenuButton asChild tooltip={item.name} isActive={location.pathname === item.url}>
+                                <SidebarMenuButton
+                                    asChild
+                                    tooltip={item.name}
+                                    isActive={location.pathname === item.url}
+                                >
                                     <Link to={item.url}>
                                         <item.icon />
                                         <span>{item.name}</span>
@@ -182,9 +193,9 @@ const UserSideBar: React.FC = () => {
                                     {isTier && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(113 63 18)"
+                                            fill={fillTierCrown}
                                             className={clsx(
-                                                "h-4 w-4 text-yellow-900",
+                                                "h-4 w-4 text-orange-700 dark:text-orange-400",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&
@@ -196,9 +207,9 @@ const UserSideBar: React.FC = () => {
                                     {isPremium && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(252 211 77)"
+                                            fill={fillPremiumCrown}
                                             className={clsx(
-                                                "h-4 w-4 text-amber-300",
+                                                "h-4 w-4 text-yellow-500 dark:text-yellow-300",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&

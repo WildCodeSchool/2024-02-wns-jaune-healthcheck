@@ -23,7 +23,7 @@ const UserLayout: React.FC = () => {
         <SidebarProvider>
             <UserSideBar />
             <SidebarInset className="w-[50vw]">
-                <header className="border-b-[1px] flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                <header className="dark:bg-sidebar border-b-[1px] flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex w-full justify-between items-center gap-2 px-4">
                         <section className="flex items-center gap-2">
                             <SidebarTrigger className="-ml-1" />

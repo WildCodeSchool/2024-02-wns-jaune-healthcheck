@@ -89,92 +89,92 @@ export function SubscriptionWrapper() {
     };
 
     return (
-      <div className="w-full h-fit m-auto">
-          <section className="py-4">
-              <h1 className="font-semibold text-2xl mb-[1px]">
-                  Gérez votre abonnement et vos avantages
-              </h1>
-              <h2 className="mb-4 text-sm text-gray-500">
-                  Séléctionnez la formule la plus adaptée à votre utilisation.
-              </h2>
-          </section>
-          <section className="flex flex-col lg:flex-row justify-center items-center gap-3">
-              {subscriptions.map((subscription) => (
-                <Card
-                  key={subscription.id}
-                  className={`w-full xl:w-1/3 h-full flex flex-col ${
-                    user.role === subscription.id &&
-                    "border-2 border-primary"
-                  }`}
-                >
-                    <CardHeader>
-                        <CardTitle>{subscription.title}</CardTitle>
-                        <CardDescription>
-                            {subscription.description}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="font-bold text-2xl md:text-4xl mb-2">
-                            {subscription.price}€{" "}
-                            <span className="text-sm font-medium text-gray-600">
+        <div className="w-full h-fit m-auto">
+            <section className="py-4">
+                <h1 className="font-semibold text-2xl mb-[1px]">
+                    Gérez votre abonnement et vos avantages
+                </h1>
+                <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    Séléctionnez la formule la plus adaptée à votre utilisation.
+                </h2>
+            </section>
+            <section className="flex flex-col lg:flex-row justify-center items-center gap-3">
+                {subscriptions.map((subscription) => (
+                    <Card
+                        key={subscription.id}
+                        className={`w-full xl:w-1/3 h-full flex flex-col ${
+                            user.role === subscription.id &&
+                            "border-2 border-primary"
+                        }`}
+                    >
+                        <CardHeader>
+                            <CardTitle>{subscription.title}</CardTitle>
+                            <CardDescription>
+                                {subscription.description}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="font-bold text-2xl md:text-4xl mb-2">
+                                {subscription.price}€{" "}
+                                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                                     / mois
                                 </span>
-                        </p>
-                        <Separator className="my-6"/>
-                        <ul className="flex flex-col gap-2 py-2">
-                            {subscription.features.map((feature, index) => (
-                              <li
-                                key={index}
-                                className="flex items-center gap-2"
-                              >
-                                  {feature.included ? (
-                                    <Check className="w-4 h-4 text-green-500"/>
-                                  ) : (
-                                    <X className="w-4 h-4 text-red-500"/>
-                                  )}
-                                  <p className="text-left">
-                                      {renderSubscriptionFeatureText(
-                                        feature,
-                                      )}
-                                  </p>
-                              </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                    <CardFooter>
-                        <Button
-                          className="w-full"
-                          disabled={user.role === subscription.id}
-                          onClick={() =>
-                            handleOpenPricing(subscription.id)
-                          }
-                        >
-                            {getButtonText(subscription.id)}
-                        </Button>
-                    </CardFooter>
-                </Card>
-              ))}
-              {(openPricing.tier || openPricing.premium) && (
-                <StripeProvider
-                  showTier={openPricing.tier}
-                  showPremium={openPricing.premium}
-                  closePricing={closePricing}
-                />
-              )}
-              {openPricing.free && (
-                <CancelForm
-                  showFree={openPricing.free}
-                  closePricing={closePricing}
-                />
-              )}
-              {(openUpdateTier.tier || openUpdateTier.premium) && (
-                <UpdateTierForm
-                  tier={openUpdateTier.tier}
-                  premium={openUpdateTier.premium}
-                  closeUpdateTier={closeUpdateTier}
-                />
-              )}
-          </section>
-      </div>
+                            </p>
+                            <Separator className="my-6" />
+                            <ul className="flex flex-col gap-2 py-2">
+                                {subscription.features.map((feature, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex items-center gap-2"
+                                    >
+                                        {feature.included ? (
+                                            <Check className="w-4 h-4 text-green-600 dark:text-teal-400" />
+                                        ) : (
+                                            <X className="w-4 h-4 text-red-600 dark:text-rose-400" />
+                                        )}
+                                        <p className="text-left">
+                                            {renderSubscriptionFeatureText(
+                                                feature,
+                                            )}
+                                        </p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                className="w-full"
+                                disabled={user.role === subscription.id}
+                                onClick={() =>
+                                    handleOpenPricing(subscription.id)
+                                }
+                            >
+                                {getButtonText(subscription.id)}
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                ))}
+                {(openPricing.tier || openPricing.premium) && (
+                    <StripeProvider
+                        showTier={openPricing.tier}
+                        showPremium={openPricing.premium}
+                        closePricing={closePricing}
+                    />
+                )}
+                {openPricing.free && (
+                    <CancelForm
+                        showFree={openPricing.free}
+                        closePricing={closePricing}
+                    />
+                )}
+                {(openUpdateTier.tier || openUpdateTier.premium) && (
+                    <UpdateTierForm
+                        tier={openUpdateTier.tier}
+                        premium={openUpdateTier.premium}
+                        closeUpdateTier={closeUpdateTier}
+                    />
+                )}
+            </section>
+        </div>
     );
 }

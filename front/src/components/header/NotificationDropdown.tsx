@@ -52,7 +52,7 @@ export default function NotificationDropdown() {
                         {data && (
                             <Circle
                                 fill="rgb(239 68 68)"
-                                className={`absolute -top-1 right-0 h-3 w-3 text-red-500 ${
+                                className={`absolute -top-1 right-0 h-3 w-3 text-red-600 dark:text-rose-400 ${
                                     data!.notifications.some(
                                         (notification) =>
                                             notification.is_read === false,

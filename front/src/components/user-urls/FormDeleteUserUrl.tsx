@@ -140,7 +140,7 @@ export default function FormDeleteUserUrl({
                                     <FormDescription className="italic">
                                         Veuillez confirmer la suppression en
                                         entrant le chemin de l'URL :{" "}
-                                        <span className="underline text-red-600">
+                                        <span className="underline text-red-600 dark:text-rose-400">
                                             {urlPath}
                                         </span>
                                         .
