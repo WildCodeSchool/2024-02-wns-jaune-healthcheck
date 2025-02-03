@@ -6,11 +6,10 @@ type SyntaxWrapperProps = {
     language: "html" | "json";
 };
 
-const SyntaxWrapper: React.FC<SyntaxWrapperProps> = ({ 
+const SyntaxWrapper: React.FC<SyntaxWrapperProps> = ({
     children,
     language,
- }) => {
-
+}) => {
     return (
         <SyntaxHighlighter
             language={language}

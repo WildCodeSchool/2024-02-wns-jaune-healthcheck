@@ -8,7 +8,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     ChartConfig,
     ChartContainer,
@@ -17,13 +17,12 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
-import { 
+import {
     usePrivateHistoriesByStatusQuery,
     PrivateHistoriesByStatusQuery,
- } from "@/generated/graphql-types";
+} from "@/generated/graphql-types";
 import { Skeleton } from "../../ui/skeleton";
 import useSocketStore from "@/stores/webSocketStore";
-
 
 const chartConfig = {
     countJson: {
@@ -38,8 +37,7 @@ const chartConfig = {
         label: "Autre",
         color: "hsl(var(--chart-3))",
     },
-} satisfies ChartConfig
-
+} satisfies ChartConfig;
 
 const HistoriesByStatusChart: React.FC = () => {
     const [chartData, setChartData] = useState<PrivateHistoriesByStatusQuery>();
@@ -56,27 +54,23 @@ const HistoriesByStatusChart: React.FC = () => {
         if (!data) return;
         setChartData(data);
     }, [data, setChartData]);
-    
+
     if (loading && !chartData) {
-        return (
-            <Skeleton className="w-full h-[400px] p-5" />
-        );
-    } 
+        return <Skeleton className="w-full h-[400px] p-5" />;
+    }
 
     if (error) return <div>Erreur</div>;
 
     const sumFail = chartData?.privateHistoriesByStatus.reduce((acc, curr) => {
         const currJson = curr.statusCode !== 200 ? curr.countJson : 0;
         const currHtml = curr.statusCode !== 200 ? curr.countHtml : 0;
-        return acc + currJson + currHtml
+        return acc + currJson + currHtml;
     }, 0);
 
     return (
         <Card className="h-full w-full">
             <CardHeader className="items-start pb-4">
-                <CardTitle
-                    className="text-lg"
-                >
+                <CardTitle className="text-lg">
                     Statuts de vos services
                 </CardTitle>
                 <CardDescription className="text-left">
@@ -88,9 +82,7 @@ const HistoriesByStatusChart: React.FC = () => {
                     config={chartConfig}
                     className="w-full h-[300px]"
                 >
-                    <RadarChart
-                        data={chartData?.privateHistoriesByStatus}
-                    >
+                    <RadarChart data={chartData?.privateHistoriesByStatus}>
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent indicator="line" />}
@@ -98,30 +90,34 @@ const HistoriesByStatusChart: React.FC = () => {
                         <PolarAngleAxis dataKey="statusCode" />
                         <PolarGrid />
                         <Radar
-                            dataKey="countJson" 
-                            stroke={chartConfig.countJson.color} 
-                            fill={chartConfig.countJson.color} 
+                            dataKey="countJson"
+                            stroke={chartConfig.countJson.color}
+                            fill={chartConfig.countJson.color}
                             fillOpacity={0.6}
                         />
-                        <Radar 
-                            dataKey="countHtml" 
-                            stroke={chartConfig.countHtml.color} 
-                            fill={chartConfig.countHtml.color} 
+                        <Radar
+                            dataKey="countHtml"
+                            stroke={chartConfig.countHtml.color}
+                            fill={chartConfig.countHtml.color}
                             fillOpacity={0.6}
                         />
-                        <Radar 
-                            dataKey="countUnknown" 
-                            stroke={chartConfig.countUnknown.color} 
-                            fill={chartConfig.countUnknown.color} 
+                        <Radar
+                            dataKey="countUnknown"
+                            stroke={chartConfig.countUnknown.color}
+                            fill={chartConfig.countUnknown.color}
                             fillOpacity={0.6}
                         />
-                        <ChartLegend className="mt-8" content={<ChartLegendContent />} />
+                        <ChartLegend
+                            className="mt-8"
+                            content={<ChartLegendContent />}
+                        />
                     </RadarChart>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 pt-4 text-sm">
                 <div className="flex items-center gap-2 font-medium leading-none text-center">
-                    Total de {sumFail} historique{sumFail && sumFail > 0 ? "s" :""} de réponse en erreur
+                    Total de {sumFail} historique
+                    {sumFail && sumFail > 0 ? "s" : ""} de réponse en erreur
                 </div>
                 <div className="flex items-center gap-2 leading-none text-muted-foreground text-center">
                     Parmis les codes de statut HTTP présentés
@@ -129,6 +125,6 @@ const HistoriesByStatusChart: React.FC = () => {
             </CardFooter>
         </Card>
     );
-}
+};
 
 export default HistoriesByStatusChart;

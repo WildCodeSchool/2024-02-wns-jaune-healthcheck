@@ -73,9 +73,7 @@ export const CREATE_SUBSCRIPTION = gql`
 
 export const CHANGE_SUBSCRIPTION_TIER = gql`
     mutation ChangeSubscriptionTier($newPriceKey: String!) {
-        changeSubscriptionTier(
-            newPriceKey: $newPriceKey
-        )
+        changeSubscriptionTier(newPriceKey: $newPriceKey)
     }
 `;
 

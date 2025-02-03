@@ -13,6 +13,7 @@ export const historyWithResponseMock = {
                 response: "Success",
                 id: "98cd3ea2-e9c0-449a-bedb-d45b0b013961",
                 status_code: 200,
+                content_type: "text/html",
             },
         },
     },

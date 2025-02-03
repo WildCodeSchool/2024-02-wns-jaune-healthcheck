@@ -38,30 +38,33 @@ const FilterBar: React.FC<FilterBarProps> = ({
                 className="w-full"
             />
             <div className="flex max-md:justify-center justify-end gap-4 flex-grow w-full">
-            <Select value={visibilityFilter} onValueChange={onVisibilityChange}>
-                <SelectTrigger className="max-md:w-full w-full">
-                    <SelectValue placeholder="Visibilité" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">Tout voir</SelectItem>
-                    <SelectItem value="private">Privé</SelectItem>
-                    <SelectItem value="public">Public</SelectItem>
-                </SelectContent>
-            </Select>
-            <Select value={sortKey} onValueChange={handleSortChange}>
-                <SelectTrigger className="max-md:w-full w-full">
-                    <SelectValue placeholder="Choisir un tri" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="name">Trier par nom</SelectItem>
-                    <SelectItem value="status">
-                        Trier par code de statut
-                    </SelectItem>
-                    <SelectItem value="createdAt">
-                        Trier par date de création
-                    </SelectItem>
-                </SelectContent>
-            </Select>
+                <Select
+                    value={visibilityFilter}
+                    onValueChange={onVisibilityChange}
+                >
+                    <SelectTrigger className="max-md:w-full w-full">
+                        <SelectValue placeholder="Visibilité" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Tout voir</SelectItem>
+                        <SelectItem value="private">Privé</SelectItem>
+                        <SelectItem value="public">Public</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Select value={sortKey} onValueChange={handleSortChange}>
+                    <SelectTrigger className="max-md:w-full w-full">
+                        <SelectValue placeholder="Choisir un tri" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="name">Trier par nom</SelectItem>
+                        <SelectItem value="status">
+                            Trier par code de statut
+                        </SelectItem>
+                        <SelectItem value="createdAt">
+                            Trier par date de création
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
         </div>
     );

@@ -5,7 +5,7 @@ import {
     BreadcrumbSeparator,
     BreadcrumbLink,
 } from "@/components/ui/breadcrumb";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 import { useUrlQuery } from "@/generated/graphql-types";
 
 type UserBreadcrumbProps = {
@@ -32,9 +32,7 @@ const BreadcrumbWrapper: React.FC<breadcrumbWrapperProps> = ({ children }) => {
 const DashboardBreadcrumb: React.FC = () => {
     return (
         <BreadcrumbWrapper>
-            <BreadcrumbItem className="block">
-                Tableau de bord
-            </BreadcrumbItem>
+            <BreadcrumbItem className="block">Tableau de bord</BreadcrumbItem>
         </BreadcrumbWrapper>
     );
 };
@@ -43,9 +41,7 @@ const UrlsBreadcrumb: React.FC = () => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="block">
-                    URLs
-                </BreadcrumbItem>
+                <BreadcrumbItem className="block">URLs</BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
     );
@@ -55,9 +51,7 @@ const HistoriesBreadcrumb: React.FC = () => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="block">
-                    Historiques
-                </BreadcrumbItem>
+                <BreadcrumbItem className="block">Historiques</BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
     );
@@ -115,13 +109,11 @@ const HistoryBreadcrumb: React.FC<UrlBreadCrumbProps> = ({ urlId }) => {
 
 const ProfileSubscription: React.FC = () => {
     return (
-      <Breadcrumb>
-          <BreadcrumbList>
-              <BreadcrumbItem className="block">
-                  Profil
-              </BreadcrumbItem>
-          </BreadcrumbList>
-      </Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem className="block">Profil</BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>
     );
 };
 

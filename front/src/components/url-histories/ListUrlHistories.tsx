@@ -126,8 +126,10 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
         }
     };
 
-    const user = useAuthStore((state) => state.user);
-    const isPremium = user.role === Roles.PREMIUM;
+    const store = useAuthStore();
+    const user = store.user;
+
+    const isPremium = user?.role === Roles.PREMIUM;
 
     if (loading) {
         return <div>En attente...</div>;
@@ -185,7 +187,7 @@ const ListUrlHistories: React.FC<ListUrlHistoriesProps> = ({ urlId }) => {
             >
                 {PaginateHistories &&
                     PaginateHistories.histories.map((history) => (
-                        <HistoryCard item={history} />
+                        <HistoryCard item={history} key={history.id} />
                     ))}
                 {!PaginateHistories.histories.length && (
                     <p className="text-muted-foreground">Aucun historique</p>
