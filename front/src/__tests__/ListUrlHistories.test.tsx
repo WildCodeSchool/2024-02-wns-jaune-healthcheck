@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import ListUrlHistories from "@/components/urlHistories/ListUrlHistories";
+import ListUrlHistories from "@/components/url-histories/ListUrlHistories";
 import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -14,9 +14,19 @@ import {
 } from "./mocks/getAllHistoriesMock";
 import { checkUrlMock, checkUrlErrorMock } from "./mocks/checkUrlMock";
 import { GET_ALL_HISTORIES } from "@/graphql/queries";
+import useAuthStore from "@/stores/authStore";
+import { Roles } from "@/constants/role";
 
 vi.mock("@/components/ui/use-toast", () => ({
     toast: vi.fn(),
+}));
+
+vi.mock("@/stores/authStore", () => ({
+    default: vi.fn(() => {
+        return {
+            user: { role: Roles.PREMIUM },
+        };
+    }),
 }));
 
 const mockNavigate = vi.fn();
@@ -120,7 +130,33 @@ describe("Tests ListUrlHistories", () => {
         expect(historiesContainer).toBeInTheDocument();
     });
 
-    it("Should render the 'Lancer une analyse' button", async () => {
+    it("Should render the 'Lancer une analyse' button for premium user", async () => {
+        render(
+            <MockedProvider
+                mocks={[
+                    urlMock,
+                    paginatesHistoriesMock,
+                    historyWithResponseMock,
+                ]}
+                addTypename={false}
+            >
+                <ListUrlHistories urlId="c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf" />
+            </MockedProvider>,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Lancer une analyse")).toBeInTheDocument();
+        });
+    });
+
+    it("Should not render the 'Lancer une analyse' button for non-premium user", async () => {
+        const mockedUseAuthStore = vi.mocked(useAuthStore);
+        mockedUseAuthStore.mockReturnValue({
+            user: {
+                role: Roles.FREE,
+            },
+        });
+
         render(
             <MockedProvider
                 mocks={[
@@ -135,11 +171,19 @@ describe("Tests ListUrlHistories", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText("Lancer une analyse")).toBeInTheDocument();
+            expect(
+                screen.queryByText("Lancer une analyse"),
+            ).not.toBeInTheDocument();
         });
     });
 
     it("Should call checkUrl mutation when 'Lancer une analyse' button is clicked", async () => {
+        const mockedUseAuthStore = vi.mocked(useAuthStore);
+        mockedUseAuthStore.mockReturnValue({
+            user: {
+                role: Roles.PREMIUM,
+            },
+        });
         render(
             <MockedProvider
                 mocks={[
@@ -225,6 +269,7 @@ describe("Tests ListUrlHistories", () => {
                                     id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                                     name: "Test",
                                     path: "https://google.fr",
+                                    private: false,
                                 },
                             },
                             {
@@ -235,6 +280,7 @@ describe("Tests ListUrlHistories", () => {
                                     id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                                     name: "Test",
                                     path: "https://google.fr",
+                                    private: false,
                                 },
                             },
                         ],
@@ -257,6 +303,7 @@ describe("Tests ListUrlHistories", () => {
                                     id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                                     name: "Test",
                                     path: "https://google.fr",
+                                    private: false,
                                 },
                             },
                             {
@@ -267,6 +314,7 @@ describe("Tests ListUrlHistories", () => {
                                     id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                                     name: "Test",
                                     path: "https://google.fr",
+                                    private: false,
                                 },
                             },
                         ],
@@ -309,7 +357,6 @@ describe("Tests ListUrlHistories", () => {
                     searchText: "",
                     sortField: "",
                     currentPage: 1,
-                    privateHistories: true,
                     urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                 },
             },
@@ -351,7 +398,6 @@ describe("Tests ListUrlHistories", () => {
                     searchText: "",
                     sortField: "",
                     currentPage: 1,
-                    privateHistories: true,
                     urlId: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                 },
             },
@@ -371,6 +417,7 @@ describe("Tests ListUrlHistories", () => {
                                     id: "c7ecd9cf-1e12-4e0c-9a0f-acccd1395bbf",
                                     name: "Test",
                                     path: "https://google.fr",
+                                    private: false,
                                 },
                             },
                         ],

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {
     Form,
     FormControl,
@@ -9,14 +9,20 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/form.tsx";
+import { Input } from "@/components/ui/input.tsx";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { newUrlSchema } from "@/constants/validator";
-import { useAddUrlMutation } from "@/generated/graphql-types";
-import { GET_ALL_URLS, GET_RECENT_PRIVATE_URLS } from "@/graphql/queries";
-import { useToast } from "@/components/ui/use-toast";
+import { newUrlSchema } from "@/constants/validator.ts";
+import { useAddUrlMutation } from "@/generated/graphql-types.ts";
+import { 
+    GET_ALL_URLS, 
+    GET_RECENT_PRIVATE_URLS, 
+    GET_PRIVATE_SUM_URLS, 
+    GET_RECENT_PRIVATE_HISTORIES,
+    GET_PRIVATE_URLS_BY_STATUS,
+    GET_PRIVATE_HISTORIES_BY_STATUS} from "@/graphql/queries.ts";
+import { useToast } from "@/components/ui/use-toast.ts";
 import {
     DialogClose,
     DialogContent,
@@ -24,18 +30,20 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "./ui/dialog";
+} from "../ui/dialog.tsx";
 import { useState } from "react";
-import { Checkbox } from "./ui/checkbox";
-import { FormLoginProps } from "@/types/form";
+import { Checkbox } from "../ui/checkbox.tsx";
+import { FormAddUserUrlProps } from '@/types/form';
 import { useSearchParams } from "react-router-dom";
-import SelectCheckFrequency from "./custom/SelectCheckFrequency";
-import ButtonLoader from "./custom/ButtonLoader";
+import SelectCheckFrequency from "../custom/SelectCheckFrequency.tsx";
+import ButtonLoader from "../custom/ButtonLoader.tsx";
+import useAuthStore from '@/stores/authStore.tsx';
+import { Roles } from '@/constants/role.ts';
 
 export default function FormUserUrl({
-    setOpenDialog,
     openDialog,
-}: FormLoginProps) {
+    setOpenDialog,
+}: FormAddUserUrlProps) {
     const [isPrivate, setIsPrivate] = useState<boolean>(false);
     const [isCheckFrequency, setIsCheckFrequency] = useState<boolean>(false);
 
@@ -49,6 +57,9 @@ export default function FormUserUrl({
         },
     });
 
+    const user = useAuthStore((state) => state.user);
+    const isPremium = user.role === Roles.PREMIUM;
+
     // Clean form on modal close
     useEffect(() => {
         if (!openDialog) {
@@ -57,7 +68,7 @@ export default function FormUserUrl({
             newUrlForm.reset();
         }
     }, [openDialog, newUrlForm]);
-    
+
     const [searchParams] = useSearchParams();
     const [createNewUrl, { loading }] = useAddUrlMutation();
     const { toast } = useToast();
@@ -100,6 +111,18 @@ export default function FormUserUrl({
                 },
                 {
                     query: GET_RECENT_PRIVATE_URLS,
+                },
+                {
+                    query: GET_RECENT_PRIVATE_HISTORIES,
+                },
+                {
+                    query: GET_PRIVATE_URLS_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_HISTORIES_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_SUM_URLS,
                 },
             ],
         });
@@ -181,7 +204,7 @@ export default function FormUserUrl({
                                 Ajouter l'URL en privée
                             </label>
                         </div>
-                        {isCheckFrequency && (
+                        {isCheckFrequency && isPremium && (
                             <FormField
                                 control={newUrlForm.control}
                                 name="checkFrequency"
@@ -222,7 +245,7 @@ export default function FormUserUrl({
                                 Ajouter
                             </Button>
                         ) : (
-                            <ButtonLoader variant="ghost" />
+                            <ButtonLoader variant="default" />
                         )}
                     </DialogFooter>
                 </form>

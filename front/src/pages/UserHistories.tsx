@@ -1,4 +1,4 @@
-import ListUserHistories from "@/components/userHistories/ListUserHistories";
+import ListUserHistories from "@/components/user-histories/ListUserHistories";
 
 export function UserHistories() {
     return <ListUserHistories />;

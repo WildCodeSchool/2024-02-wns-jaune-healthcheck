@@ -5,8 +5,8 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import UserSideBar from "@/components/nav/UserSideBar";
-import UserBreadcrumb from "@/components/nav/UserBreadcrumb";
+import UserSideBar from "@/components/navigation/UserSideBar";
+import UserBreadcrumb from "@/components/navigation/UserBreadcrumb";
 import useAuthStore from "@/stores/authStore";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 
@@ -14,13 +14,13 @@ const UserLayout: React.FC = () => {
     const location = useLocation();
     const isLogged = useAuthStore((state) => state.isLogged);
 
-    if (!isLogged) return <Navigate to="/index" />;
+    if (!isLogged) return <Navigate to="/home" />;
 
     return (
         <SidebarProvider>
             <UserSideBar />
-            <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <SidebarInset className="w-[50vw]">
+                <header className="border-b-[1px] flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex w-full justify-between items-center gap-2 px-4">
                         <section className="flex items-center gap-2">
                             <SidebarTrigger className="-ml-1" />
@@ -33,7 +33,7 @@ const UserLayout: React.FC = () => {
                         <NotificationDropdown />
                     </div>
                 </header>
-                <main className="flex-1 space-y-4 p-4 pt-2">
+                <main className="flex-1 space-y-4 p-4">
                     <Outlet />
                 </main>
             </SidebarInset>

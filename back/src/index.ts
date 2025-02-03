@@ -11,6 +11,7 @@ import startServer from "./startServer";
 import WorkerThread from "./thread/Worker";
 import NotificationResolver from "./resolvers/NotificationResolver";
 import NotifFrequencyResolver from "./resolvers/NotifFrequencyResolver";
+import SubscriptionResolver from "./resolvers/SubscriptionResolver";
 
 const app = express();
 const port = process.env.BACKEND_PORT;
@@ -25,6 +26,7 @@ const start = async () => {
             CheckFrequencyResolver,
             NotificationResolver,
             NotifFrequencyResolver,
+            SubscriptionResolver,
         ],
         app,
     );

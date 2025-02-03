@@ -17,6 +17,7 @@ export const GET_ALL_URLS = gql`
                 id
                 name
                 path
+                private
                 createdAt
                 histories {
                     id
@@ -80,6 +81,7 @@ export const GET_ALL_HISTORIES = gql`
                     id
                     name
                     path
+                    private
                 }
             }
         }
@@ -183,5 +185,11 @@ export const GET_PRIVATE_URLS_BY_STATUS = gql`
             offLine
             onLine
         }
+    }
+`;
+
+export const GET_PRIVATE_SUM_URLS = gql`
+    query PrivateSumUrls {
+        privateSumUrls
     }
 `;

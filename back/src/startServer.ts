@@ -40,7 +40,7 @@ const startServer = async (
 
                 const token = req.headers.cookie
                     ?.split("token=")[1]
-                    .split(";")[0];
+                    ?.split(";")[0];
                 if (token) {
                     const payload = jwt.verify(
                         token,

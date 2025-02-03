@@ -11,8 +11,5 @@ class GroupByStatusUrl {
     @Field()
     offLine: number;
 }
-    
-
-
 
 export default GroupByStatusUrl;

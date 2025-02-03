@@ -6,6 +6,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { UserUrls } from "@/pages/UserUrls";
 import { UserHistories } from "@/pages/UserHistories";
+import NotFound from "@/pages/NotFound";
+import Profile from "@/pages/Profile";
 
 const routes = [
     {
@@ -14,10 +16,10 @@ const routes = [
         children: [
             {
                 path: "/",
-                element: <Navigate to="/index" />,
+                element: <Navigate to="/home" />,
             },
             {
-                path: "/index",
+                path: "/home",
                 element: <Landing />,
             },
             {
@@ -54,7 +56,19 @@ const routes = [
                 path: "/user-url/:id",
                 element: <UrlHistories />,
             },
+            {
+                path: "/profile",
+                element: <Profile />,
+            },
+            {
+                path: "*",
+                element: <NotFound />,
+            },
         ],
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ];
 

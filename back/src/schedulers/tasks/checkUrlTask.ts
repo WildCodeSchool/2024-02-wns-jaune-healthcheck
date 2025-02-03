@@ -88,10 +88,11 @@ const checkUrl = async (interval?: string) => {
                 } catch (error) {
                     console.log(error);
                     response = handleAxiosErrorResponse(error.code);
-                } 
+                }
 
                 let data = response.data;
-                const contentType = response.headers?.["content-type"] || "unknown";
+                const contentType =
+                    response.headers?.["content-type"] || "unknown";
 
                 if (contentType.includes("application/json")) {
                     data = JSON.stringify(data);

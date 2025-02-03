@@ -49,6 +49,27 @@ export class History extends BaseEntity {
     notification?: Notification | null;
 
     static async deleteOldHistoriesByUrl(url: Url) {
+        const checkFrequency = url.checkFrequency?.interval;
+        let conservedNumber: number;
+
+        if (!checkFrequency) conservedNumber = 62;
+        switch (checkFrequency) {
+            case "Minute":
+                conservedNumber = 1440; // 24 hours
+                break;
+            case "Heure":
+                conservedNumber = 168; // 7 days
+                break;
+            case "Jour":
+                conservedNumber = 62; // ~ 2 month
+                break;
+            case "Semaine":
+                conservedNumber = 52; // ~ 1 year
+                break;
+            default:
+                conservedNumber = 62;
+        }
+
         const query = `
             id NOT IN (
                 SELECT id FROM
@@ -58,7 +79,7 @@ export class History extends BaseEntity {
                             FROM history 
                             WHERE urlId = :urlId 
                             ORDER BY created_at DESC 
-                            LIMIT 29
+                            LIMIT :conservedNumber
                         )
 
                         UNION
@@ -75,7 +96,10 @@ export class History extends BaseEntity {
         `;
         return this.createQueryBuilder("history")
             .delete()
-            .where(query, { urlId: url.id })
+            .where(query, {
+                conservedNumber: conservedNumber,
+                urlId: url.id,
+            })
             .execute();
     }
 
@@ -133,7 +157,7 @@ export class History extends BaseEntity {
             .skip(skip)
             .take(16)
             .getManyAndCount();
-        
+
         return {
             histories: histories,
             totalPages: Math.ceil(total / 16),
@@ -144,22 +168,21 @@ export class History extends BaseEntity {
     }
 
     static async getGroupByStatusPrivateHistories(
-        authenticatedUserId: string
+        authenticatedUserId: string,
     ): Promise<GroupByStatusHistory[]> {
-
         const rawResults = await this.createQueryBuilder("history")
             .select("history.status_code", "statusCode")
             .addSelect(
                 `SUM(CASE WHEN history.content_type LIKE 'application/json%' THEN 1 ELSE 0 END)`,
-                "countJson"
+                "countJson",
             )
             .addSelect(
                 `SUM(CASE WHEN history.content_type LIKE 'text/html%' THEN 1 ELSE 0 END)`,
-                "countHtml"
+                "countHtml",
             )
             .addSelect(
                 `SUM(CASE WHEN history.content_type = 'unknown' THEN 1 ELSE 0 END)`,
-                "countUnknown"
+                "countUnknown",
             )
             .innerJoin("history.url", "url")
             .where("url.userId = :userId", { userId: authenticatedUserId })
@@ -173,5 +196,4 @@ export class History extends BaseEntity {
             countUnknown: parseInt(result.countUnknown, 0),
         }));
     }
-
 }

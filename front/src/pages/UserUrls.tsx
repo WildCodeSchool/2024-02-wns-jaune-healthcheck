@@ -1,4 +1,4 @@
-import ListUserUrls from "@/components/userUrls/ListUserUrls";
+import ListUserUrls from "@/components/user-urls/ListUserUrls";
 
 export function UserUrls() {
     return <ListUserUrls />;

@@ -93,27 +93,6 @@ class UserResolver {
         }
     }
 
-    @Mutation(() => String)
-    async subscribe(@Arg("role") role: string, @Ctx() context: MyContext) {
-        try {
-            if (role in Roles) {
-                throw new Error("Bad request");
-            }
-            if (context.payload) {
-                const userFromDB = await User.findOneByOrFail({
-                    id: context.payload.id,
-                });
-                userFromDB.role =
-                    Roles[role.toLocaleUpperCase() as keyof typeof Roles];
-                await User.save(userFromDB);
-                return JSON.stringify(getUserBasicInfo(userFromDB));
-            } else throw new Error();
-        } catch (error) {
-            console.log(error);
-            throw new Error("Bad request");
-        }
-    }
-
     @Query(() => String)
     async logout(@Ctx() context: MyContext) {
         context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
