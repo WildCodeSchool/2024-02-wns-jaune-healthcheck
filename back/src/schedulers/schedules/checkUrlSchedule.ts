@@ -48,6 +48,7 @@ cron.schedule(
         try {
             await checkUrl(); // Public urls, no config allowed for user
             await checkUrl("Jour");
+            await checkuserNotif("Jour");
             if (parentPort) {
                 parentPort.postMessage("Tâche journalière exécutée");
             }
@@ -70,6 +71,7 @@ cron.schedule(
     async () => {
         try {
             await checkUrl("Semaine");
+            await checkuserNotif("Semaine");
             if (parentPort) {
                 parentPort.postMessage("Tâche hebdomadaire exécutée");
             }
@@ -89,7 +91,7 @@ cron.schedule(
 // Execute job every first day of the month at 2:00 AM
 cron.schedule("0 2 1 * *", async () => {
     try {
-        checkuserNotif("Mois");
+        await checkuserNotif("Mois");
         if (parentPort) {
             parentPort.postMessage("Tâche mensuelle exécutée");
         }
@@ -100,9 +102,4 @@ cron.schedule("0 2 1 * *", async () => {
             );
         }
     }
-});
-
-// Execute job every 5 seconds
-cron.schedule("*/5 * * * * *", async () => {
-    checkuserNotif("Jour");
 });

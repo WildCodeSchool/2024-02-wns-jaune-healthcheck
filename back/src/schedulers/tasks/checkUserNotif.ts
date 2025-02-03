@@ -1,3 +1,4 @@
+import { Notification } from "../../entities/Notification";
 import dataSource from "../../database/dataSource";
 import { User } from "../../entities/User";
 import nodemailer from "nodemailer";
@@ -12,11 +13,27 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = async (userMail: string) => {
     if (process.env.EMAIL || process.env.EMAIL_PASSWORD) {
+        const notifs = await Notification.find({
+            where: {
+                user: {
+                    email: userMail,
+                },
+                is_read: false,
+            },
+            select: {
+                created_at: true,
+                content: true,
+            },
+        });
+        let message = ``;
+        for (const notif of notifs) {
+            message += `- ${notif.created_at.toLocaleDateString()}: ${notif.content}\n\n`;
+        }
         await transporter.sendMail({
             from: process.env.EMAIL,
             to: userMail,
-            subject: "Résumé de vos activités",
-            text: `Ton résumé à ${new Date().toLocaleString()}`,
+            subject: "Health Checker - Résumé des notifications non lues",
+            text: message,
         });
     } else {
         console.log("Email or password not defined");

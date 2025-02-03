@@ -10,6 +10,7 @@ import {
     History,
     Crown,
     CirclePlus,
+    Bell,
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -242,6 +243,21 @@ const UserSideBar: React.FC = () => {
                                 <DropdownMenuLabel>
                                     <h1>Profil</h1>
                                 </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            navigate(
+                                                "/profile?tab=notification",
+                                            )
+                                        }
+                                        className="cursor-pointer"
+                                    >
+                                        <Bell className="mr-2 h-4 w-4" />
+                                        <span>Notifications</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem

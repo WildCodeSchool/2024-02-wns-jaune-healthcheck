@@ -4,7 +4,7 @@ import { Query, Resolver } from "type-graphql";
 @Resolver()
 class NotifFrequencyResolver {
     @Query(() => [NotifFrequency])
-    async notifFrequency(): Promise<NotifFrequency[]> {
+    async notifFrequencies(): Promise<NotifFrequency[]> {
         try {
             return await NotifFrequency.find();
         } catch (err) {

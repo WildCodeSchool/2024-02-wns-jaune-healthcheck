@@ -135,6 +135,23 @@ class UserResolver {
         }
     }
 
+    @Query(() => String)
+    async getUserNotifFrequency(@Ctx() context: MyContext) {
+        try {
+            const user = await User.findOneByOrFail({
+                id: context.payload?.id,
+            });
+            if (!user) throw new Error("User not found");
+            const userNotifFrequency = await NotifFrequency.findOneByOrFail({
+                id: user.notifFrequency?.id,
+            });
+            if (!userNotifFrequency) throw new Error("Frequency not found");
+            return userNotifFrequency.interval;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
     @Mutation(() => String)
     async updateUserNotifFrequency(
         @Arg("frequency") frequency: string,
