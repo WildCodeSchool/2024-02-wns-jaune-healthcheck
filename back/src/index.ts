@@ -10,6 +10,7 @@ import CheckFrequencyResolver from "./resolvers/CheckFrequencyResolver";
 import startServer from "./startServer";
 import WorkerThread from "./thread/Worker";
 import NotificationResolver from "./resolvers/NotificationResolver";
+import NotifFrequencyResolver from "./resolvers/NotifFrequencyResolver";
 
 const app = express();
 const port = process.env.BACKEND_PORT;
@@ -23,12 +24,14 @@ const start = async () => {
             UserResolver,
             CheckFrequencyResolver,
             NotificationResolver,
+            NotifFrequencyResolver,
         ],
         app,
     );
 
     // Add worker thread for checkUrlSchedule and bind io websocket Server
-    const scheduleFile = appEnv === "production" ? "checkUrlSchedule.js" : "checkUrlSchedule.ts";
+    const scheduleFile =
+        appEnv === "production" ? "checkUrlSchedule.js" : "checkUrlSchedule.ts";
     const checkUrlWorker = new WorkerThread(
         path.join(__dirname, "schedulers", "schedules", scheduleFile),
         wsServer,

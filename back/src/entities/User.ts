@@ -2,12 +2,14 @@ import {
     BaseEntity,
     Column,
     Entity,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { Field, ObjectType } from "type-graphql";
 import { Url } from "./Url";
 import { Notification } from "./Notification";
+import { NotifFrequency } from "./NotifFrequency";
 
 export enum Roles {
     ADMIN = "admin",
@@ -50,4 +52,11 @@ export class User extends BaseEntity {
         eager: true,
     })
     notifications: Notification[];
+
+    @Field(() => NotifFrequency, { nullable: true })
+    @ManyToOne(() => NotifFrequency, (notifFrequency) => notifFrequency.users, {
+        eager: true,
+        nullable: true,
+    })
+    notifFrequency?: NotifFrequency;
 }

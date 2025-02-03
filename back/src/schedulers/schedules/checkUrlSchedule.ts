@@ -1,6 +1,7 @@
 import { parentPort } from "worker_threads";
 import cron from "node-cron";
 import checkUrl from "../tasks/checkUrlTask";
+import checkuserNotif from "../tasks/checkUserNotif";
 
 // Execute job every minute
 cron.schedule("* * * * *", async () => {
@@ -84,3 +85,24 @@ cron.schedule(
         timezone: "Europe/Paris",
     },
 );
+
+// Execute job every first day of the month at 2:00 AM
+cron.schedule("0 2 1 * *", async () => {
+    try {
+        checkuserNotif("Mois");
+        if (parentPort) {
+            parentPort.postMessage("Tâche mensuelle exécutée");
+        }
+    } catch (error) {
+        if (parentPort) {
+            parentPort.postMessage(
+                `Erreur dans la tâche mensuelle: ${error.message}`,
+            );
+        }
+    }
+});
+
+// Execute job every 5 seconds
+cron.schedule("*/5 * * * * *", async () => {
+    checkuserNotif("Jour");
+});
