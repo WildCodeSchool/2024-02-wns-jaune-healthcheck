@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../entities/User";
 import MyContext from "../types/MyContext";
 import { Roles } from "../entities/User";
+import { NotifFrequency } from "../entities/NotifFrequency";
 
 function setCookie(context: MyContext, token: string) {
     const expireCookieUTC = new Date();
@@ -131,6 +132,49 @@ class UserResolver {
         } catch (error) {
             console.log(error);
             throw new Error("Bad request");
+        }
+    }
+
+    @Query(() => String)
+    async getUserNotifFrequency(@Ctx() context: MyContext) {
+        try {
+            const user = await User.findOneByOrFail({
+                id: context.payload?.id,
+            });
+            if (!user) throw new Error("User not found");
+            const userNotifFrequency = await NotifFrequency.findOneByOrFail({
+                id: user.notifFrequency?.id,
+            });
+            if (!userNotifFrequency) throw new Error("Frequency not found");
+            return userNotifFrequency.interval;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    @Mutation(() => String)
+    async updateUserNotifFrequency(
+        @Arg("frequency") frequency: string,
+        @Ctx() context: MyContext,
+    ) {
+        try {
+            if (context.payload) {
+                const user = await User.findOneByOrFail({
+                    id: context.payload.id,
+                });
+                try {
+                    const resFrequency = await NotifFrequency.findOneByOrFail({
+                        interval: frequency,
+                    });
+                    user.notifFrequency = resFrequency;
+                    await User.save(user);
+                    return JSON.stringify(getUserBasicInfo(user));
+                } catch {
+                    throw new Error("Frequency not found");
+                }
+            } else throw new Error();
+        } catch (err) {
+            throw new Error(err);
         }
     }
 }
