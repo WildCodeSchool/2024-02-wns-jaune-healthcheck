@@ -86,7 +86,6 @@ const ListUserUrls: React.FC = () => {
         if (!data) {
             return;
         }
-        console.log(data.urls);
         setPaginateUrls(data.urls as PaginateUrls);
     }, [data]);
 

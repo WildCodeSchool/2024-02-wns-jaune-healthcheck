@@ -10,7 +10,7 @@ import {
     History,
     Crown,
     CirclePlus,
-    Bell,
+    Settings,
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -242,7 +242,7 @@ const UserSideBar: React.FC = () => {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg space-y-1"
                                 side="bottom"
                                 align="end"
                                 sideOffset={4}
@@ -255,28 +255,13 @@ const UserSideBar: React.FC = () => {
                                     <DropdownMenuItem
                                         onClick={() =>
                                             navigate(
-                                                "/profile?tab=notification",
-                                            )
-                                        }
-                                        className="cursor-pointer"
-                                    >
-                                        <Bell className="mr-2 h-4 w-4" />
-                                        <span>Notifications</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem
-                                        onClick={() =>
-                                            navigate(
                                                 "/profile?tab=subscription",
                                             )
                                         }
                                         className="cursor-pointer"
                                     >
-                                        <Crown className="mr-2 h-4 w-4" />
-                                        <span>Abonnements</span>
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        <span>Paramètres</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
 
