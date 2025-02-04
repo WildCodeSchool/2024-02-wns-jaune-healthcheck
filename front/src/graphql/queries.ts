@@ -193,3 +193,12 @@ export const GET_PRIVATE_SUM_URLS = gql`
         privateSumUrls
     }
 `;
+
+export const GET_NOTIF_FREQUENCIES = gql`
+    query NotifFrequencies {
+        getUserNotifFrequency
+        notifFrequencies {
+            interval
+        }
+    }
+`;

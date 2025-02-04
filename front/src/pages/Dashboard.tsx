@@ -9,13 +9,12 @@ export default function Dashboard() {
         <div className="w-full h-fit m-auto">
             <section className="pb-4">
                 <h1 className="font-semibold text-2xl mb-[1px]">Dashboard</h1>
-                <h2 className="mb-4 text-sm text-gray-500">
+                <h2 className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     Visualisez vos données privées et suivi des statistiques.
                 </h2>
             </section>
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <div className="lg:col-span-8 h-full">
-                    {/* Second chart wrapper */}
                     <div className="h-full">
                         <UrlsByStatusChart />
                     </div>

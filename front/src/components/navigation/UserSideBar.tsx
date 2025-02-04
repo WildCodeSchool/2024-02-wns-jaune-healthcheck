@@ -10,6 +10,7 @@ import {
     History,
     Crown,
     CirclePlus,
+    Settings,
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -39,6 +40,7 @@ import useAuthStore from "@/stores/authStore";
 import { useLogoutLazyQuery } from "@/generated/graphql-types";
 import { Roles } from "@/constants/role.ts";
 import FormUserUrl from "../user-urls/FormUserUrl.tsx";
+import { useTheme } from "../custom/ThemeProvider.tsx";
 
 const data = {
     navigation: [
@@ -69,9 +71,15 @@ const UserSideBar: React.FC = () => {
     const { toast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
+    const { theme } = useTheme();
 
     const isTier = user.role === Roles.TIER;
     const isPremium = user.role === Roles.PREMIUM;
+
+    const fillTierCrown =
+        theme === "dark" ? "rgb(251, 146, 60)" : "rgb(194, 65, 12)";
+    const fillPremiumCrown =
+        theme === "dark" ? "rgb(253, 224, 71)" : "rgb(234, 179, 8)";
 
     const handleLogout = () => {
         logoutQuery({
@@ -186,9 +194,9 @@ const UserSideBar: React.FC = () => {
                                     {isTier && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(113 63 18)"
+                                            fill={fillTierCrown}
                                             className={clsx(
-                                                "h-4 w-4 text-yellow-900",
+                                                "h-4 w-4 text-orange-700 dark:text-orange-400",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&
@@ -200,9 +208,9 @@ const UserSideBar: React.FC = () => {
                                     {isPremium && (
                                         <Crown
                                             strokeWidth={3}
-                                            fill="rgb(252 211 77)"
+                                            fill={fillPremiumCrown}
                                             className={clsx(
-                                                "h-4 w-4 text-amber-300",
+                                                "h-4 w-4 text-yellow-500 dark:text-yellow-300",
                                                 "-left-[6px] -top-[6px]",
                                                 "transition-transform duration-200 ease-in-out",
                                                 open &&
@@ -234,7 +242,7 @@ const UserSideBar: React.FC = () => {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg space-y-1"
                                 side="bottom"
                                 align="end"
                                 sideOffset={4}
@@ -252,8 +260,8 @@ const UserSideBar: React.FC = () => {
                                         }
                                         className="cursor-pointer"
                                     >
-                                        <Crown className="mr-2 h-4 w-4" />
-                                        <span>Abonnements</span>
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        <span>Paramètres</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
 

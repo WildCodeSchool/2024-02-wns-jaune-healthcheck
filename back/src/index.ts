@@ -10,6 +10,7 @@ import CheckFrequencyResolver from "./resolvers/CheckFrequencyResolver";
 import startServer from "./startServer";
 import WorkerThread from "./thread/Worker";
 import NotificationResolver from "./resolvers/NotificationResolver";
+import NotifFrequencyResolver from "./resolvers/NotifFrequencyResolver";
 import SubscriptionResolver from "./resolvers/SubscriptionResolver";
 
 const app = express();
@@ -24,6 +25,7 @@ const start = async () => {
             UserResolver,
             CheckFrequencyResolver,
             NotificationResolver,
+            NotifFrequencyResolver,
             SubscriptionResolver,
         ],
         app,

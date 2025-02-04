@@ -1,3 +1,4 @@
+import NotificationPage from "@/components/profile/notification/NotificationPage";
 import { SubscriptionWrapper } from "@/components/profile/subscription/SubscriptionWrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
@@ -24,9 +25,18 @@ export default function Profile() {
                 >
                     Abonnement
                 </TabsTrigger>
+                <TabsTrigger
+                    value="notification"
+                    onClick={() => handleTabChange("notification")}
+                >
+                    Notification
+                </TabsTrigger>
             </TabsList>
             <TabsContent value="subscription">
                 <SubscriptionWrapper />
+            </TabsContent>
+            <TabsContent value="notification">
+                <NotificationPage />
             </TabsContent>
         </Tabs>
     );

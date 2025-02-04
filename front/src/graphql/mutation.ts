@@ -108,3 +108,9 @@ export const DELETE_URL = gql`
         deleteUrl(id: $id)
     }
 `;
+
+export const UPDATE_USER_NOTIF_FREQUENCY = gql`
+    mutation UpdateUserNotifFrequency($frequency: String!) {
+        updateUserNotifFrequency(frequency: $frequency)
+    }
+`;
