@@ -45,7 +45,7 @@ const HistoriesByStatusChart: React.FC = () => {
         fetchPolicy: "cache-and-network",
     });
     const messages = useSocketStore((state) => state.messages);
-    console.log(data);
+
     useEffect(() => {
         refetch();
     }, [messages, refetch]);
