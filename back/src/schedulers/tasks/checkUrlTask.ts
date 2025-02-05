@@ -86,7 +86,6 @@ const checkUrl = async (interval?: string) => {
                         timeout: 5000,
                     });
                 } catch (error) {
-                    console.log(error);
                     response = handleAxiosErrorResponse(error.code);
                 }
 

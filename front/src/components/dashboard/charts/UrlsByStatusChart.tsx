@@ -30,9 +30,6 @@ import { Skeleton } from "../../ui/skeleton";
 import useSocketStore from "@/stores/webSocketStore";
 
 const chartConfig = {
-    visitors: {
-        label: "Visitors",
-    },
     onLine: {
         label: "En ligne",
         color: "hsl(var(--chart-1))",
@@ -186,17 +183,17 @@ const UrlsByStatusChart: React.FC = () => {
                             }
                         />
                         <Area
-                            dataKey="onLine"
-                            type="natural"
-                            fill="url(#fillOnline)"
-                            stroke="var(--color-onLine)"
-                            stackId="a"
-                        />
-                        <Area
                             dataKey="offLine"
                             type="natural"
                             fill="url(#fillOffLine)"
                             stroke="var(--color-offLine)"
+                            stackId="a"
+                        />
+                        <Area
+                            dataKey="onLine"
+                            type="natural"
+                            fill="url(#fillOnline)"
+                            stroke="var(--color-onLine)"
                             stackId="a"
                         />
                         <ChartLegend content={<ChartLegendContent />} />
