@@ -17,6 +17,11 @@ import { deleteUrlSchema } from "@/constants/validator.ts";
 import { useDeleteUrlMutation } from "@/generated/graphql-types.ts";
 import {
     GET_ALL_URLS,
+    GET_RECENT_PRIVATE_URLS,
+    GET_PRIVATE_SUM_URLS,
+    GET_RECENT_PRIVATE_HISTORIES,
+    GET_PRIVATE_URLS_BY_STATUS,
+    GET_PRIVATE_HISTORIES_BY_STATUS,
 } from "@/graphql/queries.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
 import {
@@ -77,6 +82,21 @@ export default function FormDeleteUserUrl({
                         currentPage:
                             Number(searchParams?.get("currentPage")) || 1,
                     },
+                },
+                {
+                    query: GET_RECENT_PRIVATE_URLS,
+                },
+                {
+                    query: GET_RECENT_PRIVATE_HISTORIES,
+                },
+                {
+                    query: GET_PRIVATE_URLS_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_HISTORIES_BY_STATUS,
+                },
+                {
+                    query: GET_PRIVATE_SUM_URLS,
                 },
             ],
         });
