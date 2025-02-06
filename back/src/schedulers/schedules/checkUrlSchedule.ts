@@ -6,8 +6,10 @@ import checkuserNotif from "../tasks/checkUserNotif";
 // Execute job every minute
 cron.schedule("* * * * *", async () => {
     try {
+        console.log('=========> cron jobs START');
         await checkUrl("Minute");
         if (parentPort) {
+            console.log('=========> cron jobs END');
             parentPort.postMessage("Tâche minutière exécutée");
         }
     } catch (error) {
