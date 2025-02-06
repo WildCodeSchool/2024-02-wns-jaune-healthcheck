@@ -8,7 +8,6 @@ class WorkerThread {
         this.worker = new Worker(taskPath);
 
         this.worker.on("message", (message) => {
-            console.log('=========> worker SEND');
             wsServer.emit("cron-job", message);
         });
 

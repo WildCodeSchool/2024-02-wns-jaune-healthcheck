@@ -83,21 +83,6 @@ export default function FormDeleteUserUrl({
                             Number(searchParams?.get("currentPage")) || 1,
                     },
                 },
-                {
-                    query: GET_RECENT_PRIVATE_URLS,
-                },
-                {
-                    query: GET_RECENT_PRIVATE_HISTORIES,
-                },
-                {
-                    query: GET_PRIVATE_URLS_BY_STATUS,
-                },
-                {
-                    query: GET_PRIVATE_HISTORIES_BY_STATUS,
-                },
-                {
-                    query: GET_PRIVATE_SUM_URLS,
-                },
             ],
         });
     };
@@ -109,7 +94,7 @@ export default function FormDeleteUserUrl({
     }, [openDialog, deleteForm]);
 
     return (
-        <DialogContent className="sm:max-w-md space-y-2">
+        <DialogContent className="space-y-2">
             <DialogHeader>
                 <DialogTitle className="text-2xl">Supprimer l'URL</DialogTitle>
                 <DialogDescription>
@@ -140,7 +125,7 @@ export default function FormDeleteUserUrl({
                                     <FormDescription className="italic">
                                         Veuillez confirmer la suppression en
                                         entrant le chemin de l'URL :{" "}
-                                        <span className="underline text-red-600 dark:text-rose-400">
+                                        <span className="underline text-red-600 dark:text-rose-400 text-wrap break-all">
                                             {urlPath}
                                         </span>
                                         .

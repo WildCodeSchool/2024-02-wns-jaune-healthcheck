@@ -283,7 +283,18 @@ class UrlResolver {
                 }
             });
             
+
             await queryRunner.manager.delete(History, { url: { id } });
+
+            await queryRunner.query(`
+                DELETE 
+                FROM notification 
+                WHERE id IN (
+                    SELECT "notificationId"
+                    FROM history
+                    WHERE "urlId" = $1
+                )
+            `, [id]);
 
             await queryRunner.manager.remove(url);
 
@@ -291,6 +302,7 @@ class UrlResolver {
 
             return true;
         } catch (error) {
+            console.log(error);
             await queryRunner.rollbackTransaction();
 
             if (error.name === "EntityNotFound") {

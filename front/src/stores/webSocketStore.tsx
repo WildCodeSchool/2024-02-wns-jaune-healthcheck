@@ -23,7 +23,6 @@ const useSocketStore = create<SocketState>((set) => ({
             console.log("disconnected from socket.io server");
         });
         socket.on("cron-job", (message: string) => {
-            console.log("received message from server", message);
             set((state) => ({
                 messages: [...state.messages, message],
             }));
