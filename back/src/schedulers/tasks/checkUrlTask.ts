@@ -24,7 +24,7 @@ const createOrUpdateNotification = async (newHistory: History) => {
             },
         },
     });
-
+    console.log("newHistory notif ==>", newHistory);
     if (user && user.notifications) {
         for (const notification of user.notifications) {
             if (
@@ -110,14 +110,18 @@ const checkUrl = async (interval?: string) => {
                     existingMessageHistory.response = "";
                     existingMessageHistory.save();
                 }
-
+                console.log("url ==>", url);
+                console.log("response ==>", response);
+                console.log("data ==>", data);
+                console.log("status_code ==>", response.status);
+                console.log("content_type ==>", contentType);
                 const newHistory = History.create({
                     url: url,
                     response: data,
                     status_code: response.status,
                     content_type: contentType,
                 });
-
+                console.log("newHistory ==>", newHistory);
                 await newHistory.save();
 
                 if (response.status > 300 && newHistory.url.user) {
