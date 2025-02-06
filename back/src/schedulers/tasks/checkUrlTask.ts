@@ -27,6 +27,7 @@ const createOrUpdateNotification = async (newHistory: History) => {
 
     if (user && user.notifications) {
         for (const notification of user.notifications) {
+            console.log('notification ==> ', notification);
             if (
                 notification.history.url.path === newHistory.url.path &&
                 notification.history.status_code === newHistory.status_code
