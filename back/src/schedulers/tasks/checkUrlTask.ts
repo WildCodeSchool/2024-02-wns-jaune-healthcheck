@@ -127,7 +127,7 @@ const checkUrl = async (interval?: string) => {
                 } catch (error) {
                     console.error("Failed to create or update notification", error);
                 }
-                console.log('fin tâche : url ==> ', url.name);
+
             } catch (error) {
                 console.error("Failed to log URL response", error);
             }
