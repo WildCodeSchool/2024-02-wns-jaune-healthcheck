@@ -168,7 +168,7 @@ export class Url extends BaseEntity {
                 authenticatedUserId: authenticatedUserId,
             })
             .andWhere(
-                "DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW()) OR DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW() - INTERVAL '1 hour')",
+                "(DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW()) OR DATE_TRUNC('hour', history.created_at) = DATE_TRUNC('hour', NOW() - INTERVAL '1 hour'))",
             )
             .groupBy("TO_CHAR(history.created_at, 'YYYY-MM-DD HH24:MI')")
             .getRawMany();
