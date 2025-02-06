@@ -28,8 +28,8 @@ const createOrUpdateNotification = async (newHistory: History) => {
     if (user && user.notifications) {
         for (const notification of user.notifications) {
             if ( 
-                notification.history?.url.path === newHistory.url.path &&
-                notification.history?.status_code === newHistory.status_code
+                notification.history.url.path === newHistory.url.path &&
+                notification.history.status_code === newHistory.status_code
             ) {
                 notification.history.notification = null;
 
