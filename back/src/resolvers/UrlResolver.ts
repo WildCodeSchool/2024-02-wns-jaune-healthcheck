@@ -123,15 +123,14 @@ class UrlResolver {
     async recentPrivateUrls(@Ctx() context: MyContext): Promise<Url[]> {
         try {
             if (context.payload) {
-                return await Url.find({
-                    order: { createdAt: "DESC" },
-                    where: {
-                        user: {
-                            id: context.payload.id,
-                        },
-                    },
-                    take: 5,
-                });
+                return await dataSource.createQueryBuilder(Url, "url")
+                    .innerJoinAndSelect("url.histories", "histories")
+                    .innerJoin("url.user", "user")
+                    .where("user.id = :userId", { userId: context.payload.id })
+                    .orderBy("url.createdAt", "DESC")
+                    .take(5)
+                    .cache(true)
+                    .getMany();
             } else {
                 throw new Error();
             }

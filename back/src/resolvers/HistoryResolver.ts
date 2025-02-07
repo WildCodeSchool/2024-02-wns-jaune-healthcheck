@@ -1,5 +1,6 @@
 import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { Not } from "typeorm";
+import dataSource from "../database/dataSource";
 import { History } from "../entities/History";
 import PaginatesHistories from "../types/PaginatesHistories";
 import GroupByStatusHistory from "../types/GroupByStatusHistory";
@@ -31,18 +32,14 @@ class HistoryResolver {
     ): Promise<History[]> {
         try {
             if (context.payload) {
-                return await History.find({
-                    order: { created_at: "DESC" },
-                    relations: ["url"],
-                    where: {
-                        url: {
-                            user: {
-                                id: context.payload.id,
-                            },
-                        },
-                    },
-                    take: 5,
-                });
+                return await dataSource.createQueryBuilder(History, "history")
+                .innerJoinAndSelect("history.url", "url")
+                .innerJoin("url.user", "user")
+                .where("user.id = :userId", { userId: context.payload.id })
+                .orderBy("history.created_at", "DESC")
+                .take(5)
+                .cache(true)
+                .getMany();
             } else {
                 throw new Error();
             }
