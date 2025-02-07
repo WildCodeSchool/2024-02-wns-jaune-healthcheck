@@ -20,6 +20,7 @@ import { AddFieldContentTypeHistoryTable1736153283751 } from "./migrations/17361
 import { NotifFrequency1736519806535 } from "./migrations/1736519806535-notifFrequency";
 import { TierRoleEnum1736421400775 } from "./migrations/1736421400775-tier-role-enum";
 import { UrlDeleteCascade1736522105212 } from "./migrations/1736522105212-url-delete-cascade";
+import { AddIndexCreatedAt1738930034935 } from "./migrations/1738930034935-Add_Index_createdAt";
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -53,6 +54,7 @@ const dataSource = new DataSource({
         NotifFrequency1736519806535,
         TierRoleEnum1736421400775,
         UrlDeleteCascade1736522105212,
+        AddIndexCreatedAt1738930034935
     ],
 });
 

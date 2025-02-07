@@ -6,6 +6,7 @@ import {
     CreateDateColumn,
     OneToMany,
     ManyToOne,
+    Index,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import { IsUrl, Length, Contains } from "class-validator";
@@ -48,6 +49,7 @@ export class Url extends BaseEntity {
     private: boolean;
 
     @Field()
+    @Index()
     @CreateDateColumn()
     createdAt: Date;
 

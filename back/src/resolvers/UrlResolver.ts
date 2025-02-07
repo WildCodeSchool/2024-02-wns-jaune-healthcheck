@@ -123,15 +123,14 @@ class UrlResolver {
     async recentPrivateUrls(@Ctx() context: MyContext): Promise<Url[]> {
         try {
             if (context.payload) {
-                return await Url.find({
-                    order: { createdAt: "DESC" },
-                    where: {
-                        user: {
-                            id: context.payload.id,
-                        },
-                    },
-                    take: 5,
-                });
+                return await dataSource.createQueryBuilder(Url, "url")
+                    .innerJoinAndSelect("url.histories", "histories")
+                    .innerJoin("url.user", "user")
+                    .where("user.id = :userId", { userId: context.payload.id })
+                    .orderBy("url.createdAt", "DESC")
+                    .take(5)
+                    .cache(true)
+                    .getMany();
             } else {
                 throw new Error();
             }
@@ -282,11 +281,8 @@ class UrlResolver {
                     id: context.payload?.id
                 }
             });
-            
 
-            await queryRunner.manager.delete(History, { url: { id } });
-
-            await queryRunner.query(`
+            await queryRunner.manager.query(`
                 DELETE 
                 FROM notification 
                 WHERE id IN (
@@ -295,6 +291,8 @@ class UrlResolver {
                     WHERE "urlId" = $1
                 )
             `, [id]);
+
+            await queryRunner.manager.delete(History, { url: { id } });
 
             await queryRunner.manager.remove(url);
 

@@ -26,7 +26,7 @@ export default function RecentUrls() {
     if (error) {
         return <div>Erreur</div>;
     }
-
+    
     return (
         <Card className="shadow-md shadow-muted">
             <CardHeader className="w-full">
