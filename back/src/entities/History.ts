@@ -7,6 +7,7 @@ import {
     BaseEntity,
     OneToOne,
     JoinColumn,
+    Index,
 } from "typeorm";
 import { Url } from "./Url";
 import { Notification } from "./Notification";
@@ -22,6 +23,7 @@ export class History extends BaseEntity {
     id: string;
 
     @Field()
+    @Index()
     @CreateDateColumn()
     created_at: Date;
 
