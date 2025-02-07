@@ -6,18 +6,18 @@ import MyContext from "../types/MyContext";
 import { Roles } from "../entities/User";
 import { NotifFrequency } from "../entities/NotifFrequency";
 
-function setCookie(context: MyContext, token: string) {
+export function setCookie(context: MyContext, token: string) {
     const expireCookieUTC = new Date();
     expireCookieUTC.setSeconds(
         expireCookieUTC.getSeconds() + Number(process.env.COOKIE_TTL),
-    );
+    )
 
-    const secureCookie = process.env.APP_ENV === "production" ? "; Secure" : "";
+    const secureCookie = process.env.APP_ENV === "production" ? "; Secure" : ""
 
     context.res.setHeader(
         "Set-Cookie",
         `token=${token}${secureCookie};httpOnly;expires=${expireCookieUTC.toUTCString()}`,
-    );
+    )
 }
 
 function getUserBasicInfo(user: User) {
@@ -26,7 +26,7 @@ function getUserBasicInfo(user: User) {
         email: user.email,
         username: user.username,
         role: user.role,
-    };
+    }
 }
 
 class UserResolver {
@@ -38,24 +38,24 @@ class UserResolver {
         @Ctx() context: MyContext,
     ) {
         if (process.env.JWT_SECRET_KEY === undefined) {
-            throw new Error("NO JWT SECRET KEY DEFINED");
+            throw new Error("NO JWT SECRET KEY DEFINED")
         }
 
-        const hashedPassword = await argon2.hash(password);
+        const hashedPassword = await argon2.hash(password)
         const userFromDB = await User.save({
             username: username,
             email: email,
             hashedPassword: hashedPassword,
-        });
+        })
 
         const token = jwt.sign(
             { id: userFromDB.id, email: userFromDB.email },
             process.env.JWT_SECRET_KEY,
-        );
+        )
 
-        setCookie(context, token);
+        setCookie(context, token)
 
-        return JSON.stringify(getUserBasicInfo(userFromDB));
+        return JSON.stringify(getUserBasicInfo(userFromDB))
     }
 
     @Mutation(() => String)
@@ -69,34 +69,34 @@ class UserResolver {
                 throw new Error("NO JWT SECRET KEY DEFINED");
             }
 
-            const userFromDB = await User.findOneByOrFail({ email });
+            const userFromDB = await User.findOneByOrFail({ email })
 
             const isCorrectPassword = await argon2.verify(
                 userFromDB.hashedPassword,
                 password,
-            );
+            )
 
             if (!isCorrectPassword) {
-                throw new Error();
+                throw new Error()
             }
 
             const token = jwt.sign(
                 { id: userFromDB.id, email: userFromDB.email },
                 process.env.JWT_SECRET_KEY,
-            );
-            setCookie(context, token);
+            )
+            setCookie(context, token)
 
-            return JSON.stringify(getUserBasicInfo(userFromDB));
+            return JSON.stringify(getUserBasicInfo(userFromDB))
         } catch (error) {
-            console.log(error);
-            throw new Error("Bad request");
+            console.log(error)
+            throw new Error("Bad request")
         }
     }
 
     @Query(() => String)
     async logout(@Ctx() context: MyContext) {
-        context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
-        return "Logged out";
+        context.res.setHeader("Set-Cookie", `token=;Max-Age=0`)
+        return "Logged out"
     }
 
     @Query(() => String)
@@ -105,12 +105,12 @@ class UserResolver {
             if (context.payload) {
                 const userFromDB = await User.findOneByOrFail({
                     id: context.payload.id,
-                });
-                return JSON.stringify(getUserBasicInfo(userFromDB));
-            } else throw new Error();
+                })
+                return JSON.stringify(getUserBasicInfo(userFromDB))
+            } else throw new Error()
         } catch (error) {
-            console.log(error);
-            throw new Error("Bad request");
+            console.log(error)
+            throw new Error("Bad request")
         }
     }
 
@@ -120,18 +120,18 @@ class UserResolver {
             if (context.payload) {
                 const requestingUser = await User.findOneByOrFail({
                     id: context.payload.id,
-                });
+                })
 
                 if (requestingUser.role !== Roles.ADMIN) {
-                    throw new Error("Unauthorized");
+                    throw new Error("Unauthorized")
                 }
 
-                const users = await User.find();
-                return JSON.stringify(users.map(getUserBasicInfo));
-            } else throw new Error();
+                const users = await User.find()
+                return JSON.stringify(users.map(getUserBasicInfo))
+            } else throw new Error()
         } catch (error) {
-            console.log(error);
-            throw new Error("Bad request");
+            console.log(error)
+            throw new Error("Bad request")
         }
     }
 
@@ -140,15 +140,15 @@ class UserResolver {
         try {
             const user = await User.findOneByOrFail({
                 id: context.payload?.id,
-            });
-            if (!user) throw new Error("User not found");
+            })
+            if (!user) throw new Error("User not found")
             const userNotifFrequency = await NotifFrequency.findOneByOrFail({
                 id: user.notifFrequency?.id,
-            });
-            if (!userNotifFrequency) throw new Error("Frequency not found");
-            return userNotifFrequency.interval;
+            })
+            if (!userNotifFrequency) throw new Error("Frequency not found")
+            return userNotifFrequency.interval
         } catch (err) {
-            throw new Error(err);
+            throw new Error(err)
         }
     }
 
@@ -161,20 +161,20 @@ class UserResolver {
             if (context.payload) {
                 const user = await User.findOneByOrFail({
                     id: context.payload.id,
-                });
+                })
                 try {
                     const resFrequency = await NotifFrequency.findOneByOrFail({
                         interval: frequency,
-                    });
-                    user.notifFrequency = resFrequency;
-                    await User.save(user);
-                    return JSON.stringify(getUserBasicInfo(user));
+                    })
+                    user.notifFrequency = resFrequency
+                    await User.save(user)
+                    return JSON.stringify(getUserBasicInfo(user))
                 } catch {
-                    throw new Error("Frequency not found");
+                    throw new Error("Frequency not found")
                 }
-            } else throw new Error();
+            } else throw new Error()
         } catch (err) {
-            throw new Error(err);
+            throw new Error(err)
         }
     }
 }
