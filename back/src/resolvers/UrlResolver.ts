@@ -282,11 +282,8 @@ class UrlResolver {
                     id: context.payload?.id
                 }
             });
-            
 
-            await queryRunner.manager.delete(History, { url: { id } });
-
-            await queryRunner.query(`
+            await queryRunner.manager.query(`
                 DELETE 
                 FROM notification 
                 WHERE id IN (
@@ -295,6 +292,8 @@ class UrlResolver {
                     WHERE "urlId" = $1
                 )
             `, [id]);
+
+            await queryRunner.manager.delete(History, { url: { id } });
 
             await queryRunner.manager.remove(url);
 
