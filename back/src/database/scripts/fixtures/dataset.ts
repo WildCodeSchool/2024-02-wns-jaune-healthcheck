@@ -1,8 +1,9 @@
-import FakeDataUrls from "./urls.json";
+import { UrlInput } from "@/resolvers/UrlResolver";
+import Urls from "./urls.json";
 
-export const urlsData = FakeDataUrls;
+export const urlsDataset: UrlInput[] = Urls;
 
-export const historiesData = [
+export const testHistories = [
     {
         status_code: 200,
         response: "Youtube response",
@@ -15,9 +16,11 @@ export const historiesData = [
     },
 ];
 
-export const userData = {
+export const testUser = {
     id: "e5fb990e-f9d9-4858-82d1-1fd1755485a5",
-    username: "test",
-    email: "test@test.fr",
+    username: "Pierre",
+    email: "pierre@health-checker.fr",
     hashedPassword: "hashedPasswordTest",
 };
+
+export const testUrls = urlsDataset.slice(0, 2);
