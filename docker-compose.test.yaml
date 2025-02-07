@@ -1,6 +1,6 @@
 name: "health-checker-test"
 services:
-  backend-test:
+  backend:
     container_name: backend-test
     build: ./back
     command: sh -c "npm run seed && npm run test"
@@ -15,10 +15,10 @@ services:
       TZ: Europe/Paris
       LC_ALL: fr_FR.UTF-8
     depends_on:
-      database-test:
+      database:
         condition: service_healthy
 
-  frontend-test:
+  frontend:
     container_name: frontend-test
     build: ./front
     command: npm run test
@@ -28,7 +28,7 @@ services:
       TZ: Europe/Paris
       LC_ALL: fr_FR.UTF-8
 
-  database-test:
+  database:
     container_name: database-test
     image: postgres:16
     environment:

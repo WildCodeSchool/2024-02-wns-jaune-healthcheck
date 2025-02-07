@@ -9,7 +9,7 @@
         "dev": "ts-node-dev --poll src/index.ts",
         "build": "tsc",
         "prod": "node dist/index.js",
-        "seed": "ts-node-dev src/database/seeder/fixtures.ts",
+        "seed": "ts-node-dev src/database/scripts/fixtures/generateFixtures.ts",
         "populate-db": "ts-node src/database/scripts/PopulateDB.ts",
         "migration:create": "typeorm-ts-node-commonjs migration:create",
         "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/dataSource.ts",

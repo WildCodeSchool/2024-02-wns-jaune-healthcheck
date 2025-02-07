@@ -27,22 +27,37 @@ Health-checker permet de vérifier si un service web est en ligne.
 ## Installation
 
 Le projet tourne sous Docker.
-Une seule commande est nécessaire pour installer le projet.
 
-> Renseigner les variables d'environnements
+> 1. Renseigner les variables d'environnements
 
 ```env
+# Environement
+APP_ENV=
+
+# Frontend
 VITE_API_URL=
+VITE_WS_URL=
+BACKEND_PORT=
 
-BACKEND_PORT=4000
+# Database
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_USER=
+POSTGRES_DB=
+POSTGRES_PASSWORD=
 
-POSTGRES_HOST=database
-POSTGRES_USER=test
-POSTGRES_DB=healthchecker
-POSTGRES_PASSWORD=test
+# Authentification
+JWT_SECRET_KEY=
+COOKIE_TTL=
+
+# Stripe
+VITE_STRIPE_PUBLIC_KEY="pk_test_xxx"
+STRIPE_SECRET_KEY="sk_test_xxx"
+STRIPE_TIER_PRICE_ID=
+STRIPE_PREMIUM_PRICE_ID=
 ```
 
-> Environnement de développement
+> 2. Environnement de développement
 
 ```bash
 docker compose -f docker-compose.dev.yaml up --build
@@ -66,7 +81,52 @@ ou
 make run-dev
 ```
 
-Pour tester le système d'abonnement, l'API Stripe fournit deux numéro de cartes :
+## Jeu de donnée
+
+Deux types de jeu de données sont présents sur le projet.
+
+> 1. Ajouter automatiquement 39 URLs à la base de donnée
+
+Le script _populateUrls_ permet d'insérer des URLs via la commande _npm run populate-db_
+
+> 2. Tester l'ajout d'URL, User et History
+
+Le script _generateFixtures_ permet des données test via la commande _npm run seed_
+
+> 3. Environnement de test
+
+Ensuite, exécutez :
+
+```bash
+docker compose -f docker-compose.test.yaml up --build
+```
+
+ou utiliser les commandes dans le fichier `Makefile`
+
+```bash
+make build-test
+```
+
+Par la suite, utiliser :
+
+```bash
+docker compose -f docker-compose.test.yaml up
+```
+
+ou
+
+```bash
+make run-test
+```
+
+Cet environnement de test, exécute automatiquement les deux scripts ci-dessus ainsi que tous les tests de l'application (front-end et back-end)
+
+## Client
+
+L'application Web **Health-checker** est exposée en local sur le port _8000_.
+
+Après avoir crée un compte, il est possible de tester le système d'abonnement.
+L'API Stripe fournit deux numéro de cartes à cet effet :
 
 ```
 4242 4242 4242 4242 : Paiement réussi
