@@ -81,7 +81,7 @@ ou
 make run-dev
 ```
 
-## Jeu de donnée
+## Jeu de données
 
 Deux types de jeu de données sont présents sur le projet.
 
