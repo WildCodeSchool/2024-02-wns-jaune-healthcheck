@@ -57,7 +57,6 @@ export class UrlSubscriber implements EntitySubscriberInterface<Url> {
                     timeout: 5000,
                 });
             } catch (error) {
-                console.log(error);
                 response = handleAxiosErrorResponse(error.code);
             }
 
