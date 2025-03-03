@@ -6,7 +6,9 @@ jest.mock("stripe");
 
 describe("SubscriptionResolver", () => {
     let subscriptionResolver: SubscriptionResolver;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockContext: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockUser: any;
 
     const mockStripeCustomer = {

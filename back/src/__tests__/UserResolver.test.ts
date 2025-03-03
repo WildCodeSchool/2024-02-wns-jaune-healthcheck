@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 
 describe("UserResolver", () => {
     let userResolver: UserResolver;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockContext: any;
     let mockUser: User;
     let passwordTest: string;
