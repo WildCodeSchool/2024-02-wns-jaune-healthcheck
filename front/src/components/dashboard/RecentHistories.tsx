@@ -36,7 +36,7 @@ export default function RecentHistories() {
     }
 
     return (
-        <Card className="shadow-md shadow-muted">
+        <Card>
             <CardHeader className="w-full">
                 <CardTitle className="text-lg mr-auto">
                     Historiques privés récents
