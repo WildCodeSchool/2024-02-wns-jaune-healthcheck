@@ -5,25 +5,24 @@ import jwt from "jsonwebtoken";
 
 describe("UserResolver", () => {
     let userResolver: UserResolver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockContext: any;
     let mockUser: User;
     let passwordTest: string;
 
     beforeEach(() => {
         userResolver = new UserResolver();
-        mockContext = {
-            res: {
-                setHeader: jest.fn(),
-            },
-            payload: { id: "e5fb990e-f9d9-4858-82d1-1fd1755485a5" },
-        };
         mockUser = {
             id: "e5fb990e-f9d9-4858-82d1-1fd1755485a5",
             username: "Pierre",
             email: "pierre@health-checker.fr",
         } as User;
         passwordTest = "password123";
+        mockContext = {
+            res: {
+                setHeader: jest.fn(),
+            },
+            payload: { id: mockUser.id },
+        };
         process.env.JWT_SECRET_KEY = "TEST_KEY";
     });
 
