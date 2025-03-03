@@ -112,7 +112,6 @@ describe("SubscriptionResolver", () => {
                 priceKey,
             );
 
-            // Vérifier la mise à jour de l'utilisateur
             expect(User.findOneBy).toHaveBeenCalledWith({
                 id: mockContext.payload.id,
             });
@@ -120,7 +119,6 @@ describe("SubscriptionResolver", () => {
             expect(mockUser.role).toBe(Roles.TIER);
             expect(mockUser.save).toHaveBeenCalled();
 
-            // Vérifier la réponse
             const userDataResponse = JSON.parse(result);
             expect(userDataResponse).toEqual({
                 id: mockUser.id,
@@ -166,7 +164,6 @@ describe("SubscriptionResolver", () => {
                 newPriceKey,
             );
 
-            // Vérifier la mise à jour de l'utilisateur
             expect(User.findOneBy).toHaveBeenCalledWith({
                 id: mockContext.payload.id,
             });
@@ -174,7 +171,6 @@ describe("SubscriptionResolver", () => {
             expect(mockUser.role).toBe(Roles.PREMIUM);
             expect(mockUser.save).toHaveBeenCalled();
 
-            // Vérifier la réponse
             const userDataResponse = JSON.parse(result);
             expect(userDataResponse).toEqual({
                 id: mockUser.id,
@@ -185,7 +181,6 @@ describe("SubscriptionResolver", () => {
         });
 
         it("doit échouer s'il n'y a pas d'abonnement actif", async () => {
-            // Modifier directement le spy créé par jest
             const stripeSpy = Stripe as unknown as jest.Mock;
             const mockStripeInstance = stripeSpy.mock.results[0].value;
             mockStripeInstance.subscriptions.list.mockResolvedValueOnce({
@@ -206,7 +201,6 @@ describe("SubscriptionResolver", () => {
             const result =
                 await subscriptionResolver.cancelSubscription(mockContext);
 
-            // Vérifier la mise à jour de l'utilisateur
             expect(User.findOneBy).toHaveBeenCalledWith({
                 id: mockContext.payload.id,
             });
@@ -225,7 +219,6 @@ describe("SubscriptionResolver", () => {
         });
 
         it("ne doit pas échouer s'il n'y a pas d'abonnement actif", async () => {
-            // Modifier directement le spy créé par jest
             const stripeSpy = Stripe as unknown as jest.Mock;
             const mockStripeInstance = stripeSpy.mock.results[0].value;
             mockStripeInstance.subscriptions.list.mockResolvedValueOnce({
@@ -235,7 +228,6 @@ describe("SubscriptionResolver", () => {
             const result =
                 await subscriptionResolver.cancelSubscription(mockContext);
 
-            // Vérifier que la réponse contient bien les données utilisateur
             const userDataResponse = JSON.parse(result);
             expect(userDataResponse).toEqual({
                 id: mockUser.id,
