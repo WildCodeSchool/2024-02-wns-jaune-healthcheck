@@ -73,14 +73,6 @@ const checkUrl = async (interval?: string) => {
 
         for (const url of urls) {
             try {
-                // Update lastCheckDate without triggering the subscriber
-                await dataSource
-                    .createQueryBuilder()
-                    .update(Url)
-                    .set({ lastCheckDate: new Date() })
-                    .where("id = :id", { id: url.id })
-                    .execute();
-
                 let response;
                 try {
                     response = await axios.get(url.path, {
@@ -121,6 +113,12 @@ const checkUrl = async (interval?: string) => {
                 });
 
                 await newHistory.save();
+
+                // Update lastCheckDate without triggering the subscriber
+                await dataSource.query(
+                    `UPDATE url SET "lastCheckDate" = $1 WHERE id = $2`,
+                    [new Date(), url.id]
+                );
 
                 try {
                     if (response.status > 300 && newHistory.url.user) {
