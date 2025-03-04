@@ -1,3 +1,4 @@
+import MyContext from "@/types/MyContext";
 import { User, Roles } from "../entities/User";
 import SubscriptionResolver from "../resolvers/SubscriptionResolver";
 import Stripe from "stripe";
@@ -6,10 +7,8 @@ jest.mock("stripe");
 
 describe("SubscriptionResolver", () => {
     let subscriptionResolver: SubscriptionResolver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let mockContext: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let mockUser: any;
+    let mockContext: MyContext;
+    let mockUser: User;
 
     const mockStripeCustomer = {
         id: "cus_mock",
@@ -34,10 +33,21 @@ describe("SubscriptionResolver", () => {
             id: "e5fb990e-f9d9-4858-82d1-1fd1755485a5",
             username: "Pierre",
             email: "pierre@health-checker.fr",
+            role: Roles.FREE,
             save: jest.fn().mockResolvedValue(undefined),
-        };
+        } as unknown as User;
 
         User.findOneBy = jest.fn().mockResolvedValue(mockUser);
+
+        mockContext = {
+            res: {
+                setHeader: jest.fn(),
+            },
+            payload: {
+                id: mockUser.id,
+                email: mockUser.email,
+            },
+        };
 
         const mockStripeMethods = {
             customers: {
@@ -68,34 +78,18 @@ describe("SubscriptionResolver", () => {
         process.env.STRIPE_PREMIUM_PRICE_ID = "price_premium_mock";
 
         subscriptionResolver = new SubscriptionResolver();
-
-        mockContext = {
-            payload: {
-                id: mockUser.id,
-                email: mockUser.email,
-            },
-        };
-        mockContext = {
-            res: {
-                setHeader: jest.fn(),
-            },
-            payload: {
-                id: mockUser.id,
-                email: mockUser.email,
-            },
-        };
     });
 
     describe("createStripeSetupIntent", () => {
-        it("doit créer une intention de configuration Stripe", async () => {
+        it("must create Stripe intent setup", async () => {
             const result =
                 await subscriptionResolver.createStripeSetupIntent(mockContext);
 
             expect(result).toBe("seti_mock_secret");
         });
 
-        it("doit échouer si l'utilisateur n'est pas authentifié", async () => {
-            mockContext.payload = null;
+        it("must fail if there isn't a user authenticated", async () => {
+            mockContext.payload = undefined;
 
             await expect(
                 subscriptionResolver.createStripeSetupIntent(mockContext),
@@ -104,7 +98,7 @@ describe("SubscriptionResolver", () => {
     });
 
     describe("createSubscription", () => {
-        it("doit créer un abonnement Tier", async () => {
+        it("must create a Tier subscription", async () => {
             const paymentMethodId = "pm_mock";
             const priceKey = Roles.TIER;
 
@@ -115,7 +109,7 @@ describe("SubscriptionResolver", () => {
             );
 
             expect(User.findOneBy).toHaveBeenCalledWith({
-                id: mockContext.payload.id,
+                id: mockContext.payload!.id,
             });
 
             expect(mockUser.role).toBe(Roles.TIER);
@@ -130,7 +124,7 @@ describe("SubscriptionResolver", () => {
             });
         });
 
-        it("doit créer un abonnement Premium", async () => {
+        it("must create a Premium subscription", async () => {
             const paymentMethodId = "pm_mock";
             const priceKey = Roles.PREMIUM;
 
@@ -144,8 +138,8 @@ describe("SubscriptionResolver", () => {
             expect(mockUser.save).toHaveBeenCalled();
         });
 
-        it("doit échouer si l'utilisateur n'est pas authentifié", async () => {
-            mockContext.payload = null;
+        it("must fail if there isn't a user authenticated", async () => {
+            mockContext.payload = undefined;
 
             await expect(
                 subscriptionResolver.createSubscription(
@@ -158,7 +152,7 @@ describe("SubscriptionResolver", () => {
     });
 
     describe("changeSubscriptionTier", () => {
-        it("doit modifier un abonnement existant", async () => {
+        it("must update an existing subscription", async () => {
             const newPriceKey = Roles.PREMIUM;
 
             const result = await subscriptionResolver.changeSubscriptionTier(
@@ -167,7 +161,7 @@ describe("SubscriptionResolver", () => {
             );
 
             expect(User.findOneBy).toHaveBeenCalledWith({
-                id: mockContext.payload.id,
+                id: mockContext.payload!.id,
             });
 
             expect(mockUser.role).toBe(Roles.PREMIUM);
@@ -182,7 +176,7 @@ describe("SubscriptionResolver", () => {
             });
         });
 
-        it("doit échouer s'il n'y a pas d'abonnement actif", async () => {
+        it("must fail if there isn't an active subscription", async () => {
             const stripeSpy = Stripe as unknown as jest.Mock;
             const mockStripeInstance = stripeSpy.mock.results[0].value;
             mockStripeInstance.subscriptions.list.mockResolvedValueOnce({
@@ -199,18 +193,17 @@ describe("SubscriptionResolver", () => {
     });
 
     describe("cancelSubscription", () => {
-        it("doit annuler un abonnement existant", async () => {
+        it("must cancel an existing subscription", async () => {
             const result =
                 await subscriptionResolver.cancelSubscription(mockContext);
 
             expect(User.findOneBy).toHaveBeenCalledWith({
-                id: mockContext.payload.id,
+                id: mockContext.payload!.id,
             });
 
             expect(mockUser.role).toBe(Roles.FREE);
             expect(mockUser.save).toHaveBeenCalled();
 
-            // Vérifier la réponse
             const userDataResponse = JSON.parse(result);
             expect(userDataResponse).toEqual({
                 id: mockUser.id,
@@ -220,7 +213,7 @@ describe("SubscriptionResolver", () => {
             });
         });
 
-        it("ne doit pas échouer s'il n'y a pas d'abonnement actif", async () => {
+        it("musn't fail if there isn't an active subscription", async () => {
             const stripeSpy = Stripe as unknown as jest.Mock;
             const mockStripeInstance = stripeSpy.mock.results[0].value;
             mockStripeInstance.subscriptions.list.mockResolvedValueOnce({

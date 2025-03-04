@@ -36,7 +36,6 @@ export default function UpdateTierForm({
 
         try {
             setLoading(true);
-            setIsUpdateValid(true);
 
             const newTierKey = premium ? Roles.PREMIUM : Roles.TIER;
 
@@ -45,6 +44,7 @@ export default function UpdateTierForm({
                     newPriceKey: newTierKey,
                 },
                 onCompleted: (data) => {
+                    setIsUpdateValid(true);
                     me(data.changeSubscriptionTier);
                     setTimeout(() => {
                         setIsUpdateValid(true);
@@ -57,6 +57,7 @@ export default function UpdateTierForm({
                     }, 3500);
                 },
                 onError: () => {
+                    setIsUpdateValid(false);
                     toast({
                         variant: "destructive",
                         description:
