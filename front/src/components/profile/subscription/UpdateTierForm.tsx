@@ -3,7 +3,7 @@ import { Button } from "../../ui/button";
 import { useChangeSubscriptionTierMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
 import { FormEvent, useState } from "react";
-import { toast } from "../../ui/use-toast";
+import { useToast } from "../../ui/use-toast";
 import { Check, X } from "lucide-react";
 import {
     DialogDescription,
@@ -28,6 +28,7 @@ export default function UpdateTierForm({
 
     const [changeSubscriptionTier] = useChangeSubscriptionTierMutation();
     const me = useAuthStore((state) => state.me);
+    const { toast } = useToast();
 
     const selectedSubscription = premium ? subscriptions[2] : subscriptions[1];
 

@@ -14,7 +14,14 @@ type MockButtonProps = {
     variant?: string;
 };
 
+const mockToast = vi.fn();
 const mockSubscriptionUpdateTier = vi.fn();
+
+vi.mock("@/components/ui/use-toast", () => ({
+    useToast: () => ({
+        toast: mockToast,
+    }),
+}));
 
 vi.mock("@/generated/graphql-types", () => ({
     useChangeSubscriptionTierMutation: () => [
@@ -166,12 +173,12 @@ describe("UpdateTierForm", () => {
 
         expect(mockSubscriptionUpdateTier).toHaveBeenCalled();
 
-        const successMessage = screen.queryByText((content) => {
-            return content.includes(
-                "Votre demande de modification a été validée",
-            );
-        });
-        expect(successMessage).not.toBeInTheDocument();
+        expect(mockToast).toHaveBeenCalledWith(
+            expect.objectContaining({
+                variant: "destructive",
+                description: expect.stringContaining("Erreur"),
+            }),
+        );
 
         expect(screen.getByText("Souscrire")).toBeInTheDocument();
 
