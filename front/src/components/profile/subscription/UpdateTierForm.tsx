@@ -3,7 +3,7 @@ import { Button } from "../../ui/button";
 import { useChangeSubscriptionTierMutation } from "@/generated/graphql-types";
 import useAuthStore from "@/stores/authStore";
 import { FormEvent, useState } from "react";
-import { toast } from "../../ui/use-toast";
+import { useToast } from "../../ui/use-toast";
 import { Check, X } from "lucide-react";
 import {
     DialogDescription,
@@ -28,6 +28,7 @@ export default function UpdateTierForm({
 
     const [changeSubscriptionTier] = useChangeSubscriptionTierMutation();
     const me = useAuthStore((state) => state.me);
+    const { toast } = useToast();
 
     const selectedSubscription = premium ? subscriptions[2] : subscriptions[1];
 
@@ -36,7 +37,6 @@ export default function UpdateTierForm({
 
         try {
             setLoading(true);
-            setIsUpdateValid(true);
 
             const newTierKey = premium ? Roles.PREMIUM : Roles.TIER;
 
@@ -45,6 +45,7 @@ export default function UpdateTierForm({
                     newPriceKey: newTierKey,
                 },
                 onCompleted: (data) => {
+                    setIsUpdateValid(true);
                     me(data.changeSubscriptionTier);
                     setTimeout(() => {
                         setIsUpdateValid(true);
@@ -57,6 +58,7 @@ export default function UpdateTierForm({
                     }, 3500);
                 },
                 onError: () => {
+                    setIsUpdateValid(false);
                     toast({
                         variant: "destructive",
                         description:

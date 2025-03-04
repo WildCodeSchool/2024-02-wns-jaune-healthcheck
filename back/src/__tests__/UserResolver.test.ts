@@ -1,3 +1,4 @@
+import MyContext from "@/types/MyContext";
 import { User } from "../entities/User";
 import UserResolver from "../resolvers/UserResolver";
 import argon2 from "argon2";
@@ -5,8 +6,7 @@ import jwt from "jsonwebtoken";
 
 describe("UserResolver", () => {
     let userResolver: UserResolver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let mockContext: any;
+    let mockContext: MyContext;
     let mockUser: User;
     let passwordTest: string;
 
@@ -22,7 +22,7 @@ describe("UserResolver", () => {
             res: {
                 setHeader: jest.fn(),
             },
-            payload: { id: mockUser.id },
+            payload: { id: mockUser.id, email: mockUser.email },
         };
         process.env.JWT_SECRET_KEY = "TEST_KEY";
     });
