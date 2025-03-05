@@ -71,7 +71,7 @@ class UrlResolver {
                 sortField,
             );
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
@@ -97,7 +97,7 @@ class UrlResolver {
                 throw new Error("Utilisateur non authentifié");
             }
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.message === "Utilisateur non authentifié") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
@@ -118,7 +118,7 @@ class UrlResolver {
                 throw new Error("Utilisateur non authentifié");
             }
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.message === "Utilisateur non authentifié") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
@@ -147,7 +147,7 @@ class UrlResolver {
             const url = await queryBuilder.getOneOrFail();
             return url;
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             throw new Error("URL non trouvée.");
         }
     }
@@ -170,7 +170,7 @@ class UrlResolver {
                 throw new Error("Utilisateur non authentifié");
             }
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.message === "Utilisateur non authentifié") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
@@ -235,7 +235,7 @@ class UrlResolver {
             await url.save();
             return url;
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error instanceof QueryFailedError) {
                 throw new Error(
                     "Erreur lors de l'ajout de l'url dans la base de données.",
@@ -268,7 +268,7 @@ class UrlResolver {
                 throw new Error("Utilisateur non authorisé");
             }
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.name === "EntityNotFound") {
                 throw new Error("URL non trouvée.");
             }
@@ -304,7 +304,7 @@ class UrlResolver {
                 throw new Error("Utilisateur non authorisé");
             }
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.name === "EntityNotFound") {
                 throw new Error("URL non trouvée.");
             }
@@ -335,7 +335,7 @@ class UrlResolver {
 
             return url;
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             if (error.name === "EntityNotFound") {
                 throw new Error("URL non trouvée.");
             } else {
@@ -383,7 +383,7 @@ class UrlResolver {
 
             return true;
         } catch (error) {
-            console.warn(`[ERROR] : ${error}`);
+            console.error(`[ERROR] : ${error}`);
             await queryRunner.rollbackTransaction();
 
             if (error.name === "EntityNotFound") {
