@@ -13,7 +13,8 @@ class HistoryResolver {
         try {
             return await History.find({ relations: ["url"] });
         } catch (error) {
-            throw new Error("Internal server error");
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 
@@ -22,7 +23,8 @@ class HistoryResolver {
         try {
             return await History.findOneByOrFail({ id });
         } catch (error) {
-            throw new Error("Internal server error");
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 
@@ -32,19 +34,21 @@ class HistoryResolver {
     ): Promise<History[]> {
         try {
             if (context.payload) {
-                return await dataSource.createQueryBuilder(History, "history")
-                .innerJoinAndSelect("history.url", "url")
-                .innerJoin("url.user", "user")
-                .where("user.id = :userId", { userId: context.payload.id })
-                .orderBy("history.created_at", "DESC")
-                .take(5)
-                .cache(true)
-                .getMany();
+                return await dataSource
+                    .createQueryBuilder(History, "history")
+                    .innerJoinAndSelect("history.url", "url")
+                    .innerJoin("url.user", "user")
+                    .where("user.id = :userId", { userId: context.payload.id })
+                    .orderBy("history.created_at", "DESC")
+                    .take(5)
+                    .cache(true)
+                    .getMany();
             } else {
                 throw new Error();
             }
-        } catch (_error) {
-            throw new Error("Internal server error");
+        } catch (error) {
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 
@@ -76,8 +80,9 @@ class HistoryResolver {
                 undefined,
                 urlId,
             );
-        } catch (err) {
-            throw new Error(err);
+        } catch (error) {
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 
@@ -92,7 +97,8 @@ class HistoryResolver {
             });
             return history;
         } catch (error) {
-            throw new Error("Internal server error");
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 
@@ -125,10 +131,15 @@ class HistoryResolver {
                     };
                 });
             } else {
-                throw new Error();
+                throw new Error("User unauthenticated");
             }
-        } catch (_error) {
-            throw new Error("Internal server error");
+        } catch (error) {
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else {
+                throw new Error("Erreur interne, veuillez réessayer.");
+            }
         }
     }
 }

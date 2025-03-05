@@ -7,19 +7,28 @@ import MyContext from "../types/MyContext";
 class NotificationResolver {
     @Query(() => [Notification])
     async notifications(@Ctx() context: MyContext): Promise<Notification[]> {
-        if (context.payload) {
-            return await Notification.find({
-                order: { created_at: "DESC" },
-                relations: ["user"],
-                where: {
-                    user: {
-                        id: context.payload.id,
+        try {
+            if (context.payload) {
+                return await Notification.find({
+                    order: { created_at: "DESC" },
+                    relations: ["user"],
+                    where: {
+                        user: {
+                            id: context.payload.id,
+                        },
                     },
-                },
-                take: 5,
-            });
-        } else {
-            throw new Error("User is not authenticated");
+                    take: 5,
+                });
+            } else {
+                throw new Error("User unauthenticated");
+            }
+        } catch (error) {
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else {
+                throw new Error("Erreur interne, veuillez réessayer.");
+            }
         }
     }
 
@@ -40,7 +49,8 @@ class NotificationResolver {
             notification.save();
             return "Notification is read";
         } catch (error) {
-            throw new Error("Notification not found");
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Notification non trouvée.");
         }
     }
 
@@ -73,7 +83,14 @@ class NotificationResolver {
             await Notification.delete({ id: notification.id });
             return "Notification is deleted";
         } catch (error) {
-            throw new Error("Failed to delete notification");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "Notification not found") {
+                throw new Error("Notification non trouvée.");
+            } else {
+                throw new Error(
+                    "Erreur lors de la suppression de la notification.",
+                );
+            }
         }
     }
 
@@ -105,7 +122,14 @@ class NotificationResolver {
             );
             return "All notifications have been deleted";
         } catch (error) {
-            throw new Error("Failed to delete notifications");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "No notifications found") {
+                throw new Error("Aucune notification trouvée.");
+            } else {
+                throw new Error(
+                    "Erreur lors de la suppression des notifications.",
+                );
+            }
         }
     }
 }
