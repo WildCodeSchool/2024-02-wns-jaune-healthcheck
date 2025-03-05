@@ -93,7 +93,7 @@ describe("SubscriptionResolver", () => {
 
             await expect(
                 subscriptionResolver.createStripeSetupIntent(mockContext),
-            ).rejects.toThrow("User is not authenticated");
+            ).rejects.toThrow("User unauthenticated");
         });
     });
 
@@ -147,7 +147,7 @@ describe("SubscriptionResolver", () => {
                     "pm_mock",
                     Roles.TIER,
                 ),
-            ).rejects.toThrow("User is not authenticated");
+            ).rejects.toThrow("User unauthenticated");
         });
     });
 
@@ -188,7 +188,9 @@ describe("SubscriptionResolver", () => {
                     mockContext,
                     Roles.PREMIUM,
                 ),
-            ).rejects.toThrow("Failed to change subscription tier");
+            ).rejects.toThrow(
+                "Erreur lors de la modification de l'abonnement, veuillez réessayer.",
+            );
         });
     });
 

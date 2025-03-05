@@ -94,11 +94,11 @@ class UrlResolver {
                         );
                 }
             } else {
-                throw new Error("Utilisateur non authentifié");
+                throw new Error("User unauthenticated");
             }
         } catch (error) {
             console.error(`[ERROR] : ${error}`);
-            if (error.message === "Utilisateur non authentifié") {
+            if (error.message === "User unauthenticated") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
                 throw new Error("Erreur interne, veuillez réessayer.");
@@ -115,11 +115,11 @@ class UrlResolver {
                     private: true,
                 });
             } else {
-                throw new Error("Utilisateur non authentifié");
+                throw new Error("User unauthenticated");
             }
         } catch (error) {
             console.error(`[ERROR] : ${error}`);
-            if (error.message === "Utilisateur non authentifié") {
+            if (error.message === "User unauthenticated") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
                 throw new Error("Erreur interne, veuillez réessayer.");
@@ -167,11 +167,11 @@ class UrlResolver {
                     .cache(true)
                     .getMany();
             } else {
-                throw new Error("Utilisateur non authentifié");
+                throw new Error("User unauthenticated");
             }
         } catch (error) {
             console.error(`[ERROR] : ${error}`);
-            if (error.message === "Utilisateur non authentifié") {
+            if (error.message === "User unauthenticated") {
                 throw new Error("Utilisateur non authentifié.");
             } else {
                 throw new Error("Erreur interne, veuillez réessayer.");
@@ -201,7 +201,7 @@ class UrlResolver {
                 );
 
                 if (limitReached) {
-                    throw new Error("Erreur de limitation des données");
+                    throw new Error("Data limitation error");
                 }
 
                 if (!checkFrequencyId || userRole !== Roles.PREMIUM) {
@@ -229,7 +229,7 @@ class UrlResolver {
 
             const dataValidationError = await validate(url);
             if (dataValidationError.length > 0) {
-                throw new Error("Erreur de validation des données");
+                throw new Error("Data validation error");
             }
 
             await url.save();
@@ -241,12 +241,12 @@ class UrlResolver {
                     "Erreur lors de l'ajout de l'url dans la base de données.",
                 );
             }
-            if (error.message === "Erreur de validation des données") {
+            if (error.message === "Data validation error") {
                 throw new Error(
                     "Erreur de validation des données, l'url doit comporter un chemin valide ex: http(s)://...",
                 );
             }
-            if (error.message === "Erreur de limitation des données") {
+            if (error.message === "Data limitation error") {
                 throw new Error("La limite de l'abonnement a été atteinte.");
             }
             throw new Error("Erreur interne, veuillez réessayer.");
@@ -265,14 +265,14 @@ class UrlResolver {
 
                 return url;
             } else {
-                throw new Error("Utilisateur non authorisé");
+                throw new Error("User unauthorized");
             }
         } catch (error) {
             console.error(`[ERROR] : ${error}`);
             if (error.name === "EntityNotFound") {
                 throw new Error("URL non trouvée.");
             }
-            if (error.message === "Utilisateur non authorisé") {
+            if (error.message === "User unauthorized") {
                 throw new Error("Utilisateur non authorisé.");
             } else {
                 throw new Error("Erreur interne, veuillez réessayer.");
@@ -301,14 +301,14 @@ class UrlResolver {
                 await url.save();
                 return url;
             } else {
-                throw new Error("Utilisateur non authorisé");
+                throw new Error("User unauthorized");
             }
         } catch (error) {
             console.error(`[ERROR] : ${error}`);
             if (error.name === "EntityNotFound") {
                 throw new Error("URL non trouvée.");
             }
-            if (error.message === "Utilisateur non authorisé") {
+            if (error.message === "User unauthorized") {
                 throw new Error("Utilisateur non authorisé.");
             } else {
                 throw new Error("Erreur interne, veuillez réessayer.");
