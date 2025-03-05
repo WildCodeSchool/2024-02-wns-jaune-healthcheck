@@ -120,12 +120,16 @@ export class History extends BaseEntity {
 
         const whereConditions: string[] = ["1 = 1"];
 
-        if (privateHistories === undefined && authenticatedUserId) {
-            whereConditions.push(
-                "(user.id = :authenticatedUserId OR user.id IS NULL)",
-            );
-        } else if (privateHistories && authenticatedUserId) {
-            whereConditions.push("user.id = :authenticatedUserId");
+        if (authenticatedUserId) {
+            if (privateHistories === true) {
+                whereConditions.push("user.id = :authenticatedUserId");
+            } else if (privateHistories === false) {
+                whereConditions.push("user.id IS NULL");
+            } else {
+                whereConditions.push(
+                    "(user.id = :authenticatedUserId OR user.id IS NULL)",
+                );
+            }
         } else {
             whereConditions.push("user.id IS NULL");
         }

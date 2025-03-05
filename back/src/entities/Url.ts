@@ -39,7 +39,7 @@ export class Url extends BaseEntity {
             message: "Le chemin doit être une URL valide",
         },
     )
-    @Contains('https', {
+    @Contains("https", {
         message: "L'URL doit être sécurisée (utiliser HTTPS)",
     })
     path: string;
@@ -93,12 +93,16 @@ export class Url extends BaseEntity {
 
         const whereConditions: string[] = ["1 = 1"];
 
-        if (privateUrls === undefined && authenticatedUserId) {
-            whereConditions.push(
-                "(user.id = :authenticatedUserId OR user.id IS NULL)",
-            );
-        } else if (privateUrls && authenticatedUserId) {
-            whereConditions.push("user.id = :authenticatedUserId");
+        if (authenticatedUserId) {
+            if (privateUrls === true) {
+                whereConditions.push("user.id = :authenticatedUserId");
+            } else if (privateUrls === false) {
+                whereConditions.push("user.id IS NULL");
+            } else {
+                whereConditions.push(
+                    "(user.id = :authenticatedUserId OR user.id IS NULL)",
+                );
+            }
         } else {
             whereConditions.push("user.id IS NULL");
         }
