@@ -103,10 +103,10 @@ describe("Unit Test Url Resolver", () => {
             leftJoinAndSelect: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
             andWhere: jest.fn().mockReturnThis(),
-            getOne: jest.fn().mockRejectedValue(new Error("URL non trouvée")),
+            getOne: jest.fn().mockRejectedValue(new Error("URL not found")),
             getOneOrFail: jest
                 .fn()
-                .mockRejectedValue(new Error("URL non trouvée")),
+                .mockRejectedValue(new Error("URL not found")),
         } as unknown as SelectQueryBuilder<Url>);
 
         await expect(
