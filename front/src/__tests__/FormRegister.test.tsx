@@ -57,7 +57,6 @@ vi.mock("@/generated/graphql-types", () => ({
     },
 }));
 
-// Mock tous les composants d'UI
 vi.mock("@/components/ui/dialog.tsx", () => ({
     Dialog: ({ children }: MockDialogProps) => (
         <div data-testid="dialog">{children}</div>
