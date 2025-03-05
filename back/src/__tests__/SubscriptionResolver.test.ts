@@ -188,9 +188,7 @@ describe("SubscriptionResolver", () => {
                     mockContext,
                     Roles.PREMIUM,
                 ),
-            ).rejects.toThrow(
-                "Erreur lors de la modification de l'abonnement, veuillez réessayer.",
-            );
+            ).rejects.toThrow("Aucun abonnement actif n'a été trouvé.");
         });
     });
 
