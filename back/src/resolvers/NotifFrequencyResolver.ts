@@ -7,8 +7,11 @@ class NotifFrequencyResolver {
     async notifFrequencies(): Promise<NotifFrequency[]> {
         try {
             return await NotifFrequency.find();
-        } catch (err) {
-            throw new Error(err);
+        } catch (error) {
+            console.error(`[ERROR] : ${error}`);
+            throw new Error(
+                "Erreur lors de récupération des fréquences de notification.",
+            );
         }
     }
 }

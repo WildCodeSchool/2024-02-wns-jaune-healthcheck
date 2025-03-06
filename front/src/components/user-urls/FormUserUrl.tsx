@@ -15,13 +15,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newUrlSchema } from "@/constants/validator.ts";
 import { useAddUrlMutation } from "@/generated/graphql-types.ts";
-import { 
-    GET_ALL_URLS, 
-    GET_RECENT_PRIVATE_URLS, 
-    GET_PRIVATE_SUM_URLS, 
+import {
+    GET_ALL_URLS,
+    GET_RECENT_PRIVATE_URLS,
+    GET_PRIVATE_SUM_URLS,
     GET_RECENT_PRIVATE_HISTORIES,
     GET_PRIVATE_URLS_BY_STATUS,
-    GET_PRIVATE_HISTORIES_BY_STATUS} from "@/graphql/queries.ts";
+    GET_PRIVATE_HISTORIES_BY_STATUS,
+} from "@/graphql/queries.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
 import {
     DialogClose,
@@ -33,12 +34,12 @@ import {
 } from "../ui/dialog.tsx";
 import { useState } from "react";
 import { Checkbox } from "../ui/checkbox.tsx";
-import { FormAddUserUrlProps } from '@/types/form';
+import { FormAddUserUrlProps } from "@/types/form";
 import { useSearchParams } from "react-router-dom";
 import SelectCheckFrequency from "../custom/SelectCheckFrequency.tsx";
 import ButtonLoader from "../custom/ButtonLoader.tsx";
-import useAuthStore from '@/stores/authStore.tsx';
-import { Roles } from '@/constants/role.ts';
+import useAuthStore from "@/stores/authStore.tsx";
+import { Roles } from "@/constants/role.ts";
 
 export default function FormUserUrl({
     openDialog,

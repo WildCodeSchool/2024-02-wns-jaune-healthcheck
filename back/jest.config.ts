@@ -190,6 +190,9 @@ const config: Config = {
 
     // Whether to use watchman for file crawling
     // watchman: true,
+
+    // Disables logs from printing to the console
+    silent: true,
 };
 
 export default config;

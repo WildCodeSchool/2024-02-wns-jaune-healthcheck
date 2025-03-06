@@ -26,9 +26,9 @@ export default function RecentUrls() {
     if (error) {
         return <div>Erreur</div>;
     }
-    
+
     return (
-        <Card className="shadow-md shadow-muted">
+        <Card>
             <CardHeader className="w-full">
                 <CardTitle className="text-lg mr-auto">
                     URL privées récentes

@@ -1,8 +1,11 @@
-# Health-checker
+![Cover](https://github.com/WildCodeSchool/2024-02-wns-jaune-healthcheck/blob/develop/branding-readme.png?raw=true)
+<br>
 
-Health-checker permet de vérifier si un service web est en ligne.
+## A propos du projet
 
-## Languages & Tools
+Health-checker est une application web permettant de surveiller l'état de santé de services web.
+
+### Réalisé avec
 
 ![Apollo-GraphQL](https://img.shields.io/badge/-ApolloGraphQL-311C87?style=for-the-badge&logo=apollo-graphql)
 
@@ -24,11 +27,35 @@ Health-checker permet de vérifier si un service web est en ligne.
 
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 
-## Installation
+## Démarrer
+Suivez les instructions suivantes pour l'exécuter dans votre environnement local.
 
-Le projet tourne sous Docker.
+### Prérequis
 
-> 1. Renseigner les variables d'environnements
+* <a href="https://git-scm.com/downloads">Git</a>
+* <a href="https://www.docker.com">Docker Desktop</a>
+
+### Installation
+
+Le projet est exécuté dans un environnement Docker
+
+> 1. Cloner le répertoire de travail
+
+ ```bash
+ git clone https://github.com/WildCodeSchool/2024-02-wns-jaune-healthcheck.git
+ ```
+
+> 2. Aller dans le repertoire source du projet
+```
+cd 2024-02-wns-jaune-healthcheck
+```
+
+> 3. Créer le fichier pour les variables d'environnement
+```
+touch .env
+```
+
+> 4. Renseigner les variables d'environnement
 
 ```env
 # Environement
@@ -57,10 +84,10 @@ STRIPE_TIER_PRICE_ID=
 STRIPE_PREMIUM_PRICE_ID=
 ```
 
-> 2. Environnement de développement
+> 5. Démarrer l'application en environnement de développement
 
 ```bash
-docker compose -f docker-compose.dev.yaml up --build
+docker compose -f docker-compose.dev.yaml up --build --detach
 ```
 
 ou utiliser les commandes dans le fichier `Makefile`
@@ -72,7 +99,7 @@ make build-dev
 Par la suite, utiliser :
 
 ```bash
-docker compose -f docker-compose.dev.yaml up
+docker compose -f docker-compose.dev.yaml up --detach
 ```
 
 ou
@@ -81,7 +108,7 @@ ou
 make run-dev
 ```
 
-## Jeu de données
+### Jeu de données
 
 Deux types de jeu de données sont présents sur le projet.
 
@@ -121,7 +148,7 @@ make run-test
 
 Cet environnement de test, exécute automatiquement les deux scripts ci-dessus ainsi que tous les tests de l'application (front-end et back-end)
 
-## Client
+### Client
 
 L'application Web **Health-checker** est exposée en local sur le port _8000_.
 

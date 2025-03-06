@@ -53,7 +53,7 @@ describe("HistoryResolver", () => {
             );
 
             await expect(resolver.histories()).rejects.toThrow(
-                "Internal server error",
+                "Erreur interne, veuillez réessayer.",
             );
         });
     });

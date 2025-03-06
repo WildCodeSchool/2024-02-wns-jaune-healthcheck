@@ -52,7 +52,7 @@ class SubscriptionResolver {
     @Mutation(() => String)
     async createStripeSetupIntent(@Ctx() context: MyContext): Promise<string> {
         if (!context.payload) {
-            throw new Error("User is not authenticated");
+            throw new Error("User unauthenticated");
         }
 
         try {
@@ -64,8 +64,14 @@ class SubscriptionResolver {
 
             return setupIntent.client_secret!;
         } catch (error) {
-            console.error("Stripe setup intent error:", error);
-            throw new Error("Failed to create setup intent");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else {
+                throw new Error(
+                    "Erreur lors de la configuration de l'instance Stripe, veuillez réessayer.",
+                );
+            }
         }
     }
 
@@ -76,14 +82,10 @@ class SubscriptionResolver {
         @Arg("priceKey", { nullable: false }) priceKey: string,
     ): Promise<string> {
         if (!context.payload) {
-            throw new Error("User is not authenticated");
+            throw new Error("User unauthenticated");
         }
 
         const userEmail = context.payload.email;
-        if (!userEmail) {
-            throw new Error("User email is required to create a subscription");
-        }
-
         const priceId = this.getPriceId(priceKey);
 
         try {
@@ -126,8 +128,16 @@ class SubscriptionResolver {
                 role: user.role,
             });
         } catch (error) {
-            console.error("Stripe subscription error:", error);
-            throw new Error("Failed to create subscription");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else if (error.message === "User not found") {
+                throw new Error("Utilisateur non authorisé.");
+            } else {
+                throw new Error(
+                    "Erreur lors de la création de l'abonnement, veuillez réessayer.",
+                );
+            }
         }
     }
 
@@ -137,7 +147,7 @@ class SubscriptionResolver {
         @Arg("newPriceKey", { nullable: false }) newPriceKey: string,
     ): Promise<string> {
         if (!context.payload) {
-            throw new Error("User is not authenticated");
+            throw new Error("User unauthenticated");
         }
 
         const priceId = this.getPriceId(newPriceKey);
@@ -187,15 +197,27 @@ class SubscriptionResolver {
                 role: user.role,
             });
         } catch (error) {
-            console.error("Subscription change error:", error);
-            throw new Error("Failed to change subscription tier");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else if (error.message === "Invalid subscription tier") {
+                throw new Error("Le palier demandé n'existe pas.");
+            } else if (error.message === "No active subscription found") {
+                throw new Error("Aucun abonnement actif n'a été trouvé.");
+            } else if (error.message === "User not found") {
+                throw new Error("Utilisateur non authorisé.");
+            } else {
+                throw new Error(
+                    "Erreur lors de la modification de l'abonnement, veuillez réessayer.",
+                );
+            }
         }
     }
 
     @Mutation(() => String)
     async cancelSubscription(@Ctx() context: MyContext): Promise<string> {
         if (!context.payload) {
-            throw new Error("User is not authenticated");
+            throw new Error("User unauthenticated");
         }
 
         try {
@@ -237,8 +259,14 @@ class SubscriptionResolver {
                 role: user?.role,
             });
         } catch (error) {
-            console.error("Failed to cancel subscription:", error);
-            throw new Error("Failed to cancel subscription");
+            console.error(`[ERROR] : ${error}`);
+            if (error.message === "User unauthenticated") {
+                throw new Error("Utilisateur non authentifié.");
+            } else {
+                throw new Error(
+                    "Erreur lors de l'annulation de l'abonnement, veuillez réessayer.",
+                );
+            }
         }
     }
 }

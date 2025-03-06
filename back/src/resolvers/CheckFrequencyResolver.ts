@@ -8,7 +8,8 @@ class CheckFrequencyResolver {
         try {
             return await CheckFrequency.find();
         } catch (error) {
-            throw new Error("Internal server error");
+            console.error(`[ERROR] : ${error}`);
+            throw new Error("Erreur interne, veuillez réessayer.");
         }
     }
 }

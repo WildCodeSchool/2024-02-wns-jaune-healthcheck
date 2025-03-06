@@ -22,8 +22,8 @@ const UserLayout: React.FC = () => {
     return (
         <SidebarProvider>
             <UserSideBar />
-            <SidebarInset className="w-[50vw]">
-                <header className="dark:bg-sidebar border-b-[1px] flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+            <SidebarInset className="w-[50vw] flex flex-col h-screen">
+                <header className="sticky top-0 right-0 left-0 z-50 bg-sidebar dark:bg-sidebar border-b-[1px] flex h-16 shrink-0 items-center">
                     <div className="flex w-full justify-between items-center gap-2 px-4">
                         <section className="flex items-center gap-2">
                             <SidebarTrigger className="-ml-1" />
@@ -39,9 +39,11 @@ const UserLayout: React.FC = () => {
                         </section>
                     </div>
                 </header>
-                <main className="flex-1 space-y-4 p-4">
-                    <Outlet />
-                </main>
+                <div className="flex-1 overflow-auto h-full">
+                    <main className="p-4">
+                        <Outlet />
+                    </main>
+                </div>
             </SidebarInset>
         </SidebarProvider>
     );

@@ -45,7 +45,7 @@ export default function Notification({ data }: NotificationProps) {
 
     return (
         <li
-            className={`relative flex flex-row justify-between items-center w-fit gap-4 p-2 transition-colors ${
+            className={`relative flex flex-row justify-between items-center w-full gap-4 p-2 rounded-sm transition-colors ${
                 data.is_read === false ? "bg-secondary" : "bg-transparent"
             }`}
             onMouseOver={hRead}

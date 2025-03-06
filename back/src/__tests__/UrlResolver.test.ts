@@ -60,7 +60,7 @@ describe("Unit Test Url Resolver", () => {
             new Error("Internal server error"),
         );
         await expect(urlResolver.urls(mockContext, 1, "", "")).rejects.toThrow(
-            "Internal server error",
+            "Erreur interne, veuillez réessayer.",
         );
     });
 
@@ -79,7 +79,7 @@ describe("Unit Test Url Resolver", () => {
         );
         await expect(
             urlResolver.urls({} as MyContext, 1, "", ""),
-        ).rejects.toThrow("Internal server error");
+        ).rejects.toThrow("Erreur interne, veuillez réessayer.");
     });
 
     it("Query url should return an Url", async () => {
@@ -103,16 +103,10 @@ describe("Unit Test Url Resolver", () => {
             leftJoinAndSelect: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
             andWhere: jest.fn().mockReturnThis(),
-            getOne: jest
-                .fn()
-                .mockRejectedValue(
-                    new Error("URL non trouvée ou accès non autorisé"),
-                ),
+            getOne: jest.fn().mockRejectedValue(new Error("URL not found")),
             getOneOrFail: jest
                 .fn()
-                .mockRejectedValue(
-                    new Error("URL non trouvée ou accès non autorisé"),
-                ),
+                .mockRejectedValue(new Error("URL not found")),
         } as unknown as SelectQueryBuilder<Url>);
 
         await expect(
@@ -120,6 +114,6 @@ describe("Unit Test Url Resolver", () => {
                 mockContext,
                 "123e4567-e89b-12d3-a456-426614174001",
             ),
-        ).rejects.toThrow("URL non trouvée ou accès non autorisé");
+        ).rejects.toThrow("URL non trouvée.");
     });
 });
