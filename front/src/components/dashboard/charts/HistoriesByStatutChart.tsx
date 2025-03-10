@@ -65,6 +65,7 @@ const HistoriesByStatusChart: React.FC = () => {
         const currJson = curr.statusCode !== 200 ? curr.countJson : 0;
         const currHtml = curr.statusCode !== 200 ? curr.countHtml : 0;
         const currUnknown = curr.statusCode !== 200 ? curr.countUnknown : 0;
+        
         return acc + currJson + currHtml + currUnknown;
     }, 0);
 
