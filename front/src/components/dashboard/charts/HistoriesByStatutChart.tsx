@@ -64,7 +64,9 @@ const HistoriesByStatusChart: React.FC = () => {
     const sumFail = chartData?.privateHistoriesByStatus.reduce((acc, curr) => {
         const currJson = curr.statusCode !== 200 ? curr.countJson : 0;
         const currHtml = curr.statusCode !== 200 ? curr.countHtml : 0;
-        return acc + currJson + currHtml;
+        const currUnknown = curr.statusCode !== 200 ? curr.countUnknown : 0;
+        
+        return acc + currJson + currHtml + currUnknown;
     }, 0);
 
     return (
